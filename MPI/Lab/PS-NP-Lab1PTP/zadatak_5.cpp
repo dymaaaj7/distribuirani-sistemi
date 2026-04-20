@@ -11,8 +11,7 @@ pojedinačno.
 Iz root procesa ispisati identifikatore svih procesa koji ispunjavaju gore
 pomenuti uslov.
 
-Zadatak realizovati
-korišćenjem MPI Point-to-Point operacija.
+Zadatak realizovati korišćenjem MPI Point-to-Point operacija.
 
 */
 
