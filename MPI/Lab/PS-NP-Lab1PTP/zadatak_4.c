@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     {
         float niz[N];
         for (int i = 0; i < N; i++)
-            niz[i] = float(i) + 1.0;
+            niz[i] = (float)i + 1.0;
 
         for (int i = 0; i < chunk_size; i++)
         {

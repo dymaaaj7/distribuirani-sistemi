@@ -1,6 +1,6 @@
 # Distribuirani Sistemi — MPI Vežbe
 
-Ovaj repozitorijum sadrži materijale, vežbe i laboratorijske zadatke iz predmeta **Distribuirani Sistemi**, sa fokusom na paralelno programiranje koristeći **MPI (Message Passing Interface)**.
+Ovaj repozitorijum sadrži materijale, vežbe, laboratorijske zadatke i ispitna rešenja iz predmeta **Distribuirani Sistemi**, sa fokusom na pismeni deo ispita.
 
 ---
 
@@ -9,62 +9,46 @@ Ovaj repozitorijum sadrži materijale, vežbe i laboratorijske zadatke iz predme
 ```
 .
 ├── MPI/
-│   ├── README.md              # (prazan — za buduće proširenje)
 │   ├── SPISAKFUNKCIJA.md      # Referenca najčešće korišćenih MPI funkcija
+│   ├── template.c             # Šablon za MPI programe
 │   ├── Vezbe/                 # Vežbe sa časova
-│   │   ├── MPI_1_1.cpp
-│   │   ├── MPI_1_2.cpp
-│   │   ├── MPI_1_3.cpp
-│   │   ├── MPI_1_4.cpp
-│   │   ├── MPI_2_1.cpp
-│   │   ├── MPI_2_2.cpp
-│   │   ├── MPI_2_3.cpp
-│   │   ├── MPI_3_1.cpp
-│   │   ├── MPI_3_2.cpp
-│   │   ├── MPI_3_3.cpp
-│   │   └── MPI_3_4.cpp
+│   │   ├── MPI_1_1.c
+│   │   ├── MPI_1_2.c
+│   │   ├── MPI_1_3.c
+│   │   ├── MPI_1_4.c
+│   │   ├── MPI_2_1.c
+│   │   ├── MPI_2_2.c
+│   │   ├── MPI_2_3.c
+│   │   ├── MPI_3_1.c
+│   │   ├── MPI_3_2.c
+│   │   ├── MPI_3_3.c
+│   │   └── MPI_3_4.c
 │   ├── Lab/
 │   │   └── PS-NP-Lab1PTP/     # Laboratorijska vežba — Point-to-Point komunikacija
-│   │       ├── zadatak_1.cpp
-│   │       ├── zadatak_2.cpp
-│   │       ├── zadatak_3.cpp
-│   │       ├── zadatak_4.cpp
-│   │       └── zadatak_5.cpp
-│   └── Blanketi/              # (prazan direktorijum — za buduće materijale)
-└── Distribuirani Sistemi_PrezentacijeSpojene.pdf
+│   │       ├── primer.c
+│   │       ├── zadatak_1.c
+│   │       ├── zadatak_2.c
+│   │       ├── zadatak_3.c
+│   │       ├── zadatak_4.c
+│   │       └── zadatak_5.c
+│   └── Blanketi/              # Rešenja ispitnih zadataka po godinama
+│       ├── 2020/
+│       │   ├── jun_a.c
+│       │   └── jun_b.c
+│       ├── 2021/
+│       │   ├── april_a.cpp
+│       │   └── april_b.cpp
+│       └── 2022/
+│           ├── april_a.c
+│           ├── april_b.c
+│           ├── decembar_a.c
+│           ├── decembar_b.c
+│           ├── januar_a.c
+│           └── januar_b.c
+├── ispit-zadaci.md            # Praćenje odrađenih zadataka sa ispita po rokovima
+├── Distribuirani Sistemi_PrezentacijeSpojene.pdf
+└── .gitignore
 ```
-
----
-
-## 🛠️ Preduslovi
-
-Za kompilaciju i pokretanje programa potrebno je imati instaliranu MPI implementaciju, npr. **OpenMPI** ili **MPICH**:
-
-```bash
-# Ubuntu/Debian
-sudo apt-get install openmpi-bin libopenmpi-dev
-
-# Arch Linux
-sudo pacman -S openmpi
-```
-
----
-
-## 🚀 Kompilacija i pokretanje
-
-### Kompilacija pojedinačnog programa
-
-```bash
-mpicxx -o naziv_programa naziv_programa.cpp
-```
-
-### Pokretanje sa zadatim brojem procesa
-
-```bash
-mpirun --oversubscribe -np 4 ./naziv_programa
-```
-
-> Napomena: opcija `--oversubscribe` omogućava pokretanje više procesa nego što ima fizičkih jezgara (korisno na laptopovima).
 
 ---
 
@@ -74,22 +58,22 @@ mpirun --oversubscribe -np 4 ./naziv_programa
 
 | Fajl | Opis |
 |------|------|
-| [`MPI_1_1.cpp`](MPI/Vezbe/MPI_1_1.cpp) | Lančano slanje podataka od procesa `P0` do `Pn` i nazad. Unos se završava negativnom vrednošću. |
-| [`MPI_1_2.cpp`](MPI/Vezbe/MPI_1_2.cpp) | Suma prvih `n` celih brojeva koristeći P-to-P komunikaciju — svaki proces učestvuje u akumulaciji. |
-| [`MPI_1_3.cpp`](MPI/Vezbe/MPI_1_3.cpp) | Suma `N` celih brojeva ( `N` je stepen dvojke ) korišćenjem parnog spajanja procesa u logaritamskom broju koraka. |
-| [`MPI_1_4.cpp`](MPI/Vezbe/MPI_1_4.cpp) | Implementacija grupne operacije `MPI_Scatter` koristeći isključivo P-to-P komunikaciju u hiperkub topologiji. |
+| [`MPI_1_1.c`](MPI/Vezbe/MPI_1_1.c) | Lančano slanje podataka od procesa `P0` do `Pn` i nazad. Unos se završava negativnom vrednošću. |
+| [`MPI_1_2.c`](MPI/Vezbe/MPI_1_2.c) | Suma prvih `n` celih brojeva koristeći P-to-P komunikaciju — svaki proces učestvuje u akumulaciji. |
+| [`MPI_1_3.c`](MPI/Vezbe/MPI_1_3.c) | Suma `N` celih brojeva (`N` je stepen dvojke) korišćenjem parnog spajanja procesa u logaritamskom broju koraka. |
+| [`MPI_1_4.c`](MPI/Vezbe/MPI_1_4.c) | Implementacija grupne operacije `MPI_Scatter` koristeći isključivo P-to-P komunikaciju u hiperkub topologiji. |
 
 ### Vežbe — Grupne operacije
 
 | Fajl | Opis |
 |------|------|
-| [`MPI_2_1.cpp`](MPI/Vezbe/MPI_2_1.cpp) | Pronalaženje minimalne i maksimalne vrednosti među procesima, zajedno sa identifikatorima procesa (`MPI_MINLOC` / `MPI_MAXLOC`). |
-| [`MPI_2_2.cpp`](MPI/Vezbe/MPI_2_2.cpp) | Pronalaženje maksimalne vrednosti na svakoj od 30 lokacija i identifikatora procesa koji je sadrži (`MPI_MAXLOC` nad nizovima). |
-| [`MPI_2_3.cpp`](MPI/Vezbe/MPI_2_3.cpp) | Numerička integracija — aproksimacija broja **π** integracijom funkcije `f(x)=4/(1+x²)` na intervalu `[0,1]`. |
-| [`MPI_3_1.cpp`](MPI/Vezbe/MPI_3_1.cpp) | Skalarni proizvod dva vektora dimenzije `N` korišćenjem `MPI_Scatter` i `MPI_Reduce`. |
-| [`MPI_3_2.cpp`](MPI/Vezbe/MPI_3_2.cpp) | Množenje matrice `A(n×n)` i vektora `b(n)` — distribucija vrsta matrice i emitovanje vektora (`MPI_Scatter` + `MPI_Bcast` + `MPI_Gather`). |
-| [`MPI_3_3.cpp`](MPI/Vezbe/MPI_3_3.cpp) | Pronalaženje minimalnog neparnog broja deljivog zadatom vrednošću `x` iz intervala `[a,b]` — raspodela brojeva po procesima u cikličkom redosledu. |
-| [`MPI_3_4.cpp`](MPI/Vezbe/MPI_3_4.cpp) | Množenje matrice `A(m×n)` i vektora `b(n)` — distribucija kolona matrice `A` P-to-P operacijama, a preostalo grupnim operacijama. |
+| [`MPI_2_1.c`](MPI/Vezbe/MPI_2_1.c) | Pronalaženje minimalne i maksimalne vrednosti među procesima, zajedno sa identifikatorima procesa (`MPI_MINLOC` / `MPI_MAXLOC`). |
+| [`MPI_2_2.c`](MPI/Vezbe/MPI_2_2.c) | Pronalaženje maksimalne vrednosti na svakoj od 30 lokacija i identifikatora procesa koji je sadrži (`MPI_MAXLOC` nad nizovima). |
+| [`MPI_2_3.c`](MPI/Vezbe/MPI_2_3.c) | Numerička integracija — aproksimacija broja **π** integracijom funkcije `f(x)=4/(1+x²)` na intervalu `[0,1]`. |
+| [`MPI_3_1.c`](MPI/Vezbe/MPI_3_1.c) | Skalarni proizvod dva vektora dimenzije `N` korišćenjem `MPI_Scatter` i `MPI_Reduce`. |
+| [`MPI_3_2.c`](MPI/Vezbe/MPI_3_2.c) | Množenje matrice `A(n×n)` i vektora `b(n)` — distribucija vrsta matrice i emitovanje vektora (`MPI_Scatter` + `MPI_Bcast` + `MPI_Gather`). |
+| [`MPI_3_3.c`](MPI/Vezbe/MPI_3_3.c) | Pronalaženje minimalnog neparnog broja deljivog zadatom vrednošću `x` iz intervala `[a,b]` — raspodela brojeva po procesima u cikličkom redosledu. |
+| [`MPI_3_4.c`](MPI/Vezbe/MPI_3_4.c) | Množenje matrice `A(m×n)` i vektora `b(n)` — distribucija kolona matrice `A` P-to-P operacijama, a preostalo grupnim operacijama. |
 
 ---
 
@@ -97,11 +81,43 @@ mpirun --oversubscribe -np 4 ./naziv_programa
 
 | Fajl | Opis |
 |------|------|
-| [`zadatak_1.cpp`](MPI/Lab/PS-NP-Lab1PTP/zadatak_1.cpp) | Svaki proces proverava parnost sume elemenata niza `bafer` i upisuje rezultat u odgovarajući bit celobrojnog podatka. Rezultat se šalje unazad do `P0`. |
-| [`zadatak_2.cpp`](MPI/Lab/PS-NP-Lab1PTP/zadatak_2.cpp) | Root proces šalje identičnu poruku svim procesima, a zatim prima izmenjenu (obrnutu) poruku. Merenje vremena blokirajućih i neblokirajućih operacija. |
-| [`zadatak_3.cpp`](MPI/Lab/PS-NP-Lab1PTP/zadatak_3.cpp) | Root proces šalje dva stringa svim ostalim procesima. Procesi prihvataju poruke u obrnutom redosledu i vraćaju svoj identifikator. |
-| [`zadatak_4.cpp`](MPI/Lab/PS-NP-Lab1PTP/zadatak_4.cpp) | Root proces deli niz dužine `N` na `N/P` elemenata po procesu. Svaki proces nalazi lokalni minimum i šalje ga nazad. Root određuje globalni minimum. |
-| [`zadatak_5.cpp`](MPI/Lab/PS-NP-Lab1PTP/zadatak_5.cpp) | Root proces prima sume elemenata niza od svih procesa i ispisuje identifikatore onih čija je suma deljiva identifikatorom procesa. |
+| [`primer.c`](MPI/Lab/PS-NP-Lab1PTP/primer.c) | Primer osnovne P-to-P komunikacije između dva procesa. |
+| [`zadatak_1.c`](MPI/Lab/PS-NP-Lab1PTP/zadatak_1.c) | Svaki proces proverava parnost sume elemenata niza `bafer` i upisuje rezultat u odgovarajući bit celobrojnog podatka. Rezultat se šalje unazad do `P0`. |
+| [`zadatak_2.c`](MPI/Lab/PS-NP-Lab1PTP/zadatak_2.c) | Root proces šalje identičnu poruku svim procesima, a zatim prima izmenjenu (obrnutu) poruku. Merenje vremena blokirajućih i neblokirajućih operacija. |
+| [`zadatak_3.c`](MPI/Lab/PS-NP-Lab1PTP/zadatak_3.c) | Root proces šalje dva stringa svim ostalim procesima. Procesi prihvataju poruke u obrnutom redosledu i vraćaju svoj identifikator. |
+| [`zadatak_4.c`](MPI/Lab/PS-NP-Lab1PTP/zadatak_4.c) | Root proces deli niz dužine `N` na `N/P` elemenata po procesu. Svaki proces nalazi lokalni minimum i šalje ga nazad. Root određuje globalni minimum. |
+| [`zadatak_5.c`](MPI/Lab/PS-NP-Lab1PTP/zadatak_5.c) | Root proces prima sume elemenata niza od svih procesa i ispisuje identifikatore onih čija je suma deljiva identifikatorom procesa. |
+
+---
+
+## 📝 Blanketi — Ispitni zadaci
+
+Rešenja zadataka sa prethodnih rokova podeljena su po godinama. Svaki rok obično sadrži zadatke `a)` (grupne operacije) i `b)` (P-to-P operacije).
+
+### 2020
+
+| Fajl | Tema |
+|------|------|
+| [`jun_a.c`](MPI/Blanketi/2020/jun_a.c) | Ciklična raspodela dvostruke petlje, suma `i+j`, pronalaženje procesa sa najmanjim brojem prostih sabiraka — **grupne operacije**. |
+| [`jun_b.c`](MPI/Blanketi/2020/jun_b.c) | Isti zadatak — **P-to-P operacije**. |
+
+### 2021
+
+| Fajl | Tema |
+|------|------|
+| [`april_a.cpp`](MPI/Blanketi/2021/april_a.cpp) | Množenje matrice `A(n×k)` i vektora `B(k)` — slanje kolona P-to-P, ostalo grupnim operacijama. Pronalaženje minimuma i proizvoda po vrstama. |
+| [`april_b.cpp`](MPI/Blanketi/2021/april_b.cpp) | Isti zadatak — sve operacije realizovane P-to-P. |
+
+### 2022
+
+| Fajl | Tema |
+|------|------|
+| [`april_a.c`](MPI/Blanketi/2022/april_a.c) | Množenje matrice `A(k×l)` i vektora `b(l)` — raspodela po `q` kolona po procesu, maksimum i suma po vrstama — **grupne operacije**. |
+| [`april_b.c`](MPI/Blanketi/2022/april_b.c) | Isti zadatak — **P-to-P operacije**. |
+| [`decembar_a.c`](MPI/Blanketi/2022/decembar_a.c) | Ciklična raspodela dvostruke petlje sa pomakom `y` i silaznim `j` — pronalaženje procesa sa najvećim brojem prostih sabiraka — **grupne operacije**. |
+| [`decembar_b.c`](MPI/Blanketi/2022/decembar_b.c) | Isti zadatak — **P-to-P operacije**. |
+| [`januar_a.c`](MPI/Blanketi/2022/januar_a.c) | Ciklična raspodela dvostruke petlje `i+j`, pronalaženje procesa sa najmanjim brojem prostih sabiraka — **grupne operacije** (isto kao jun 2020). |
+| [`januar_b.c`](MPI/Blanketi/2022/januar_b.c) | Isti zadatak — **P-to-P operacije**. |
 
 ---
 
@@ -119,11 +135,18 @@ Fajl [`MPI/SPISAKFUNKCIJA.md`](MPI/SPISAKFUNKCIJA.md) sadrži priručnu referenc
 
 ---
 
-## 📝 Napomene
+## ✅ Praćenje zadataka
 
-- Kod nekih vežbi i zadataka (`MPI_1_3.cpp`, `MPI_1_4.cpp`, `MPI_2_3.cpp`, `MPI_3_3.cpp`, `MPI_3_4.cpp`, `zadatak_2.cpp`, `zadatak_3.cpp`) **nedostaje implementacija** — ostavljeni su samo komentari sa tekstom zadatka.
-- Neke implementacije sadrže uočljive greške (npr. beskonačna petlja u [`zadatak_5.cpp`](MPI/Lab/PS-NP-Lab1PTP/zadatak_5.cpp) na liniji 36 usled nedostajućeg `i++`, ili uslov `rank < 0` koji se nikad ne ispunjava). Ove zadatke treba pažljivo pregledati pre pokretanja.
+Fajl [`ispit-zadaci.md`](ispit-zadaci.md) služi za praćenje odrađenih zadataka sa ispita po rokovima (od 2019. do 2025). Za svaki rok vodi se evidencija o MPI, JMS i WCF zadacima.
 
 ---
 
-*Autor: Student kursa Distribuirani Sistemi*
+## 📝 Napomene
+
+- Folder `MPI/Lab/PS-NP-Lab1PTP` sadrži implementaciju zadataka sa prve laboratorijske vežbe sa predmeta Paralelni Sistemi po **novoj akreditaciji** i pomenuti zadaci odgovaraju prvom terminu MPI vežbi na predmetu Distribuirani Sistemi.
+- Kod nekih vežbi i zadataka (`MPI_1_3.c`, `MPI_1_4.c`, `MPI_2_3.c`, `MPI_3_3.c`, `MPI_3_4.c`, `zadatak_2.c`, `zadatak_3.c`) **nedostaje implementacija** — ostavljeni su samo komentari sa tekstom zadatka.
+- Fajl [`MPI/template.c`](MPI/template.c) sadrži osnovni šablon za MPI programe sa inicijalizacijom, dobijanjem ranga i veličine komunikatora, kao i finalizacijom.
+
+---
+
+*Autor: Dimitrije Janković*

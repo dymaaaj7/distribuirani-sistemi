@@ -17,7 +17,6 @@ Zadatak realizovati korišćenjem MPI Point-to-Point operacija.
 
 #include <mpi.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <time.h>
 
 #define BUFFER_SIZE 10
@@ -33,7 +32,7 @@ int main(int argc, char *argv[])
 
     int bafer[BUFFER_SIZE];
     int suma = 0;
-    for (int i = 0; i < size;)
+    for (int i = 0; i < size; i++)
     {
         bafer[i] = rand() % 20 + 1;
         suma += bafer[i];
