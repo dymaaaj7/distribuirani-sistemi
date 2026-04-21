@@ -1,6 +1,8 @@
+<!-- markdownlint-disable MD024 -->
 # Praćenje odrađenih zadataka sa ispita
 
 Legenda:
+
 - `[ ]` – nije odrađen
 - `[x]` – odrađen
 
@@ -9,245 +11,320 @@ Legenda:
 ## 2025
 
 ### Oktobar
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
 
-### Septembar
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+- [ ] **MPI** — Napomena: Cudno
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
+
+### Septembar - NEDOSTAJE
+
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ### Jun
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+
+- [ ] **MPI** — Napomena: a - matrica i matrica, b - cudno
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ### April
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+
+- [ ] **MPI** — Napomena: Matrica i vektor
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ### Januar
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
 
-### Decembar
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+- [ ] **MPI** — Napomena: Matrica i matrica
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
+
+### Decembar - NEDOSTAJE
+
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ---
 
 ## 2024
 
-### Oktobar
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+### Oktobar - NEDOSTAJE
+
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ### Septembar
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+
+- [ ] **MPI** — Napomena: - Niz
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ### Jun
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
 
-### April
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+- [ ] **MPI** — Napomena: - Cudno
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
-### Januar
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+### April - NEDOSTAJE
 
-### Decembar
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
+
+### Januar - NEDOSTAJE
+
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
+
+### Decembar - NEDOSTAJE
+
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ---
 
 ## 2023
 
+### Oktobar 2
+
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
+
 ### Oktobar
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ### Septembar
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
+
+### Jun 2
+
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ### Jun
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ### April
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ### Januar
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
 
-### Decembar
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
+
+### Decembar - NEDOSTAJE
+
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ---
 
 ## 2022
 
 ### Oktobar 2
+
 - [ ] **MPI** — Napomena: Matrica i matrica
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ### Oktobar
+
 - [ ] **MPI** — Napomena: a-stablo i b-matrica i matrica
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ### Septembar
+
 - [ ] **MPI** — Napomena: Niz
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ### Jun 2
+
 - [ ] **MPI** — Napomena: Matrica i matrica
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ### Jun
+
 - [ ] **MPI** — Napomena: Cudno
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ### April
-- [X] **MPI** — Napomena: Matrica i vektor
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+
+- [X] **MPI** — Napomena: Matrica i vektor, po q kolona/elemenata vektora
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ### Januar
+
 - [x] **MPI** — Napomena: Niz, kao Jun 2020
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ### Decembar
+
 - [X] **MPI** — Napomena: Niz
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ---
 
 ## 2021
 
+### Oktobar 2
+
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
+
 ### Oktobar
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ### Septembar
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ### Jun
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+
+- [X] **MPI** — Napomena: Matrica i vektor, po l kolona/elemenata vektora
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
+
+### Maj
+
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ### April
-- [X] **MPI** — Napomena: Matrica i vektor
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
 
-### Januar
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+- [X] **MPI** — Napomena: Matrica i vektor - po jedna kolona/element vketora
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
+
+### Januar - NEDOSTAJE
+
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ### Decembar
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ---
 
 ## 2020
 
 ### Oktobar
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ### Septembar
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
+
+### Jul - dodatni
+
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ### Jun
+
 - [X] **MPI** — Napomena: Niz, kao Januar 2022
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
-### April
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+### April - NEDOSTAJE
 
-### Januar
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
-### Decembar
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+### Januar - NEDOSTAJE
+
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
+
+### Decembar - NEDOSTAJE
+
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ---
 
 ## 2019
 
 ### Oktobar
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ### Septembar
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ### Jun
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ### April
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
 
 ### Januar
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
 
-### Decembar
-- [ ] **MPI** — Napomena: 
-- [ ] **JMS** — Napomena: 
-- [ ] **WCF** — Napomena: 
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
+
+### Decembar - NEDOSTAJE
+
+- [ ] **MPI** — Napomena:
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
+  
