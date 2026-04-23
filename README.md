@@ -31,13 +31,16 @@ Ovaj repozitorijum sadrži materijale, vežbe, laboratorijske zadatke i ispitna 
 │   │       ├── zadatak_3.c
 │   │       ├── zadatak_4.c
 │   │       └── zadatak_5.c
-│   └── Blanketi/              # Rešenja ispitnih zadataka po godinama
+│       ├── Blanketi/              # Rešenja ispitnih zadataka po godinama
+│       │   └── SABLONI.md         # Izvučeni šabloni i tipovi zadataka
 │       ├── 2020/
 │       │   ├── jun_a.c
 │       │   └── jun_b.c
 │       ├── 2021/
-│       │   ├── april_a.cpp
-│       │   └── april_b.cpp
+│       │   ├── april_a.c
+│       │   ├── april_b.c
+│       │   ├── jun_a.c
+│       │   └── jun_b.c
 │       └── 2022/
 │           ├── april_a.c
 │           ├── april_b.c
@@ -105,8 +108,10 @@ Rešenja zadataka sa prethodnih rokova podeljena su po godinama. Svaki rok obič
 
 | Fajl | Tema |
 |------|------|
-| [`april_a.cpp`](MPI/Blanketi/2021/april_a.cpp) | Množenje matrice `A(n×k)` i vektora `B(k)` — slanje kolona P-to-P, ostalo grupnim operacijama. Pronalaženje minimuma i proizvoda po vrstama. |
-| [`april_b.cpp`](MPI/Blanketi/2021/april_b.cpp) | Isti zadatak — sve operacije realizovane P-to-P. |
+| [`april_a.c`](MPI/Blanketi/2021/april_a.c) | Množenje matrice `A(n×k)` i vektora `B(k)` — po jedna kolona/element vektora, minimum i proizvod po vrstama — **grupne operacije**. |
+| [`april_b.c`](MPI/Blanketi/2021/april_b.c) | Isti zadatak — **P-to-P operacije**. |
+| [`jun_a.c`](MPI/Blanketi/2021/jun_a.c) | Množenje matrice `A(k×m)` i vektora `b(m)` — po `l` kolona/elemenata vektora, maksimum i suma po vrstama — **grupne operacije**. |
+| [`jun_b.c`](MPI/Blanketi/2021/jun_b.c) | Isti zadatak — **P-to-P operacije**. |
 
 ### 2022
 
@@ -118,6 +123,17 @@ Rešenja zadataka sa prethodnih rokova podeljena su po godinama. Svaki rok obič
 | [`decembar_b.c`](MPI/Blanketi/2022/decembar_b.c) | Isti zadatak — **P-to-P operacije**. |
 | [`januar_a.c`](MPI/Blanketi/2022/januar_a.c) | Ciklična raspodela dvostruke petlje `i+j`, pronalaženje procesa sa najmanjim brojem prostih sabiraka — **grupne operacije** (isto kao jun 2020). |
 | [`januar_b.c`](MPI/Blanketi/2022/januar_b.c) | Isti zadatak — **P-to-P operacije**. |
+
+---
+
+## 🔧 Šabloni i tipovi zadataka
+
+Fajl [`MPI/Blanketi/SABLONI.md`](MPI/Blanketi/SABLONI.md) sadrži detaljnu analizu svih ispitnih zadataka sa izvučenim **šablonima** i **tipovima**:
+
+- **Tip 1**: Ciklična raspodela dvostruke petlje — rekonstrukcija indeksa `i` i `j` iz `t`, pronalaženje procesa sa ekstremom (MINLOC/MAXLOC), sumiranje u izabrani proces.
+- **Tip 2**: Matrica × vektor — kolonska raspodela matrice `A`, lokalno izračunavanje, redukcija rezultata u procesu sa ekstremom.
+- **Konverzija a) → b)**: Univerzalni šabloni za zamenu `MPI_Reduce`, `MPI_Bcast` i `MPI_Reduce` nad nizovima P-to-P operacijama.
+- **Tabela ponavljanja**: Koji su rokovi identični ili varijacije istog zadatka.
 
 ---
 
