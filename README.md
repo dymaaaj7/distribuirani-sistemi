@@ -47,7 +47,8 @@ Ovaj repozitorijum sadrži materijale, vežbe, laboratorijske zadatke i ispitna 
 │           ├── decembar_a.c
 │           ├── decembar_b.c
 │           ├── januar_a.c
-│           └── januar_b.c
+│           ├── januar_b.c
+│           └── jun_2.c
 ├── ispit-zadaci.md            # Praćenje odrađenih zadataka sa ispita po rokovima
 ├── Distribuirani Sistemi_PrezentacijeSpojene.pdf
 └── .gitignore
@@ -123,6 +124,7 @@ Rešenja zadataka sa prethodnih rokova podeljena su po godinama. Svaki rok obič
 | [`decembar_b.c`](MPI/Blanketi/2022/decembar_b.c) | Isti zadatak — **P-to-P operacije**. |
 | [`januar_a.c`](MPI/Blanketi/2022/januar_a.c) | Ciklična raspodela dvostruke petlje `i+j`, pronalaženje procesa sa najmanjim brojem prostih sabiraka — **grupne operacije** (isto kao jun 2020). |
 | [`januar_b.c`](MPI/Blanketi/2022/januar_b.c) | Isti zadatak — **P-to-P operacije**. |
+| [`jun_2.c`](MPI/Blanketi/2022/jun_2.c) | Množenje matrice `A(k×m)` i matrice `B(m×n)` — po `q` kolona matrice A i `q` vrsta matrice B po procesu, proizvod kolona matrice B, maksimum — **grupne + P-to-P operacije**. |
 
 ---
 
@@ -132,6 +134,7 @@ Fajl [`MPI/Blanketi/SABLONI.md`](MPI/Blanketi/SABLONI.md) sadrži detaljnu anali
 
 - **Tip 1**: Ciklična raspodela dvostruke petlje — rekonstrukcija indeksa `i` i `j` iz `t`, pronalaženje procesa sa ekstremom (MINLOC/MAXLOC), sumiranje u izabrani proces.
 - **Tip 2**: Matrica × vektor — kolonska raspodela matrice `A`, lokalno izračunavanje, redukcija rezultata u procesu sa ekstremom.
+- **Tip 3**: Matrica × matrica — raspodela `q` kolona matrice `A` i `q` vrsta matrice `B`, lokalno množenje, redukcija rezultata u procesu sa ekstremom.
 - **Konverzija a) → b)**: Univerzalni šabloni za zamenu `MPI_Reduce`, `MPI_Bcast` i `MPI_Reduce` nad nizovima P-to-P operacijama.
 - **Tabela ponavljanja**: Koji su rokovi identični ili varijacije istog zadatka.
 
