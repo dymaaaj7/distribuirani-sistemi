@@ -170,7 +170,7 @@ Legenda:
 - [ ] **WCF** — Napomena: 
 
 ### April
-- [ ] **MPI** — Napomena: 
+- [X] **MPI** — Napomena: Matrica i vektor
 - [ ] **JMS** — Napomena: 
 - [ ] **WCF** — Napomena: 
 
