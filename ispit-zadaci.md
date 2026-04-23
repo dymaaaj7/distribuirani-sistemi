@@ -141,12 +141,12 @@ Legenda:
 - [ ] **WCF** — Napomena: 
 
 ### Januar
-- [ ] **MPI** — Napomena: Niz
+- [x] **MPI** — Napomena: Niz, kao Jun 2020
 - [ ] **JMS** — Napomena: 
 - [ ] **WCF** — Napomena: 
 
 ### Decembar
-- [ ] **MPI** — Napomena: Niz
+- [X] **MPI** — Napomena: Niz
 - [ ] **JMS** — Napomena: 
 - [ ] **WCF** — Napomena: 
 
@@ -199,7 +199,7 @@ Legenda:
 - [ ] **WCF** — Napomena: 
 
 ### Jun
-- [X] **MPI** — Napomena: Niz
+- [X] **MPI** — Napomena: Niz, kao Januar 2022
 - [ ] **JMS** — Napomena: 
 - [ ] **WCF** — Napomena: 
 
