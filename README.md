@@ -48,7 +48,9 @@ Ovaj repozitorijum sadrži materijale, vežbe, laboratorijske zadatke i ispitna 
 │           ├── decembar_b.c
 │           ├── januar_a.c
 │           ├── januar_b.c
-│           └── jun_2.c
+│           ├── jun_2.c
+│           ├── septembar_a.c
+│           └── septembar_b.c
 ├── ispit-zadaci.md            # Praćenje odrađenih zadataka sa ispita po rokovima
 ├── Distribuirani Sistemi_PrezentacijeSpojene.pdf
 └── .gitignore
@@ -125,6 +127,8 @@ Rešenja zadataka sa prethodnih rokova podeljena su po godinama. Svaki rok obič
 | [`januar_a.c`](MPI/Blanketi/2022/januar_a.c) | Ciklična raspodela dvostruke petlje `i+j`, pronalaženje procesa sa najmanjim brojem prostih sabiraka — **grupne operacije** (isto kao jun 2020). |
 | [`januar_b.c`](MPI/Blanketi/2022/januar_b.c) | Isti zadatak — **P-to-P operacije**. |
 | [`jun_2.c`](MPI/Blanketi/2022/jun_2.c) | Množenje matrice `A(k×m)` i matrice `B(m×n)` — po `q` kolona matrice A i `q` vrsta matrice B po procesu, proizvod kolona matrice B, maksimum — **grupne + P-to-P operacije**. |
+| [`septembar_a.c`](MPI/Blanketi/2022/septembar_a.c) | Ciklična raspodela dvostruke petlje sa pomakom `y` i silaznim `j` — pronalaženje procesa sa najvećim brojem prostih sabiraka — **grupne operacije** (isto kao decembar 2022). |
+| [`septembar_b.c`](MPI/Blanketi/2022/septembar_b.c) | Isti zadatak — **P-to-P operacije**. |
 
 ---
 

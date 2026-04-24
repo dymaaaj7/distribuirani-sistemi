@@ -291,6 +291,7 @@ else {
 | Jun 2020 | Tip 1 | Bazni oblik, `i=0..N-1`, `j=0..N-1` |
 | Januar 2022 | Tip 1 | **Identičan** Jun 2020 |
 | Decembar 2022 | Tip 1 | Varijanta: pomak `y`, silazni `j`, traži se **najveći** broj prostih |
+| Septembar 2022 | Tip 1 | **Identičan** Decembar 2022 |
 | April 2021 | Tip 2 | Po jedna kolona, **min** + **proizvod** po vrstama |
 | April 2022 | Tip 2 | Po `q` kolona, **max** + **suma** po vrstama |
 | Jun 2021 | Tip 2 | Po `l` kolona, **max** + **suma** po vrstama |
