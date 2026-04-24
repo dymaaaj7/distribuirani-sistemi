@@ -156,7 +156,7 @@ Legenda:
 
 ### Septembar
 
-- [ ] **MPI** — Napomena: Niz
+- [x] **MPI** — Napomena: Tip 1 - Niz, kao Decembar 2022
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 

@@ -1,10 +1,10 @@
-/* Kao septembar 2022
+/* Kao Decembar 222
 
 Napisati MPI program kojim se vrsi realizacija sumiranja opisanog sa:
 
 
-for (int i = y; i < y + N; i++) // y=2,N=6 -> 2 3 4 5 6 7 -> N
-    for (int j = N; j >= 0; j--) // 6 5 4 3 2 1 0 -> N + 1
+for (int i = y; i < y + N; i++) // y=2,N=6 -> 2 3 4 5 6 7 -> N+1
+    for (int j = N; j >= 0; j--) // 6 5 4 3 2 1 0 -> N
         s += i + j;             // N*(N+1) prolazaka za t
 
 ravnomernom ciklicnom raspodelom posla izmedju p procesa.
@@ -27,34 +27,8 @@ b)  koriscenjem P-t-P operacija
 
 */
 
-/*
-┌─────────────────────────────────────────────────────┐
-│              SABLON ZA CIKLICNU RASPODELU           │
-├─────────────────────────────────────────────────────┤
-│                                                     │
-│  KORAK 1: broj vrednosti j (JN)                     │
-│                                                     │
-│    UZLAZNA (j++)                                    │
-│      j < C   → JN = C - B                           │
-│      j <= C  → JN = C - B + 1                       │
-│                                                     │
-│    SILAZNA (j--)                                    │
-│      j > C   → JN = B - C                           │
-│      j >= C  → JN = B - C + 1                       │
-│                                                     │
-│  KORAK 2: ukupno iteracija                          │
-│    t_max = N * JN                                   │
-│                                                     │
-│  KORAK 3: rekonstrukcija                            │
-│    i = t / JN + pocetak_i                           │
-│    j++ → j = B + (t % JN)                           │
-│    j-- → j = B - (t % JN)                           │
-│                                                     │
-└─────────────────────────────────────────────────────┘
-*/
-
-#include <mpi.h>
 #include <stdio.h>
+#include <mpi.h>
 
 #define N 6
 #define y 2
@@ -72,7 +46,7 @@ int is_prime(int n)
 int main(int argc, char *argv[])
 {
     int rank, size, root = 0;
-    int local_sum = 0, sum = 0;
+    int sum, local_sum = 0;
     struct
     {
         int value;
@@ -88,15 +62,13 @@ int main(int argc, char *argv[])
     in.rank = rank;
     for (int t = rank; t < N * (N + 1); t += size)
     {
-        int i = t / (N + 1) + y;
+        int i = y + (t / (N + 1));
         int j = N - (t % (N + 1));
         local_sum += i + j;
-
         if (is_prime(i + j))
             in.value++;
     }
 
-    // pronalazak procesa sa najvecim brojem prostih sabiraka
     // MPI_Reduce(&in, &out, 1, MPI_2INT, MPI_MAXLOC, root, MPI_COMM_WORLD);
     if (rank != root)
         MPI_Send(&in, 1, MPI_2INT, root, 0, MPI_COMM_WORLD);
@@ -126,13 +98,14 @@ int main(int argc, char *argv[])
     else
         MPI_Recv(&out, 1, MPI_2INT, root, 0, MPI_COMM_WORLD, &status);
 
-    // ukupna suma u out.rank
     // MPI_Reduce(&local_sum, &sum, 1, MPI_INT, MPI_SUM, out.rank, MPI_COMM_WORLD);
     if (rank != out.rank)
+    {
         MPI_Send(&local_sum, 1, MPI_INT, out.rank, 0, MPI_COMM_WORLD);
+    }
     else
     {
-        sum += local_sum;
+        sum = local_sum;
         for (int p = 0; p < size; p++)
         {
             if (p == out.rank)
