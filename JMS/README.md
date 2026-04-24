@@ -17,9 +17,13 @@ JMS/
 │       │   ├── Producer.java
 │       │   ├── Subscriber.java
 │       │   └── MsgListener.java
-│       └── Primer_2/            # P2P model (Queue)
-│           ├── Sender.java
-│           └── Receiver.java
+│       ├── Primer_2/            # P2P model (Queue)
+│       │   ├── Sender.java
+│       │   └── Receiver.java
+│       └── Primer_3/            # Pub/Sub model (Topic) sa transakcijama
+│           ├── Publisher.java
+│           ├── Subscriber.java
+│           └── MsgListener.java
 ├── Lab/                         # Laboratorijske vežbe
 └── Blanketi/                    # Rešenja ispitnih zadataka (placeholder)
 ```
@@ -46,6 +50,16 @@ Direktna komunikacija zasnovana na redovima (queue). Svaka poruka se obrađuje t
 |------|------|
 | [`Sender.java`](Vezbe/JMS_07/Primer_2/Sender.java) | JMS pošiljalac koji šalje 10 tekstualnih poruka u queue. |
 | [`Receiver.java`](Vezbe/JMS_07/Primer_2/Receiver.java) | JMS primalac koji izvlači 10 poruka iz queue-a i ispisuje ih. |
+
+### Primer 3 — Publish/Subscribe (Topic) sa transakcijama
+
+Pub/Sub model zasnovan isključivo na `Topic` sa Topic-specifičnim API-jem (`TopicConnection`, `TopicSession`, `TopicPublisher`, `TopicSubscriber`). Sesija je **transakciona** — poruke se šalju u batch-u i potvrđuju eksplicitnim `commit()`.
+
+| Fajl | Opis |
+|------|------|
+| [`Publisher.java`](Vezbe/JMS_07/Primer_3/Publisher.java) | Topic publisher koji šalje 10 poruka, svaku dva puta, a zatim izvršava `ts.commit()` da potvrdi transakciju. |
+| [`Subscriber.java`](Vezbe/JMS_07/Primer_3/Subscriber.java) | Topic subscriber koji se pretplaćuje na topic i postavlja `MessageListener` za asinhrono prihvatanje. |
+| [`MsgListener.java`](Vezbe/JMS_07/Primer_3/MsgListener.java) | `MessageListener` implementacija za ispis primljenih tekstualnih poruka. |
 
 ---
 
