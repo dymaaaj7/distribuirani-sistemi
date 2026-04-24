@@ -9,9 +9,9 @@ public class Producer {
     public static void main(String[] args) throws Exception {
         ictx = new InitialContext();
 
-        ConnectionFactory cf = (ConnectionFactory) ictx.lookup("cf");
         Queue queue = (Queue) ictx.lookup("queue");
         Topic topic = (Topic) ictx.lookup("topic");
+        ConnectionFactory cf = (ConnectionFactory) ictx.lookup("cf");
 
         ictx.close();
 
