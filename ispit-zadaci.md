@@ -162,7 +162,7 @@ Legenda:
 
 ### Jun 2
 
-- [ ] **MPI** — Napomena: Matrica i matrica
+- [x] **MPI** — Napomena: Tip 3 - Matrica i matrica (A×B, q kolona/vrsta)
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 

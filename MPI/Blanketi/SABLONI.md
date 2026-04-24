@@ -146,7 +146,84 @@ if (rank == out.rank) {
 
 ---
 
-## Konverzija a) → b): Zamena grupnih operacija P-to-P
+## Tip 3: Matrica × Matrica (raspodela kolona A i vrsta B)
+
+### Primeri
+- **Jun 2 2022** — po `q` kolona matrice A i `q` vrsta matrice B po procesu
+
+### Tekst zadatka (generički)
+Napisati MPI program koji množi matricu `A(k×m)` i matricu `B(m×n)`, prikazuje rezultujuću matricu `C`. Takođe pronalazi proizvod elemenata svake kolone matrice `B`. Root proces šalje svakom procesu po `q` kolona matrice A (P-to-P) i po `q` vrsta matrice B (grupna operacija). Rezultati se prikazuju u procesu koji sadrži maksimum matrice B nakon raspodele.
+
+### Šablon
+
+```c
+// --- 1. RASPODELA q KOLONA MATRICE A (P-to-P) ---
+// Root šalje svakom procesu q kolona, svaka kolona odjednom
+if (rank == root) {
+    for (int i = 0; i < k; i++)
+        for (int j = 0; j < q; j++)
+            local_a[i][j] = a[i][j + root * q];
+
+    for (int p = 0; p < size; p++) {
+        if (p == root) continue;
+        for (int j = 0; j < q; j++) {
+            for (int i = 0; i < k; i++)
+                tmp_a[i] = a[i][j + p * q];
+            MPI_Send(tmp_a, k, MPI_INT, p, 0, MPI_COMM_WORLD);
+        }
+    }
+} else {
+    for (int j = 0; j < q; j++)
+        MPI_Recv(&local_a[0][j], k, MPI_INT, root, 0, MPI_COMM_WORLD, &status);
+}
+
+// --- 2. RASPODELA q VRSTA MATRICE B (grupna) ---
+// MPI_Scatter(b, q*n, MPI_INT, local_b, q*n, MPI_INT, root, ...)
+
+// --- 3. LOKALNO IZRAČUNAVANJE ---
+in.value = local_b[0][0];
+in.rank = rank;
+for (int j = 0; j < n; j++) local_col_prod[j] = 1;
+
+for (int i = 0; i < q; i++)
+    for (int j = 0; j < n; j++) {
+        local_col_prod[j] *= local_b[i][j];     // proizvod kolona B
+        if (local_b[i][j] > in.value)            // lokalni max B
+            in.value = local_b[i][j];
+    }
+
+for (int i = 0; i < k; i++)
+    for (int j = 0; j < n; j++) {
+        local_c[i][j] = 0;
+        for (int l = 0; l < q; l++)
+            local_c[i][j] += local_a[i][l] * local_b[l][j];
+    }
+
+// --- 4. GLOBALNI MAKSIMUM MATRICE B ---
+// MPI_Reduce(&in, &out, 1, MPI_2INT, MPI_MAXLOC, root, ...)
+// MPI_Bcast(&out, 1, MPI_2INT, root, ...)
+
+// --- 5. REDUKCIJA REZULTATA U IZABRANI PROCES ---
+// MPI_Reduce(local_col_prod, col_prod, n, MPI_INT, MPI_PROD, out.rank, ...)
+// MPI_Reduce(local_c, c, k*n, MPI_INT, MPI_SUM, out.rank, ...)
+
+if (rank == out.rank) {
+    // štampa matricu C, maksimum, proizvode kolona B
+}
+```
+
+### Varijante
+
+| Parametar | Jun 2 2022 |
+|-----------|------------|
+| Kolona A / Vrsta B po procesu | `q` (konstanta) |
+| Operacija na B | proizvod kolona |
+| Ekstrem | maksimum u B |
+| Štampanje | proces sa maksimumom |
+
+---
+
+## Zamena grupnih operacija P-to-P
 
 Sve tri često korišćene grupne operacije u zadacima se zamenjuju na isti način:
 
@@ -217,6 +294,7 @@ else {
 | April 2021 | Tip 2 | Po jedna kolona, **min** + **proizvod** po vrstama |
 | April 2022 | Tip 2 | Po `q` kolona, **max** + **suma** po vrstama |
 | Jun 2021 | Tip 2 | Po `l` kolona, **max** + **suma** po vrstama |
+| Jun 2 2022 | Tip 3 | Po `q` kolona A i `q` vrsta B, **max** + **proizvod** kolona B |
 
 ---
 
