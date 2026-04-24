@@ -1,6 +1,6 @@
 # Distribuirani Sistemi — Materijali sa vežbi i ispita
 
-Ovaj repozitorijum sadrži materijale, vežbe, laboratorijske zadatke i ispitna rešenja iz predmeta **Distribuirani Sistemi**. 
+Ovaj repozitorijum sadrži materijale, vežbe, laboratorijske zadatke i ispitna rešenja iz predmeta **Distribuirani Sistemi**.
 
 Fokus je na pismenom delu ispita i obuhvata više tehnologija: **MPI**, **JMS**, i **WCF**.
 
@@ -38,7 +38,7 @@ Fokus je na pismenom delu ispita i obuhvata više tehnologija: **MPI**, **JMS**,
 ## 🚀 Brzi linkovi
 
 | Tehnologija | Opis |
-|-------------|------|
+| ------------- | ------ |
 | [MPI](MPI/README.md) | Paralelno programiranje sa Message Passing Interface |
 | [JMS](JMS/README.md) | Java Message Service — asinhrona komunikacija |
 | [WCF](WCF/README.md) | Windows Communication Foundation (placeholder) |
