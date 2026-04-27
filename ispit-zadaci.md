@@ -16,7 +16,7 @@ Legenda:
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
-### Septembar - NEDOSTAJE
+### Septembar — NEDOSTAJE
 
 - [ ] **MPI** — Napomena:
 - [ ] **JMS** — Napomena:
@@ -40,7 +40,7 @@ Legenda:
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
-### Decembar - NEDOSTAJE
+### Decembar — NEDOSTAJE
 
 - [ ] **MPI** — Napomena:
 - [ ] **JMS** — Napomena:
@@ -50,7 +50,7 @@ Legenda:
 
 ## 2024
 
-### Oktobar - NEDOSTAJE
+### Oktobar — NEDOSTAJE
 
 - [ ] **MPI** — Napomena:
 - [ ] **JMS** — Napomena:
@@ -58,29 +58,29 @@ Legenda:
 
 ### Septembar
 
-- [ ] **MPI** — Napomena: - Niz
+- [ ] **MPI** — Napomena: Niz
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
 ### Jun
 
-- [ ] **MPI** — Napomena: - Cudno
+- [ ] **MPI** — Napomena: Cudno
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
-### April - NEDOSTAJE
+### April — NEDOSTAJE
 
 - [ ] **MPI** — Napomena:
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
-### Januar - NEDOSTAJE
+### Januar — NEDOSTAJE
 
 - [ ] **MPI** — Napomena:
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
-### Decembar - NEDOSTAJE
+### Decembar — NEDOSTAJE
 
 - [ ] **MPI** — Napomena:
 - [ ] **JMS** — Napomena:
@@ -132,7 +132,7 @@ Legenda:
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
-### Decembar - NEDOSTAJE
+### Decembar — NEDOSTAJE
 
 - [ ] **MPI** — Napomena:
 - [ ] **JMS** — Napomena:
@@ -174,7 +174,7 @@ Legenda:
 
 ### April
 
-- [X] **MPI** — Napomena: Matrica i vektor, po q kolona/elemenata vektora
+- [x] **MPI** — Napomena: Matrica i vektor, po q kolona/elemenata vektora
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
@@ -186,7 +186,7 @@ Legenda:
 
 ### Decembar
 
-- [X] **MPI** — Napomena: Niz
+- [x] **MPI** — Napomena: Niz
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
@@ -208,13 +208,13 @@ Legenda:
 
 ### Septembar
 
-- [ ] **MPI** — Napomena:
+- [x] **MPI** — Napomena: Matrica × matrica, po l vrsta matrice A + proizvod kolona matrice A
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
 ### Jun
 
-- [X] **MPI** — Napomena: Matrica i vektor, po l kolona/elemenata vektora
+- [x] **MPI** — Napomena: Matrica i vektor, po l kolona/elemenata vektora
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
@@ -226,11 +226,11 @@ Legenda:
 
 ### April
 
-- [X] **MPI** — Napomena: Matrica i vektor - po jedna kolona/element vketora
+- [x] **MPI** — Napomena: Matrica i vektor — po jedna kolona/element vektora
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
-### Januar - NEDOSTAJE
+### Januar — NEDOSTAJE
 
 - [ ] **MPI** — Napomena:
 - [ ] **JMS** — Napomena:
@@ -258,7 +258,7 @@ Legenda:
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
-### Jul - dodatni
+### Jul — dodatni
 
 - [ ] **MPI** — Napomena:
 - [ ] **JMS** — Napomena:
@@ -266,23 +266,23 @@ Legenda:
 
 ### Jun
 
-- [X] **MPI** — Napomena: Niz, kao Januar 2022
+- [x] **MPI** — Napomena: Niz, kao Januar 2022
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
-### April - NEDOSTAJE
+### April — NEDOSTAJE
 
 - [ ] **MPI** — Napomena:
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
-### Januar - NEDOSTAJE
+### Januar — NEDOSTAJE
 
 - [ ] **MPI** — Napomena:
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
-### Decembar - NEDOSTAJE
+### Decembar — NEDOSTAJE
 
 - [ ] **MPI** — Napomena:
 - [ ] **JMS** — Napomena:
@@ -322,9 +322,8 @@ Legenda:
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
-### Decembar - NEDOSTAJE
+### Decembar — NEDOSTAJE
 
 - [ ] **MPI** — Napomena:
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
-  
