@@ -2,12 +2,15 @@
 
 Ovaj folder sadrži sve materijale vezane za **MPI** deo predmeta Distribuirani Sistemi: vežbe sa časova, laboratorijske zadatke, rešenja ispitnih zadataka (blanketa) i reference.
 
+> [← Nazad na root README](../README.md)
+
 ---
 
 ## 📁 Struktura
 
 ```
 MPI/
+├── README.md              # Ovaj fajl
 ├── SPISAKFUNKCIJA.md      # Referenca najčešće korišćenih MPI funkcija
 ├── template.c             # Šablon za MPI programe
 ├── Vezbe/                 # Vežbe sa časova
@@ -39,7 +42,9 @@ MPI/
     │   ├── april_a.c
     │   ├── april_b.c
     │   ├── jun_a.c
-    │   └── jun_b.c
+    │   ├── jun_b.c
+    │   ├── septembar_a.c
+    │   └── septembar_b.c
     └── 2022/
         ├── april_a.c
         ├── april_b.c
@@ -111,6 +116,8 @@ Rešenja zadataka sa prethodnih rokova podeljena su po godinama. Svaki rok obič
 | [`april_b.c`](Blanketi/2021/april_b.c) | Isti zadatak — **P-to-P operacije**. |
 | [`jun_a.c`](Blanketi/2021/jun_a.c) | Množenje matrice `A(k×m)` i vektora `b(m)` — po `l` kolona/elemenata vektora, maksimum i suma po vrstama — **grupne operacije**. |
 | [`jun_b.c`](Blanketi/2021/jun_b.c) | Isti zadatak — **P-to-P operacije**. |
+| [`septembar_a.c`](Blanketi/2021/septembar_a.c) | Množenje matrica `A(k×m)` i `B(m×n)` — po `l` vrsta matrice `A`, cela matrica `B`, proizvod elemenata po kolonama matrice `A`, maksimum u `C` — **grupne operacije**. |
+| [`septembar_b.c`](Blanketi/2021/septembar_b.c) | Isti zadatak — **P-to-P operacije**. |
 
 ### 2022
 
