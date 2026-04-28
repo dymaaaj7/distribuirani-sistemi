@@ -53,6 +53,8 @@ MPI/
         ├── januar_a.c
         ├── januar_b.c
         ├── jun_2.c
+        ├── oktobar_2_a.c
+        ├── oktobar_2_b.c
         ├── septembar_a.c
         └── septembar_b.c
 ```
@@ -130,6 +132,8 @@ Rešenja zadataka sa prethodnih rokova podeljena su po godinama. Svaki rok obič
 | [`januar_a.c`](Blanketi/2022/januar_a.c) | Ciklična raspodela dvostruke petlje `i+j`, pronalaženje procesa sa najmanjim brojem prostih sabiraka — **grupne operacije** (isto kao jun 2020). |
 | [`januar_b.c`](Blanketi/2022/januar_b.c) | Isti zadatak — **P-to-P operacije**. |
 | [`jun_2.c`](Blanketi/2022/jun_2.c) | Množenje matrice `A(k×m)` i matrice `B(m×n)` — po `q` kolona matrice A i `q` vrsta matrice B po procesu, proizvod kolona matrice B, maksimum — **grupne + P-to-P operacije**. |
+| [`oktobar_2_a.c`](Blanketi/2022/oktobar_2_a.c) | Množenje matrica `A(k×m)` i `B(m×n)` — po `s` vrsta matrice A, cela matrica B, proizvod elemenata svake kolone matrice A, maksimum u matrici C — **grupne + P-to-P operacije**. |
+| [`oktobar_2_b.c`](Blanketi/2022/oktobar_2_b.c) | Isti zadatak — **P-to-P operacije** (zamena svih grupnih operacija). |
 | [`septembar_a.c`](Blanketi/2022/septembar_a.c) | Ciklična raspodela dvostruke petlje sa pomakom `y` i silaznim `j` — pronalaženje procesa sa najvećim brojem prostih sabiraka — **grupne operacije** (isto kao decembar 2022). |
 | [`septembar_b.c`](Blanketi/2022/septembar_b.c) | Isti zadatak — **P-to-P operacije**. |
 

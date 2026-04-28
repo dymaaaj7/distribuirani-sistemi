@@ -144,7 +144,7 @@ Legenda:
 
 ### Oktobar 2
 
-- [ ] **MPI** — Napomena: Matrica i matrica
+- [ ] **MPI** — Napomena: Tip 3b — Matrica × matrica, po `s` vrsta matrice A, cela matrica B, proizvod kolona A, maksimum u C
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
