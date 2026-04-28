@@ -55,6 +55,8 @@ MPI/
         ├── jun_2.c
         ├── oktobar_2_a.c
         ├── oktobar_2_b.c
+        ├── oktobar_a.c
+        ├── oktobar_b.c
         ├── septembar_a.c
         └── septembar_b.c
 ```
@@ -136,6 +138,8 @@ Rešenja zadataka sa prethodnih rokova podeljena su po godinama. Svaki rok obič
 | [`oktobar_2_b.c`](Blanketi/2022/oktobar_2_b.c) | Isti zadatak — **P-to-P operacije** (zamena svih grupnih operacija). |
 | [`septembar_a.c`](Blanketi/2022/septembar_a.c) | Ciklična raspodela dvostruke petlje sa pomakom `y` i silaznim `j` — pronalaženje procesa sa najvećim brojem prostih sabiraka — **grupne operacije** (isto kao decembar 2022). |
 | [`septembar_b.c`](Blanketi/2022/septembar_b.c) | Isti zadatak — **P-to-P operacije**. |
+| [`oktobar_a.c`](Blanketi/2022/oktobar_a.c) | Stablo — P-to-P slanje podatka od procesa 0 svim ostalim u logaritamskom broju koraka — **P-to-P operacije**. |
+| [`oktobar_b.c`](Blanketi/2022/oktobar_b.c) | Stablo — P-to-P slanje podatka od procesa 0 svim ostalim u logaritamskom broju koraka — **P-to-P operacije**. |
 
 ---
 

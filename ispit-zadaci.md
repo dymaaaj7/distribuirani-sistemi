@@ -62,7 +62,7 @@ Legenda:
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
-### Jun
+### Jun - NEDOSTAJE
 
 - [ ] **MPI** — Napomena: Cudno
 - [ ] **JMS** — Napomena:
@@ -144,13 +144,13 @@ Legenda:
 
 ### Oktobar 2
 
-- [ ] **MPI** — Napomena: Tip 3b — Matrica × matrica, po `s` vrsta matrice A, cela matrica B, proizvod kolona A, maksimum u C
+- [x] **MPI** — Napomena: Tip 3b — Matrica × matrica, po `s` vrsta matrice A, cela matrica B, proizvod kolona A, maksimum u C
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
 ### Oktobar
 
-- [ ] **MPI** — Napomena: a-stablo i b-matrica i matrica
+- [x] **MPI** — Napomena: a-stablo i b-matrica i matrica
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 

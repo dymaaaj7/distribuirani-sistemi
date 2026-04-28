@@ -377,6 +377,8 @@ else {
 | Jun 2021 | Tip 2 | Po `l` kolona, **max** + **suma** po vrstama |
 | Jun 2 2022 | Tip 3a | Po `q` kolona A i `q` vrsta B, **max** + **proizvod** kolona B |
 | Oktobar 2 2022 | Tip 3b | Po `s` vrsta A, cela B, **max** u C + **proizvod** kolona A |
+| Oktobar 2022 a | Stablo | Hiperkub — P-to-P slanje podatka od P0 svim ostalim u `log₂(p)` koraka |
+| Oktobar 2022 b | Tip 3a var. | Po **1** kolona A (P-to-P) i **1** vrsta B (`MPI_Scatter`), `MPI_Reduce` u C |
 
 ---
 
