@@ -55,6 +55,8 @@ MPI/
         ├── jun_2.c
         ├── oktobar_2_a.c
         ├── oktobar_2_b.c
+        ├── oktobar_a.c
+        ├── oktobar_b.c
         ├── septembar_a.c
         └── septembar_b.c
 ```
@@ -136,6 +138,8 @@ Rešenja zadataka sa prethodnih rokova podeljena su po godinama. Svaki rok obič
 | [`oktobar_2_b.c`](Blanketi/2022/oktobar_2_b.c) | Isti zadatak — **P-to-P operacije** (zamena svih grupnih operacija). |
 | [`septembar_a.c`](Blanketi/2022/septembar_a.c) | Ciklična raspodela dvostruke petlje sa pomakom `y` i silaznim `j` — pronalaženje procesa sa najvećim brojem prostih sabiraka — **grupne operacije** (isto kao decembar 2022). |
 | [`septembar_b.c`](Blanketi/2022/septembar_b.c) | Isti zadatak — **P-to-P operacije**. |
+| [`oktobar_a.c`](Blanketi/2022/oktobar_a.c) | Stablo — P-to-P slanje podatka od procesa 0 svim ostalim u logaritamskom broju koraka — **P-to-P operacije**. |
+| [`oktobar_b.c`](Blanketi/2022/oktobar_b.c) | Stablo — P-to-P slanje podatka od procesa 0 svim ostalim u logaritamskom broju koraka — **P-to-P operacije**. |
 
 ---
 
@@ -167,5 +171,5 @@ Fajl [`SPISAKFUNKCIJA.md`](SPISAKFUNKCIJA.md) sadrži priručnu referencu najče
 
 ## 📝 Napomene
 
-- Kod nekih vežbi i zadataka (`MPI_1_3.c`, `MPI_1_4.c`, `MPI_2_3.c`, `MPI_3_3.c`, `MPI_3_4.c`, `zadatak_2.c`, `zadatak_3.c`) **nedostaje implementacija** — ostavljeni su samo komentari sa tekstom zadatka.
+- Kod nekih vežbi i zadataka (`MPI_1_3.c`, `MPI_1_4.c`, `MPI_2_3.c`, `zadatak_2.c`, `zadatak_3.c`) **nedostaje implementacija** — ostavljeni su samo komentari sa tekstom zadatka.
 - Fajl [`template.c`](template.c) sadrži osnovni šablon za MPI programe sa inicijalizacijom, dobijanjem ranga i veličine komunikatora, kao i finalizacijom.

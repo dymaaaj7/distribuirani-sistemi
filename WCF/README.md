@@ -63,7 +63,7 @@ Vežba pokazuje različite načine instanciranja WCF servisa i upotrebu DataCont
 
 ---
 
-## � Napomene
+## 📝 Napomene
 
 - WCF (Windows Communication Foundation) je Microsoft-ov framework za izgradnju servisno-orijentisanih aplikacija.
 - Vežba `WCF_10` demonstrira osnovne koncepte: `ServiceContract`, `OperationContract`, `DataContract`, `DataMember`, `InstanceContextMode` i `SessionMode`.

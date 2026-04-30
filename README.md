@@ -31,8 +31,12 @@ Fokus je na pismenom delu ispita i obuhvata tri tehnologije: **MPI**, **JMS** i 
 │   ├── Lab/
 │   └── Blanketi/
 │
-├── WCF/                          # WCF vežbe, labovi i blanketi (placeholder)
-│   └── README.md
+├── WCF/                          # WCF vežbe, labovi i blanketi
+│   ├── README.md
+│   ├── beleske.md
+│   ├── Vezbe/
+│   ├── Lab/
+│   └── Blanketi/
 │
 ├── ispit-zadaci.md               # Praćenje odrađenih zadataka sa ispita po rokovima
 ├── Distribuirani Sistemi_PrezentacijeSpojene.pdf
@@ -47,7 +51,7 @@ Fokus je na pismenom delu ispita i obuhvata tri tehnologije: **MPI**, **JMS** i 
 |-------------|------|
 | [MPI](MPI/README.md) | Paralelno programiranje sa Message Passing Interface |
 | [JMS](JMS/README.md) | Java Message Service — asinhrona komunikacija |
-| [WCF](WCF/README.md) | Windows Communication Foundation (placeholder) |
+| [WCF](WCF/README.md) | Windows Communication Foundation |
 | [Praćenje zadataka](ispit-zadaci.md) | Evidencija odrađenih zadataka po ispitnim rokovima |
 
 ---
