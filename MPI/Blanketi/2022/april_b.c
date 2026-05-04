@@ -14,7 +14,7 @@ Svi elementi kolona matrice A se salju odjednom.
 Svi procesi ucestvuju u izracunavanjima potrebnim za generisanje rezultata.
 
 Svi rezultati programa se prikazuju u procesu koji sadrzi maksimalnu vrednost
-elemenata u matrici A, nakon raspodele kolona po procesima..
+elemenata u matrici A, nakon raspodele kolona po procesima.
 
 Zadatak resiti:
 a)  koriscenjem grupnih operacija, osim za slanje kolona matrice A
