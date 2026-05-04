@@ -110,7 +110,7 @@ Legenda:
 
 ### Jun 2
 
-- [ ] **MPI** — Napomena:
+- [x] **MPI** — Napomena: Matrica × matrica, po q kolona A i q vrsta B, max u B + proizvod kolona B
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 

@@ -166,6 +166,7 @@ Postoje **dve varijante** Tip 3, koje se razlikuju po tome kako se raspodeljuje 
 
 ### Primeri
 - **Jun 2 2022** — po `q` kolona matrice A i `q` vrsta matrice B po procesu
+- **Jun 2 2023** — po `q` kolona matrice A i `q` vrsta matrice B po procesu
 
 ### Tekst zadatka (generički — Jun 2 2022)
 Napisati MPI program koji množi matricu `A(k×m)` i matricu `B(m×n)`, prikazuje rezultujuću matricu `C`. Takođe pronalazi proizvod elemenata svake kolone matrice `B`. Root proces šalje svakom procesu po `q` kolona matrice A (P-to-P) i po `q` vrsta matrice B (grupna operacija). Rezultati se prikazuju u procesu koji sadrži maksimum matrice B nakon raspodele.
@@ -230,12 +231,12 @@ if (rank == out.rank) {
 
 ### Varijante — Tip 3a
 
-| Parametar | Jun 2 2022 |
-|-----------|------------|
-| Kolona A / Vrsta B po procesu | `q` (konstanta) |
-| Operacija na B | proizvod kolona |
-| Ekstrem | maksimum u B |
-| Štampanje | proces sa maksimumom |
+| Parametar | Jun 2 2022 | Jun 2 2023 |
+|-----------|------------|------------|
+| Kolona A / Vrsta B po procesu | `q` (konstanta) | `q` (konstanta) |
+| Operacija na B | proizvod kolona | proizvod kolona |
+| Ekstrem | maksimum u B | maksimum u B |
+| Štampanje | proces sa maksimumom | proces sa maksimumom |
 
 ---
 
@@ -519,6 +520,7 @@ else {
 | April 2022 | Tip 2 | Po `q` kolona, **max** + **suma** po vrstama |
 | Jun 2021 | Tip 2 | Po `l` kolona, **max** + **suma** po vrstama |
 | Jun 2 2022 | Tip 3a | Po `q` kolona A i `q` vrsta B, **max** + **proizvod** kolona B |
+| Jun 2 2023 | Tip 3a | Po `q` kolona A i `q` vrsta B, **max** + **proizvod** kolona B |
 | Septembar 2021 | Tip 3b | Po `l` vrsta A (`MPI_Scatter`), cela B, **max** u C + **proizvod** kolona A |
 | Oktobar 2 2022 | Tip 3b | Po `s` vrsta A, cela B, **max** u C + **proizvod** kolona A |
 | Oktobar 2022 a | Tip 4 | Hiperkub — P-to-P slanje podatka od P0 svim ostalim u `log₂(p)` koraka |
