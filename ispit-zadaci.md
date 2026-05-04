@@ -104,7 +104,7 @@ Legenda:
 
 ### Septembar
 
-- [ ] **MPI** — Napomena:
+- [X] **MPI** — Napomena: Matrica × matrica, po r vrsta matrice A, proizvod kolona A, prikaz u procesu sa minimumom
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
