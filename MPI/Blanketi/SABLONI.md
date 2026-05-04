@@ -312,6 +312,7 @@ if (rank == root) {
 ### Primeri
 - **Septembar 2021** — po `l` vrsta matrice A, cela matrica B, proizvod kolona matrice A, maksimum u C
 - **Oktobar 2 2022** — po `s` vrsta matrice A, cela matrica B, proizvod kolona matrice A
+- **Septembar 2023** — po `r` vrsta matrice A, cela matrica B, proizvod kolona matrice A, minimum u A
 
 ### Tekst zadatka (generički — Oktobar 2 2022)
 Napisati MPI program koji množi matricu `A(k×m)` i matricu `B(m×n)`, prikazuje rezultujuću matricu `C`. Takođe pronalazi proizvod elemenata svake kolone matrice `A`. Root proces šalje svakom procesu po `s` vrsta matrice A (P-to-P) i **celu matricu B** (grupna operacija). Rezultati se prikazuju u procesu koji sadrži maksimum matrice `C`.
@@ -374,15 +375,15 @@ if (rank == out.rank) {
 
 ### Varijante — Tip 3b
 
-| Parametar | Septembar 2021 | Oktobar 2 2022 |
-|-----------|----------------|----------------|
-| Vrsta A po procesu | `l` (konstanta) | `s` (konstanta) |
-| Matrica B | cela (`MPI_Bcast`) | cela (`MPI_Bcast`) |
-| Operacija na A | proizvod kolona | proizvod kolona |
-| Ekstrem | maksimum u C | maksimum u C |
-| Štampanje | proces sa maksimumom | proces sa maksimumom |
+| Parametar | Septembar 2021 | Oktobar 2 2022 | Septembar 2023 |
+|-----------|----------------|----------------|----------------|
+| Vrsta A po procesu | `l` (konstanta) | `s` (konstanta) | `r` (konstanta) |
+| Matrica B | cela (`MPI_Bcast`) | cela (`MPI_Bcast`) | cela (`MPI_Bcast`) |
+| Operacija na A | proizvod kolona | proizvod kolona | proizvod kolona |
+| Ekstrem | maksimum u C | maksimum u C | **minimum u A** |
+| Štampanje | proces sa maksimumom | proces sa maksimumom | **proces sa minimumom** |
 
-> **Napomena:** Septembar 2021 koristi `MPI_Scatter` umesto P-to-P za slanje vrsta matrice A — moguće zato što je k deljivo sa l. Kod Oktobra 2 2022, `s` vrsta se šalju P-to-P kao u zadatku.
+> **Napomena:** Septembar 2021 i Septembar 2023 koriste `MPI_Scatter` umesto P-to-P za slanje vrsta matrice A — moguće zato što je k deljivo sa l/r. Kod Oktobra 2 2022, `s` vrsta se šalju P-to-P kao u zadatku. Septembar 2023 je prvi zadatak gde se ekstrem traži u matrici **A** (minimum), a ne u rezultujućoj matrici **C** (maksimum).
 
 ---
 
@@ -522,6 +523,7 @@ else {
 | Oktobar 2 2022 | Tip 3b | Po `s` vrsta A, cela B, **max** u C + **proizvod** kolona A |
 | Oktobar 2022 a | Tip 4 | Hiperkub — P-to-P slanje podatka od P0 svim ostalim u `log₂(p)` koraka |
 | Oktobar 2022 b | Tip 3a var. | Po **1** kolona A (P-to-P) i **1** vrsta B (`MPI_Scatter`), `MPI_Reduce` u C |
+| Septembar 2023 | Tip 3b | Po `r` vrsta A (`MPI_Scatter`/P-to-P), cela B, **min** u A + **proizvod** kolona A |
 
 ---
 
