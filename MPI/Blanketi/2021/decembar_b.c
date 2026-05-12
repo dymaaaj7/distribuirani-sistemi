@@ -22,105 +22,160 @@ b)  koriscenjem P-t-P operacija za upotrebljene grupne operacije pod a)
 
 */
 
-// 1 rezultujuca matrica C
-// maksimalna vrednost elementa
-// suma svake vrste
-
 #include <mpi.h>
 #include <stdio.h>
-
+#include <limits.h>
 #define k 3
-#define l 6
+#define l 4
 #define q 2
 
-// size = l / q
+// mpiexec -n 2 decembar_b.c
 
 int main(int argc, char *argv[])
 {
     int rank, size, root = 0;
     int a[k][l], b[l], c[k];
     int local_a[k][q], local_b[q], local_c[k];
-
     int row_sum[k], local_row_sum[k];
     struct
     {
         int value;
         int rank;
     } in, out;
-
     MPI_Status status;
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    // inicijalizacija matrice a i vektora b
     if (rank == root)
     {
         for (int i = 0; i < k; i++)
             for (int j = 0; j < l; j++)
                 a[i][j] = i + j;
+
         for (int i = 0; i < l; i++)
             b[i] = i + 1;
     }
 
-    // slanje q kolona matrice A
     if (rank == root)
     {
-        // root ostavlja sebi prvih q kolona
         for (int i = 0; i < k; i++)
             for (int j = 0; j < q; j++)
-                local_a[i][j] = a[i][j];
+                local_a[i][j] = a[i][j + q * root];
 
         int tmp_a[k][q];
-        for (int p = 1; p < size; p++)
+        for (int p = 0; p < size; p++)
         {
+            if (p == root)
+                continue;
             for (int i = 0; i < k; i++)
                 for (int j = 0; j < q; j++)
-                    // p*q je offset
-                    tmp_a[i][j] = a[i][p * q + j];
+                    tmp_a[i][j] = a[i][j + q * p];
             MPI_Send(tmp_a, k * q, MPI_INT, p, 0, MPI_COMM_WORLD);
         }
     }
     else
         MPI_Recv(local_a, k * q, MPI_INT, root, 0, MPI_COMM_WORLD, &status);
 
-    // slanje q elemenata vektora b
-    MPI_Scatter(b, q, MPI_INT, local_b, q, MPI_INT, root, MPI_COMM_WORLD);
+    if (rank == root)
+    {
+        for (int i = 0; i < q; i++)
+            local_b[i] = b[i + q * root];
 
-    // lokalno izracunavanje: parcijalni doprinosi za c, sumu vrsti i maksimum
-    in.value = local_a[0][0]; // pocetna vrednost za trazenje maksimuma
+        int tmp_b[q];
+        for (int p = 0; p < size; p++)
+        {
+            if (p == root)
+                continue;
+            for (int i = 0; i < q; i++)
+                tmp_b[i] = b[i + q * p];
+            MPI_Send(tmp_b, q, MPI_INT, p, 0, MPI_COMM_WORLD);
+        }
+    }
+    else
+        MPI_Recv(local_b, q, MPI_INT, root, 0, MPI_COMM_WORLD, &status);
+
+    for (int i = 0; i < k; i++)
+        local_row_sum[i] = 0;
+    in.value = INT_MIN;
     in.rank = rank;
+
     for (int i = 0; i < k; i++)
     {
         local_c[i] = 0;
-        local_row_sum[i] = 0;
         for (int j = 0; j < q; j++)
         {
-            // parcijalni proizvod vrste sa vektorom b
-            local_c[i] += local_a[i][j] * local_b[j];
-            // parcijalna suma vrste i
             local_row_sum[i] += local_a[i][j];
-            // azuriranje lokalnog maksimuma
+            local_c[i] += local_a[i][j] * local_b[j];
             if (local_a[i][j] > in.value)
                 in.value = local_a[i][j];
         }
     }
 
-    // redukcija - globalni maksimum i njegov proces (MPI_MAXLOC)
-    MPI_Reduce(&in, &out, 1, MPI_2INT, MPI_MAXLOC, root, MPI_COMM_WORLD);
+    // MPI_Reduce(&in, &out, 1, MPI_2INT, MPI_MAXLOC, root, MPI_COMM_WORLD);
+    if (rank != root)
+        MPI_Send(&in, 1, MPI_2INT, root, 0, MPI_COMM_WORLD);
+    else
+    {
+        out = in;
+        for (int p = 0; p < size; p++)
+        {
+            if (p == root)
+                continue;
+            MPI_Recv(&in, 1, MPI_2INT, p, 0, MPI_COMM_WORLD, &status);
+            if (in.value > out.value)
+                out = in;
+        }
+    }
 
-    // broadcast ko stampa rezultate
-    MPI_Bcast(&out, 1, MPI_2INT, root, MPI_COMM_WORLD);
+    // MPI_Bcast(&out, 1, MPI_2INT, root, MPI_COMM_WORLD);
+    if (rank == root)
+    {
+        for (int p = 0; p < size; p++)
+        {
+            if (p == root)
+                continue;
+            MPI_Send(&out, 1, MPI_2INT, p, 0, MPI_COMM_WORLD);
+        }
+    }
+    else
+        MPI_Recv(&out, 1, MPI_2INT, root, 0, MPI_COMM_WORLD, &status);
 
-    // redukcija - suma vrsti i vektor c u procesu sa maksimumom
-    MPI_Reduce(local_row_sum,
-               row_sum,
-               k,
-               MPI_INT,
-               MPI_SUM,
-               out.rank,
-               MPI_COMM_WORLD);
-    MPI_Reduce(local_c, c, k, MPI_INT, MPI_SUM, out.rank, MPI_COMM_WORLD);
+    // MPI_Reduce(local_row_sum, row_sum, k, MPI_INT, MPI_SUM, out.rank, MPI_COMM_WORLD);
+    if (rank != out.rank)
+        MPI_Send(local_row_sum, k, MPI_INT, out.rank, 0, MPI_COMM_WORLD);
+    else
+    {
+        for (int i = 0; i < k; i++)
+            row_sum[i] = local_row_sum[i];
+
+        for (int p = 0; p < size; p++)
+        {
+            if (p == out.rank)
+                continue;
+            MPI_Recv(local_row_sum, k, MPI_INT, p, 0, MPI_COMM_WORLD, &status);
+            for (int i = 0; i < k; i++)
+                row_sum[i] += local_row_sum[i];
+        }
+    }
+
+    // MPI_Reduce(local_c, c, k, MPI_INT, MPI_SUM, out.rank, MPI_COMM_WORLD);
+    if (rank != out.rank)
+        MPI_Send(local_c, k, MPI_INT, out.rank, 0, MPI_COMM_WORLD);
+    else
+    {
+        for (int i = 0; i < k; i++)
+            c[i] = local_c[i];
+
+        for (int p = 0; p < size; p++)
+        {
+            if (p == out.rank)
+                continue;
+            MPI_Recv(local_c, k, MPI_INT, p, 0, MPI_COMM_WORLD, &status);
+            for (int i = 0; i < k; i++)
+                c[i] += local_c[i];
+        }
+    }
 
     if (rank == out.rank)
     {

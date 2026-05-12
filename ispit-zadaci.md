@@ -238,7 +238,7 @@ Legenda:
 
 ### Decembar
 
-- [ ] **MPI** — Napomena:
+- [x] **MPI** — Napomena: Matrica i vektor, po q kolona/elemenata vektora (kao April 2022)
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
