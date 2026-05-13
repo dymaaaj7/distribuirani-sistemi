@@ -16,12 +16,6 @@ Legenda:
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
-### Septembar — NEDOSTAJE
-
-- [ ] **MPI** — Napomena:
-- [ ] **JMS** — Napomena:
-- [ ] **WCF** — Napomena:
-
 ### Jun
 
 - [ ] **MPI** — Napomena: a - matrica i matrica, b - cudno
@@ -40,49 +34,13 @@ Legenda:
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
-### Decembar — NEDOSTAJE
-
-- [ ] **MPI** — Napomena:
-- [ ] **JMS** — Napomena:
-- [ ] **WCF** — Napomena:
-
 ---
 
 ## 2024
 
-### Oktobar — NEDOSTAJE
-
-- [ ] **MPI** — Napomena:
-- [ ] **JMS** — Napomena:
-- [ ] **WCF** — Napomena:
-
 ### Septembar
 
 - [ ] **MPI** — Napomena: Niz
-- [ ] **JMS** — Napomena:
-- [ ] **WCF** — Napomena:
-
-### Jun - NEDOSTAJE
-
-- [ ] **MPI** — Napomena: Cudno
-- [ ] **JMS** — Napomena:
-- [ ] **WCF** — Napomena:
-
-### April — NEDOSTAJE
-
-- [ ] **MPI** — Napomena:
-- [ ] **JMS** — Napomena:
-- [ ] **WCF** — Napomena:
-
-### Januar — NEDOSTAJE
-
-- [ ] **MPI** — Napomena:
-- [ ] **JMS** — Napomena:
-- [ ] **WCF** — Napomena:
-
-### Decembar — NEDOSTAJE
-
-- [ ] **MPI** — Napomena:
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
@@ -127,12 +85,6 @@ Legenda:
 - [ ] **WCF** — Napomena:
 
 ### Januar
-
-- [ ] **MPI** — Napomena:
-- [ ] **JMS** — Napomena:
-- [ ] **WCF** — Napomena:
-
-### Decembar — NEDOSTAJE
 
 - [ ] **MPI** — Napomena:
 - [ ] **JMS** — Napomena:
@@ -230,12 +182,6 @@ Legenda:
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
-### Januar — NEDOSTAJE
-
-- [ ] **MPI** — Napomena:
-- [ ] **JMS** — Napomena:
-- [ ] **WCF** — Napomena:
-
 ### Decembar
 
 - [x] **MPI** — Napomena: Matrica i vektor, po q kolona/elemenata vektora (kao April 2022)
@@ -267,24 +213,6 @@ Legenda:
 ### Jun
 
 - [x] **MPI** — Napomena: Niz, kao Januar 2022
-- [ ] **JMS** — Napomena:
-- [ ] **WCF** — Napomena:
-
-### April — NEDOSTAJE
-
-- [ ] **MPI** — Napomena:
-- [ ] **JMS** — Napomena:
-- [ ] **WCF** — Napomena:
-
-### Januar — NEDOSTAJE
-
-- [ ] **MPI** — Napomena:
-- [ ] **JMS** — Napomena:
-- [ ] **WCF** — Napomena:
-
-### Decembar — NEDOSTAJE
-
-- [ ] **MPI** — Napomena:
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
@@ -322,8 +250,13 @@ Legenda:
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
-### Decembar — NEDOSTAJE
+---
 
-- [ ] **MPI** — Napomena:
-- [ ] **JMS** — Napomena:
-- [ ] **WCF** — Napomena:
+## Nedostajući rokovi
+
+- 2025 — Septembar, Decembar
+- 2024 — Oktobar, Jun, April, Januar, Decembar
+- 2023 — Decembar
+- 2021 — Januar
+- 2020 — April, Januar, Decembar
+- 2019 — Decembar
