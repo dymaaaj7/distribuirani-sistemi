@@ -30,7 +30,7 @@ Legenda:
 
 ### Januar
 
-- [ ] **MPI** — Napomena: Matrica i matrica
+- [x] **MPI** — Napomena: Tip 3b — Matrica × matrica, po `m` vrsta A + cela B, suma kolona B, maksimum u A
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
