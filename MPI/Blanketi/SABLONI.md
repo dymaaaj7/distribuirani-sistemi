@@ -85,6 +85,7 @@ if (rank == out.rank) {
 - **April 2022** — po **q** kolona / elemenata vektora
 - **Jun 2021** — po **l** kolona / elemenata vektora
 - **Decembar 2021** — po **q** kolona / elemenata vektora (identičan Aprilu 2022)
+- **April 2025** — po **s** kolona / elemenata vektora (identičan Aprilu 2022)
 
 ### Tekst zadatka (generički)
 Napisati MPI program koji množi matricu `A` i vektor `b`, prikazuje rezultujući vektor `c`. Takođe pronalazi maksimum/minimum elemenata matrice `A` i sumu/proizvod elemenata svake vrste. Root proces šalje svakom procesu po `q` kolona matrice `A` (ili po jednu) i po `q` elemenata vektora `b`. Rezultati se prikazuju u procesu koji sadrži maksimum/minimum nakon raspodele.
@@ -150,12 +151,12 @@ if (rank == out.rank) {
 
 ### Varijante
 
-| Parametar | April 2021 | April 2022 | Jun 2021 | Decembar 2021 |
-|-----------|------------|------------|----------|---------------|
-| Kolona po procesu | 1 (`k` = broj kolona) | `q` (konstanta) | `l` (konstanta) | `q` (konstanta) |
-| Operacija na vrstama | proizvod | suma | suma | suma |
-| Ekstrem | minimum | maksimum | maksimum | maksimum |
-| Stampanje | proces sa minimumom | proces sa maksimumom | proces sa maksimumom | proces sa maksimumom |
+| Parametar | April 2021 | April 2022 | Jun 2021 | Decembar 2021 | April 2025 |
+|-----------|------------|------------|----------|---------------|------------|
+| Kolona po procesu | 1 (`k` = broj kolona) | `q` (konstanta) | `l` (konstanta) | `q` (konstanta) | `s` (konstanta) |
+| Operacija na vrstama | proizvod | suma | suma | suma | suma |
+| Ekstrem | minimum | maksimum | maksimum | maksimum | maksimum |
+| Stampanje | proces sa minimumom | proces sa maksimumom | proces sa maksimumom | proces sa maksimumom | proces sa maksimumom |
 
 ---
 
@@ -522,6 +523,7 @@ else {
 | April 2022 | Tip 2 | Po `q` kolona, **max** + **suma** po vrstama |
 | Jun 2021 | Tip 2 | Po `l` kolona, **max** + **suma** po vrstama |
 | Decembar 2021 | Tip 2 | **Identičan** Aprilu 2022 — po `q` kolona, **max** + **suma** po vrstama |
+| April 2025 | Tip 2 | **Identičan** Aprilu 2022 — po `s` kolona, **max** + **suma** po vrstama |
 | Jun 2 2022 | Tip 3a | Po `q` kolona A i `q` vrsta B, **max** + **proizvod** kolona B |
 | Jun 2 2023 | Tip 3a | Po `q` kolona A i `q` vrsta B, **max** + **proizvod** kolona B |
 | Septembar 2021 | Tip 3b | Po `l` vrsta A (`MPI_Scatter`), cela B, **max** u C + **proizvod** kolona A |
