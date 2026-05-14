@@ -24,7 +24,7 @@ Legenda:
 
 ### April
 
-- [ ] **MPI** — Napomena: Matrica i vektor
+- [x] **MPI** — Napomena: Tip 2 — Matrica × vektor, po `s` kolona, max + suma po vrstama (kao April 2022)
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 

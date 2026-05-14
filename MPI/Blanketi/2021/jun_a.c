@@ -1,7 +1,7 @@
 /*
 
 Napisati MPI program koji realizuje mozenje matrice Akxm i vektora bm, cime se
-izracunava i prikazuje rezultujeci vektor c.
+izracunava i prikazuje rezultujuci vektor c.
 
 Takodje, program pronalazi i prikazuje maksimalnu vrednost elemenata u matrici
 A, kao i sumu elemenata svake vrste matrice A.
