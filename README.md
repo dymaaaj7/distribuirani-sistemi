@@ -26,7 +26,6 @@ Fokus je na pismenom delu ispita i obuhvata tri tehnologije: **MPI**, **JMS** i 
 │   ├── Vezbe/
 │   │   ├── MOM_JMS.md           # Teorijski rezime: MOM i JMS
 │   │   ├── JMS_07/              # Osnovni API, Queue, Topic, transakcije
-│   │   ├── JMS_08/              # Centralizovana arhitektura (placeholder)
 │   │   └── JMS_09/              # Necentralizovana arhitektura — lekar/sestra
 │   ├── Lab/
 │   └── Blanketi/

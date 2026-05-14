@@ -169,6 +169,7 @@ Postoje **dve varijante** Tip 3, koje se razlikuju po tome kako se raspodeljuje 
 ### Primeri
 - **Jun 2 2022** — po `q` kolona matrice A i `q` vrsta matrice B po procesu
 - **Jun 2 2023** — po `q` kolona matrice A i `q` vrsta matrice B po procesu
+- **Jun 2025 a** — po `q` kolona matrice A i `q` vrsta matrice B po procesu, **bez traženja ekstrema** — samo root štampa
 
 ### Tekst zadatka (generički — Jun 2 2022)
 Napisati MPI program koji množi matricu `A(k×m)` i matricu `B(m×n)`, prikazuje rezultujuću matricu `C`. Takođe pronalazi proizvod elemenata svake kolone matrice `B`. Root proces šalje svakom procesu po `q` kolona matrice A (P-to-P) i po `q` vrsta matrice B (grupna operacija). Rezultati se prikazuju u procesu koji sadrži maksimum matrice B nakon raspodele.
@@ -233,12 +234,14 @@ if (rank == out.rank) {
 
 ### Varijante — Tip 3a
 
-| Parametar | Jun 2 2022 | Jun 2 2023 |
-|-----------|------------|------------|
-| Kolona A / Vrsta B po procesu | `q` (konstanta) | `q` (konstanta) |
-| Operacija na B | proizvod kolona | proizvod kolona |
-| Ekstrem | maksimum u B | maksimum u B |
-| Štampanje | proces sa maksimumom | proces sa maksimumom |
+| Parametar | Jun 2 2022 | Jun 2 2023 | Jun 2025 a |
+|-----------|------------|------------|------------|
+| Kolona A / Vrsta B po procesu | `q` (konstanta) | `q` (konstanta) | `q` (konstanta) |
+| Operacija na B | proizvod kolona | proizvod kolona | proizvod kolona |
+| Ekstrem | maksimum u B | maksimum u B | **nema** |
+| Štampanje | proces sa maksimumom | proces sa maksimumom | **root** |
+
+> **Napomena:** Jun 2025 a je najjednostavnija varijanta Tip 3a — nema traženje ekstrema (`MPI_MAXLOC`/`MPI_MINLOC`), nema `MPI_Bcast` za određivanje ko štampa. Rezultati se prosto redukuju u root proces preko `MPI_Reduce(MPI_SUM)` za matricu C i `MPI_Reduce(MPI_PROD)` za proizvod kolona B.
 
 ---
 
@@ -532,6 +535,8 @@ else {
 | Oktobar 2022 b | Tip 3a var. | Po **1** kolona A (P-to-P) i **1** vrsta B (`MPI_Scatter`), `MPI_Reduce` u C |
 | Septembar 2023 | Tip 3b | Po `r` vrsta A (`MPI_Scatter`/P-to-P), cela B, **min** u A + **proizvod** kolona A |
 | Januar 2025 | Tip 3b | Po `m` vrsta A (`MPI_Scatter`), cela B, **max** u A + **suma** kolona B |
+| Jun 2025 a | Tip 3a | Po `q` kolona A i `q` vrsta B, **proizvod** kolona B — **bez ekstrema**, root štampa |
+| Jun 2025 b | Jedinstven | `MPI_Bcast` niza X iz **P2**, formula `yi=(p(p+1)/2)*xi`, `MPI_Reduce(MPI_SUM)` u root |
 
 ---
 
@@ -544,3 +549,4 @@ else {
 5. **Tip 4 (Stablo)** — petlja `for (i = 1; i <= log₂(size); i++)` sa `half = 1 << (i-1)`. Tri kategorije: `rank < half` šalje, `half ≤ rank < 2*half` prima, ostali čekaju. Uvek se podrazumeva da je `size` stepen dvojke.
 6. **Pamtiti strukturu** `struct { int value; int rank; }` — neophodna za `MPI_MINLOC`/`MPI_MAXLOC`.
 7. **Redosled operacija** je uvek isti za Tip 1/2/3: **Raspodela → Lokalni račun → Reduce(LOC) → Bcast → Reduce(SUM)**.
+8. **Jedinstveni zadaci** — povremeno se pojave zadaci koji ne pripadaju nijednom tipu (npr. Jun 2025 b). Važno je razumeti osnovne grupne operacije (`MPI_Bcast`, `MPI_Reduce`) i znati ih kombinovati u novim situacijama.
