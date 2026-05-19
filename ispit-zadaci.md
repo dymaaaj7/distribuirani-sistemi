@@ -18,7 +18,7 @@ Legenda:
 
 ### Jun
 
-- [ ] **MPI** — Napomena: a - matrica i matrica, b - cudno
+- [x] **MPI** — Napomena: a - Tip 3a — Matrica × matrica, po q kolona A + q vrsta B, proizvod kolona B (bez ekstrema); b - Jedinstven — Bcast niza X iz P2, formula yi=(p(p+1)/2)*xi, Reduce SUM
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 

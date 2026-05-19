@@ -41,24 +41,36 @@ MPI/
     ├── 2021/
     │   ├── april_a.c
     │   ├── april_b.c
+    │   ├── decembar_a.c
+    │   ├── decembar_b.c
     │   ├── jun_a.c
     │   ├── jun_b.c
     │   ├── septembar_a.c
     │   └── septembar_b.c
-    └── 2022/
-        ├── april_a.c
-        ├── april_b.c
-        ├── decembar_a.c
-        ├── decembar_b.c
+    ├── 2022/
+    │   ├── april_a.c
+    │   ├── april_b.c
+    │   ├── decembar_a.c
+    │   ├── decembar_b.c
+    │   ├── januar_a.c
+    │   ├── januar_b.c
+    │   ├── jun_2.c
+    │   ├── oktobar_2_a.c
+    │   ├── oktobar_2_b.c
+    │   ├── oktobar_a.c
+    │   ├── oktobar_b.c
+    │   ├── septembar_a.c
+    │   └── septembar_b.c
+    ├── 2023/
+    │   ├── jun_2.c
+    │   ├── septembar_a.c
+    │   └── septembar_b.c
+    └── 2025/
+        ├── april.c
         ├── januar_a.c
         ├── januar_b.c
-        ├── jun_2.c
-        ├── oktobar_2_a.c
-        ├── oktobar_2_b.c
-        ├── oktobar_a.c
-        ├── oktobar_b.c
-        ├── septembar_a.c
-        └── septembar_b.c
+        ├── jun_a.c
+        └── jun_b.c
 ```
 
 ---
@@ -122,6 +134,8 @@ Rešenja zadataka sa prethodnih rokova podeljena su po godinama. Svaki rok obič
 | [`jun_b.c`](Blanketi/2021/jun_b.c) | Isti zadatak — **P-to-P operacije**. |
 | [`septembar_a.c`](Blanketi/2021/septembar_a.c) | Množenje matrica `A(k×m)` i `B(m×n)` — po `l` vrsta matrice `A`, cela matrica `B`, proizvod elemenata po kolonama matrice `A`, maksimum u `C` — **grupne operacije**. |
 | [`septembar_b.c`](Blanketi/2021/septembar_b.c) | Isti zadatak — **P-to-P operacije**. |
+| [`decembar_a.c`](Blanketi/2021/decembar_a.c) | Množenje matrice `A(n×k)` i vektora `b(k)` — po `q` kolona/elemenata vektora, maksimum i suma po vrstama — **grupne operacije** (isto kao april 2022). |
+| [`decembar_b.c`](Blanketi/2021/decembar_b.c) | Isti zadatak — **P-to-P operacije**. |
 
 ### 2022
 
@@ -140,6 +154,24 @@ Rešenja zadataka sa prethodnih rokova podeljena su po godinama. Svaki rok obič
 | [`septembar_b.c`](Blanketi/2022/septembar_b.c) | Isti zadatak — **P-to-P operacije**. |
 | [`oktobar_a.c`](Blanketi/2022/oktobar_a.c) | Stablo — P-to-P slanje podatka od procesa 0 svim ostalim u logaritamskom broju koraka — **P-to-P operacije**. |
 | [`oktobar_b.c`](Blanketi/2022/oktobar_b.c) | Stablo — P-to-P slanje podatka od procesa 0 svim ostalim u logaritamskom broju koraka — **P-to-P operacije**. |
+
+### 2023
+
+| Fajl | Tema |
+|------|------|
+| [`jun_2.c`](Blanketi/2023/jun_2.c) | Množenje matrice `A(k×m)` i matrice `B(m×n)` — po `q` kolona matrice A i `q` vrsta matrice B po procesu, proizvod kolona matrice B, maksimum — **grupne + P-to-P operacije**. |
+| [`septembar_a.c`](Blanketi/2023/septembar_a.c) | Množenje matrica `A(k×m)` i `B(m×n)` — po `r` vrsta matrice A, cela matrica B, proizvod elemenata svake kolone matrice A, minimum u matrici A — **grupne operacije**. |
+| [`septembar_b.c`](Blanketi/2023/septembar_b.c) | Isti zadatak — **P-to-P operacije**. |
+
+### 2025
+
+| Fajl | Tema |
+|------|------|
+| [`januar_a.c`](Blanketi/2025/januar_a.c) | Množenje matrica `A(r×k)` i `B(k×n)` — po `m` vrsta matrice A, cela matrica B, suma elemenata po kolonama matrice B, maksimum u matrici A — **grupne operacije**. |
+| [`januar_b.c`](Blanketi/2025/januar_b.c) | Isti zadatak — **P-to-P operacije**. |
+| [`april.c`](Blanketi/2025/april.c) | Množenje matrice `A(n×k)` i vektora `b(k)` — po `s` kolona po procesu, maksimum i suma po vrstama — **grupne + P-to-P operacije**. |
+| [`jun_a.c`](Blanketi/2025/jun_a.c) | Množenje matrice `A(n×k)` i matrice `B(k×n)` — po `q` kolona matrice A i `q` vrsta matrice B, proizvod kolona matrice B — **grupne + P-to-P operacije** (bez traženja ekstrema). |
+| [`jun_b.c`](Blanketi/2025/jun_b.c) | Jedinstven zadatak — `MPI_Bcast` niza X iz procesa 2, formula `yi=(p(p+1)/2)*xi`, `MPI_Reduce(MPI_SUM)` — **grupne operacije**. |
 
 ---
 
