@@ -1,0 +1,9 @@
+Generisi centralizovani informacioni sistem koji ce omoguciti sestri da prijavi pacijenta da jedosao kod odredjenog lekara.
+Po okoncanju posete odstampati informacije o poseti pacijenta.
+
+Iz uloge lekara:
+da doibje koji je pacijent na redu
+nakon obavljenog pregleda da prijvi da je zavrsio rpegled
+
+3. ROto cekaonica
+PRikazuje listu trneutnih pacijenata po lekaru
