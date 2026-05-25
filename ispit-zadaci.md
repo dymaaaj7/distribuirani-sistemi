@@ -22,7 +22,7 @@ Legenda:
 
 ### Oktobar
 
-- [ ] **MPI** — Napomena: Cudno
+- [x] **MPI** — Napomena: a - Tip 4 — stablo (kao Oktobar 2022 a); b - Tip 2 var. — niz umesto matrice, formula R = Σ(ā+aᵢ)/(b+c)
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 

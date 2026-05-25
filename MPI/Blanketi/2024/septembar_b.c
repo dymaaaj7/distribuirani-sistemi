@@ -9,7 +9,7 @@ i=0,n-1, a p ukupan broj procesa.
 */
 
 #include <mpi.h>
-#include <stdio.h>`
+#include <stdio.h>
 #include <stdlib.h>
 
 #define n 8
