@@ -8,6 +8,16 @@ Legenda:
 
 ---
 
+## 2026
+
+### April
+
+- [x] **MPI** — Napomena: a - Tip 3c — Cela matrica A (Bcast) + s kolona B (P-to-P), min u B, min po vrstama C; b - Jedinstven — Kružna razmena b1→sledeći, prima od prethodnog
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
+
+---
+
 ## 2025
 
 ### Oktobar
@@ -254,6 +264,7 @@ Legenda:
 
 ## Nedostajući rokovi
 
+- 2026 — Jun, Septembar, Oktobar, Decembar
 - 2025 — Septembar, Decembar
 - 2024 — Oktobar, Jun, April, Januar, Decembar
 - 2023 — Decembar

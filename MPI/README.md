@@ -65,12 +65,15 @@ MPI/
     │   ├── jun_2.c
     │   ├── septembar_a.c
     │   └── septembar_b.c
-    └── 2025/
-        ├── april.c
-        ├── januar_a.c
-        ├── januar_b.c
-        ├── jun_a.c
-        └── jun_b.c
+    ├── 2025/
+    │   ├── april.c
+    │   ├── januar_a.c
+    │   ├── januar_b.c
+    │   ├── jun_a.c
+    │   └── jun_b.c
+    └── 2026/
+        ├── april_a.c
+        └── april_b.c
 ```
 
 ---
@@ -172,6 +175,13 @@ Rešenja zadataka sa prethodnih rokova podeljena su po godinama. Svaki rok obič
 | [`april.c`](Blanketi/2025/april.c) | Množenje matrice `A(n×k)` i vektora `b(k)` — po `s` kolona po procesu, maksimum i suma po vrstama — **grupne + P-to-P operacije**. |
 | [`jun_a.c`](Blanketi/2025/jun_a.c) | Množenje matrice `A(n×k)` i matrice `B(k×n)` — po `q` kolona matrice A i `q` vrsta matrice B, proizvod kolona matrice B — **grupne + P-to-P operacije** (bez traženja ekstrema). |
 | [`jun_b.c`](Blanketi/2025/jun_b.c) | Jedinstven zadatak — `MPI_Bcast` niza X iz procesa 2, formula `yi=(p(p+1)/2)*xi`, `MPI_Reduce(MPI_SUM)` — **grupne operacije**. |
+
+### 2026
+
+| Fajl | Tema |
+|------|------|
+| [`april_a.c`](Blanketi/2026/april_a.c) | Množenje matrice `A(n×k)` i matrice `B(k×m)` — cela matrica A (`MPI_Bcast`), po `s` kolona matrice B (P-to-P), minimum u B, minimum po vrstama C — **grupne + P-to-P operacije**. |
+| [`april_b.c`](Blanketi/2026/april_b.c) | Kružna razmena podataka — svaki proces šalje niz sledećem i prima od prethodnog u prstenu — **P-to-P operacije**. |
 
 ---
 
