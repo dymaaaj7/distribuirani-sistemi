@@ -1,7 +1,7 @@
 <!-- markdownlint-disable MD024 -->
 # MPI Blanketi — Šabloni i Tipovi Zadataka
 
-Na osnovu analize zadataka sa prethodnih rokova, MPI ispitni zadaci se mogu svrstati u **četiri osnovna tipa**. Većina zadataka dolazi u varijanti **a)** (grupne operacije) i **b)** (P-to-P operacije), pri čemu je b) uvek direktna zamena grupnih operacija iz a).
+Na osnovu analize zadataka sa prethodnih rokova, MPI ispitni zadaci se mogu svrstati u **pet osnovna tipova**. Većina zadataka dolazi u varijanti **a)** (grupne operacije) i **b)** (P-to-P operacije), pri čemu je b) uvek direktna zamena grupnih operacija iz a).
 
 ## Pregled tipova
 
@@ -12,6 +12,7 @@ Na osnovu analize zadataka sa prethodnih rokova, MPI ispitni zadaci se mogu svrs
 | **Tip 3a** | Matrica × Matrica (kolone A + vrste B) | Svaki proces dobije `q` kolona A + `q` vrsta B → izračuna deo C |
 | **Tip 3a var.** | Matrica × Matrica (po 1 kolona / 1 vrsta) | Spoljašnji proizvod `local_a ⊗ local_b` + `MPI_Reduce(SUM)` u C |
 | **Tip 3b** | Matrica × Matrica (vrste A + cela B) | Svaki proces dobije vrste A + celu B (`MPI_Bcast`) → izračuna vrste C |
+| **Tip 3c** | Matrica × Matrica (cela A + kolone B) | Svaki proces dobije celu A (`MPI_Bcast`) + kolone B → izračuna kolone C |
 | **Tip 4** | Stablo / Hiperkub | Širenje podatka iz P0 svim ostalim u `log₂(p)` koraka |
 
 ---
@@ -394,6 +395,95 @@ if (rank == out.rank) {
 
 ---
 
+### Tip 3c: Cela matrica A + kolone matrice B
+
+### Primeri
+- **April 2026 a** — cela matrica A (`MPI_Bcast`) + po `s` kolona matrice B (P-to-P), minimum u B, minimum po vrstama C
+
+### Tekst zadatka (generički — April 2026 a)
+Napisati MPI program koji realizuje množenje matrice `A(n×k)` i matrice `B(k×m)`, prikazuje rezultujuću matricu `C`. Program pronalazi minimum svake vrste matrice `C`. Master proces šalje svakom procesu **celu matricu A** i po `s` kolona matrice B. Rezultati se prikazuju u procesu koji sadrži minimum u matrici B nakon distribuiranja.
+
+> **Ključna ideja:** Ovo je **inverz** od Tip 3b. Umesto što se dele vrste A + cela B (Tip 3b), ovde se šalje cela A + dele kolone B. Svaki proces izračuna **različite kolone** finalne matrice C. Rezultat se sakuplja preko `MPI_Gather` (ne `MPI_Reduce`), jer svaki proces ima različite kolone — nema preklapanja.
+
+### Šablon
+
+```c
+// --- 1. RASPODELA CELE MATRICE A (grupna) ---
+// MPI_Bcast(a, n*k, MPI_INT, root, ...)
+
+// --- 2. RASPODELA s KOLONA MATRICE B (P-to-P) ---
+// Root šalje svakom procesu po s kolona matrice B
+if (rank == root) {
+    for (int i = 0; i < k; i++)
+        for (int j = 0; j < s; j++)
+            local_b[i][j] = b[i][root * s + j];
+
+    int tmp_b[k][s];
+    for (int p = 0; p < size; p++) {
+        if (p == root) continue;
+        for (int i = 0; i < k; i++)
+            for (int j = 0; j < s; j++)
+                tmp_b[i][j] = b[i][j + p * s];
+        MPI_Send(tmp_b, k * s, MPI_INT, p, 0, MPI_COMM_WORLD);
+    }
+} else {
+    MPI_Recv(local_b, k * s, MPI_INT, root, 0, MPI_COMM_WORLD, &status);
+}
+
+// --- 3. LOKALNO IZRAČUNAVANJE ---
+in.value = INT_MAX;
+in.rank = rank;
+for (int i = 0; i < k; i++)
+    for (int j = 0; j < s; j++)
+        if (local_b[i][j] < in.value)
+            in.value = local_b[i][j];          // lokalni min B
+
+for (int i = 0; i < n; i++)
+    for (int j = 0; j < s; j++) {
+        local_c[i][j] = 0;
+        for (int l = 0; l < k; l++)
+            local_c[i][j] += a[i][l] * local_b[l][j];  // kolone C
+    }
+
+// --- 4. GLOBALNI MINIMUM MATRICE B ---
+// MPI_Reduce(&in, &out, 1, MPI_2INT, MPI_MINLOC, root, ...)
+// MPI_Bcast(&out, 1, MPI_2INT, root, ...)
+
+// --- 5. GATHER REZULTATA U IZABRANI PROCES ---
+// MPI_Gather(local_c, n*s, MPI_INT, c, n*s, MPI_INT, out.rank, ...)
+
+if (rank == out.rank) {
+    // minimum po vrstama C (računa se nakon Gather-a)
+    for (int i = 0; i < n; i++) {
+        row_min[i] = c[i][0];
+        for (int j = 0; j < m; j++)
+            if (c[i][j] < row_min[i])
+                row_min[i] = c[i][j];
+    }
+    // štampa matricu C, minimum B, minimum po vrstama C
+}
+```
+
+### Karakteristike — Tip 3c
+
+| Parametar | April 2026 a |
+|-----------|--------------|
+| Matrica A | cela (`MPI_Bcast`) |
+| Kolona B po procesu | `s` (konstanta, P-to-P) |
+| Lokalni rezultat | `local_c[n][s]` — **kolone** matrice C |
+| Sakupljanje C | `MPI_Gather` (ne `MPI_Reduce`!) |
+| Ekstrem | **minimum** u B |
+| Dodatna operacija | minimum po vrstama C (nakon Gather-a) |
+| Štampanje | proces sa minimumom u B |
+
+> **Razlika od Tip 3b:**
+> - Tip 3b: vrste A + cela B → svaki proces izračuna **vrste** C → `MPI_Reduce(MPI_SUM)` sakuplja rezultate (jer se vrste C ne preklapaju, može i `MPI_Gather`).
+> - Tip 3c: cela A + kolone B → svaki proces izračuna **kolone** C → `MPI_Gather` sakuplja rezultate u ispravan redosled.
+>
+> **Važno:** U Tip 3c se `MPI_Gather` koristi umesto `MPI_Reduce` zato što svaki proces ima **različite** kolone C — nema preklapanja elemenata, pa se rezultati samo slažu jedan pored drugog.
+
+---
+
 ## Tip 4: Stablo / Hiperkub (širenje podatka u `log₂(p)` koraka)
 
 ### Primeri
@@ -537,6 +627,8 @@ else {
 | Januar 2025 | Tip 3b | Po `m` vrsta A (`MPI_Scatter`), cela B, **max** u A + **suma** kolona B |
 | Jun 2025 a | Tip 3a | Po `q` kolona A i `q` vrsta B, **proizvod** kolona B — **bez ekstrema**, root štampa |
 | Jun 2025 b | Jedinstven | `MPI_Bcast` niza X iz **P2**, formula `yi=(p(p+1)/2)*xi`, `MPI_Reduce(MPI_SUM)` u root |
+| April 2026 a | Tip 3c | Cela A (`MPI_Bcast`) + `s` kolona B (P-to-P), **min** u B, min po vrstama C, `MPI_Gather` |
+| April 2026 b | Jedinstven | Kružna razmena — svaki proces šalje `b1` sledećem `(rank+1)%size`, prima od prethodnog |
 
 ---
 
@@ -544,7 +636,7 @@ else {
 
 1. **Naučiti šablon Tip 1** — petlja sa rekonstrukcijom indeksa je najčešća na ispitu. Razumeti kako se iz `t` rekonstruišu `i` i `j` za uzlažni i silazni smer.
 2. **Naučiti šablon Tip 2** — raspodela kolona matrice P-to-P, zatim grupne operacije za redukciju. Zamena a→b je uvek ista.
-3. **Razumeti razliku Tip 3a vs Tip 3b** — Tip 3a deli A po **kolonama** + B po **vrstama** (svaki proces izračuna deo C samostalno); Tip 3b deli A po **vrstama** + cela B (`MPI_Bcast`) (svaki proces izračuna **različite vrste** finalne C).
+3. **Razumeti razliku Tip 3a vs Tip 3b vs Tip 3c** — Tip 3a deli A po **kolonama** + B po **vrstama** (svaki proces izračuna deo C samostalno); Tip 3b deli A po **vrstama** + cela B (`MPI_Bcast`) (svaki proces izračuna **različite vrste** finalne C); Tip 3c šalje celu A (`MPI_Bcast`) + deli B po **kolonama** (svaki proces izračuna **različite kolone** finalne C, sakuplja se `MPI_Gather`).
 4. **Tip 3a varijanta (q=1)** — kada svaki proces dobije po **1** kolonu A i **1** vrstu B, lokalni rezultat je **spoljašnji proizvod** koji se sumira u finalnu C preko `MPI_Reduce(MPI_SUM)`.
 5. **Tip 4 (Stablo)** — petlja `for (i = 1; i <= log₂(size); i++)` sa `half = 1 << (i-1)`. Tri kategorije: `rank < half` šalje, `half ≤ rank < 2*half` prima, ostali čekaju. Uvek se podrazumeva da je `size` stepen dvojke.
 6. **Pamtiti strukturu** `struct { int value; int rank; }` — neophodna za `MPI_MINLOC`/`MPI_MAXLOC`.
