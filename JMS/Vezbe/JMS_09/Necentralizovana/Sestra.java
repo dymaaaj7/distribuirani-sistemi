@@ -1,65 +1,75 @@
 package JMS.Vezbe.JMS_09.Necentralizovana;
 
-import java.io.IOException;
 import java.util.Scanner;
+
 import javax.jms.*;
 import javax.naming.*;
 
 public class Sestra {
-    private QueueSender sender;
-    private QueueConnection qc;
-    private QueueSession qs;
+    private final Queue qObavestiLekara;
+    private final Queue qStampa;
+    private final QueueConnection qc;
+    private final QueueSession qs;
+    private final QueueSender sender;
+    private QueueReceiver receiver;
 
-    public Sestra() throws NamingException, JMSException {
-
-        System.out.println("Pribavljanje contexta");
+    public Sestra() throws Exception {
         InitialContext ictx = new InitialContext();
 
-        Queue obavestiLekara = (Queue) ictx.lookup("qObevestiLekara");
-        Queue stampa = (Queue) ictx.lookup("qStampa");
-        QueueConnectionFactory qcf = (QueueConnectionFactory) ictx.lookup(
-                "qcfCekaonica2020");
+        QueueConnectionFactory qcf = (QueueConnectionFactory) ictx.lookup("qcf");
+        qObavestiLekara = (Queue) ictx.lookup("qObavestiLekara");
+        qStampa = (Queue) ictx.lookup("qStampa");
 
         ictx.close();
 
-        System.out.println("Pribavljanje connection");
         qc = (QueueConnection) qcf.createQueueConnection();
-        qs = (QueueSession) qc.createQueueSession(
-                true, Session.AUTO_ACKNOWLEDGE);
+        qs = (QueueSession) qc.createQueueSession(true, Session.AUTO_ACKNOWLEDGE);
 
-        sender = (QueueSender) qs.createSender(obavestiLekara);
+        sender = (QueueSender) qs.createSender(qObavestiLekara);
 
-        QueueReceiver receiver = (QueueReceiver) qs.createReceiver(stampa);
-        receiver.setMessageListener(new SestraML());
+        receiver = (QueueReceiver) qs.createReceiver(qStampa);
+
+        receiver.setMessageListener(new MessageListener() {
+            @Override
+            public void onMessage(Message message) {
+                try {
+                    TextMessage txt = (TextMessage) message;
+                    System.out.println("Pregled pacijenta gotov. Ime: " + txt.getText());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
         qc.start();
-        System.out.println(">>>Sestra<<<");
     }
 
-    public void ObavestiLekaraDaJePacijentStigao(String Lekar, String Pacijent)
-            throws JMSException {
-        TextMessage msg = qs.createTextMessage(Pacijent);
-        // msg.setText(Pacijent);
-        msg.setStringProperty("Lekar", Lekar);
+    public void ObavestiLekara(String l, String p) throws Exception {
+        TextMessage msg = qs.createTextMessage("Pacijent stigao. Ime: " + p);
+        msg.setStringProperty("Lekar", l);
 
         sender.send(msg);
 
         qs.commit();
     }
 
-    public static void main(String[] args)
-            throws NamingException, JMSException, IOException {
+    public void Zatvori() throws Exception {
+        qc.close();
+    }
+
+    public static void main(String[] args) throws Exception {
         Sestra s = new Sestra();
 
+        @SuppressWarnings("resource")
         Scanner in = new Scanner(System.in);
 
-        System.out.println("Unesi pacijenta:");
-        String pacijent = in.nextLine();// System.console().readLine();
+        System.out.println("Ucitaj pacijenta");
+        String p = in.nextLine();
 
-        System.out.println("Unesi lekara:");
-        String lekar = in.nextLine();// System.console().readLine();
+        System.out.println("Ucitaj lekara");
+        String l = in.nextLine();
 
-        s.ObavestiLekaraDaJePacijentStigao(lekar, pacijent);
-
-        System.in.read();
+        s.ObavestiLekara(l, p);
     }
 }

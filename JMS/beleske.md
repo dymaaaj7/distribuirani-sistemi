@@ -19,6 +19,9 @@ QueueSession qs = qc.createQueueSession(true, Session.AUTO_ACKNOWLEDGE);
 
 sender.send(msg);
 qs.commit();  // obavezno pozvati da poruka ode
+
+//u sustini ovo je kao da sa send stavljamo u neki bafer, a kadase commituju
+//tek onda se posalju sve poruke zajedno
 ```
 
 ```java
