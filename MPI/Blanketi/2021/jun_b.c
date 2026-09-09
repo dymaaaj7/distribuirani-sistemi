@@ -31,6 +31,9 @@ b) koriscenje P-t-P operacija za upotrebljene grupne operacije pod a)
 #define m 6
 #define l 2
 
+// Windows: mpicc jun_b.c -o jun_b.exe && mpiexec -n 3 jun_b.exe
+// Linux:   mpicc jun_b.c -o jun_b && mpirun -np 3 ./jun_b
+
 int main(int argc, char *argv[])
 {
     int rank, size, root = 0;
@@ -175,7 +178,7 @@ int main(int argc, char *argv[])
 
         for (int p = 0; p < size; p++)
         {
-            if (p == root)
+            if (p == out.rank)
                 continue;
             MPI_Recv(local_c, k, MPI_INT, p, 0, MPI_COMM_WORLD, &status);
             for (int i = 0; i < k; i++)

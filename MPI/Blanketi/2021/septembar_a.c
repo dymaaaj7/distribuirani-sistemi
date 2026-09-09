@@ -34,6 +34,8 @@ b)  koriscenjem Point-to-Point operacija
 #define l 2 // broj vrsta koje dobije svaki proces
 
 // size = k / l
+// Windows: mpicc septembar_a.c -o septembar_a.exe && mpiexec -n 2 septembar_a.exe
+// Linux:   mpicc septembar_a.c -o septembar_a && mpirun -np 2 ./septembar_a
 int main(int argc, char *argv[])
 {
     int rank, size, root = 0;

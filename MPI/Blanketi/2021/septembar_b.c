@@ -34,6 +34,8 @@ b)  koriscenjem Point-to-Point operacija
 #define l 2 // broj vrsta koje dobije svaki proces
 
 // size = k / l
+// Windows: mpicc septembar_b.c -o septembar_b.exe && mpiexec -n 2 septembar_b.exe
+// Linux:   mpicc septembar_b.c -o septembar_b && mpirun -np 2 ./septembar_b
 int main(int argc, char *argv[])
 {
     int rank, size, root = 0;
@@ -159,7 +161,7 @@ int main(int argc, char *argv[])
         {
             if (p == out.rank)
                 continue;
-            MPI_Recv(col_prod, m, MPI_INT, p, 0, MPI_COMM_WORLD, &status);
+            MPI_Recv(local_col_prod, m, MPI_INT, p, 0, MPI_COMM_WORLD, &status);
             for (int i = 0; i < m; i++)
                 col_prod[i] *= local_col_prod[i];
         }
@@ -167,19 +169,19 @@ int main(int argc, char *argv[])
 
     // MPI_Gather(local_c, l * n, MPI_INT, c,l * n,MPI_INT,out.rank, MPI_COMM_WORLD);
     if (rank != out.rank)
-        MPI_Send(local_c, l * m, MPI_INT, out.rank, 0, MPI_COMM_WORLD);
+        MPI_Send(local_c, l * n, MPI_INT, out.rank, 0, MPI_COMM_WORLD);
     else
     {
         for (int i = 0; i < l; i++)
-            for (int j = 0; j < m; j++)
+            for (int j = 0; j < n; j++)
                 c[i + l * rank][j] = local_c[i][j];
         for (int p = 0; p < size; p++)
         {
             if (p == out.rank)
                 continue;
-            MPI_Recv(local_c, l * m, MPI_INT, p, 0, MPI_COMM_WORLD, &status);
+            MPI_Recv(local_c, l * n, MPI_INT, p, 0, MPI_COMM_WORLD, &status);
             for (int i = 0; i < l; i++)
-                for (int j = 0; j < m; j++)
+                for (int j = 0; j < n; j++)
                     c[i + l * p][j] = local_c[i][j];
         }
     }
