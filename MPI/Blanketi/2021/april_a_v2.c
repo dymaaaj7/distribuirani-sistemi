@@ -22,15 +22,15 @@ b)  koriscenjem P-t-P operacija
 
 */
 
-#include <mpi.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <mpi.h>
 
 #define n 3
 #define k 5
 
-// Windows: mpicc april_a.c -o april_a.exe && mpiexec -n 5 april_a.exe
-// Linux:   mpicc april_a.c -o april_a && mpirun -np 5 ./april_a
+// Windows: mpicc april_a_v2.c -o april_a_v2.exe && mpiexec -n 5 april_a_v2.exe
+// Linux:   mpicc april_a_v2.c -o april_a_v2 && mpirun -np 5 ./april_a_v2
 
 int main(int argc, char *argv[])
 {
@@ -39,11 +39,13 @@ int main(int argc, char *argv[])
     int a[n][k], b[k], c[n];
     int local_a[n], local_b, local_c[n];
 
+    // Za MPI_MINLOC: struktura MORA biti { value, rank } tim redom
+    // (prvi int je vrednost, drugi je rang) inace MINLOC radi nad rangovima.
     struct
     {
         int value;
         int rank;
-    } in, out; // out - za minimalnu vrednost matrice, in - za min vr kolone
+    } in, out;
 
     int row_prod[n];
 
@@ -52,18 +54,18 @@ int main(int argc, char *argv[])
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
+    // Master inicijalizuje matricu A i vektor b
     if (rank == root)
     {
         for (int i = 0; i < n; i++)
-        {
             for (int j = 0; j < k; j++)
-                a[i][j] = i + j;
-        }
+                a[i][j] = 1 + i + j;
         for (int i = 0; i < k; i++)
-            b[i] = i;
+            b[i] = i + 2;
     }
 
-    // slanje i-te kolone i-tom procesu
+    // Distribucija kolona matrice A (P2P, kolona se salje odjednom):
+    // master zadrzava svoju kolonu, ostalima salje po jednu kolonu
     if (rank == root)
     {
         for (int i = 0; i < n; i++)
@@ -73,6 +75,7 @@ int main(int argc, char *argv[])
         {
             if (p == root)
                 continue;
+
             int tmp[n];
             for (int i = 0; i < n; i++)
                 tmp[i] = a[i][p];
@@ -82,14 +85,14 @@ int main(int argc, char *argv[])
     else
         MPI_Recv(local_a, n, MPI_INT, root, 0, MPI_COMM_WORLD, &status);
 
-    // slanje elemenata vektora b
+    // Svaki proces dobija po jedan element vektora b (grupna operacija)
     MPI_Scatter(b, 1, MPI_INT, &local_b, 1, MPI_INT, root, MPI_COMM_WORLD);
 
-    // inicijalziacija
+    // Lokalni proracun: doprinos c = A * b (kolona * svoj element b)
+    // i trazenje lokalnog minimuma kolone
     in.value = local_a[0];
     in.rank = rank;
 
-    // mnozenje elemenata vrsta i mnozenje delova matrice i 1 elementa vektora
     for (int i = 0; i < n; i++)
     {
         local_c[i] = local_a[i] * local_b;
@@ -97,11 +100,13 @@ int main(int argc, char *argv[])
             in.value = local_a[i];
     }
 
-    // Trazimo minimum minimuma svake kolone
+    // Globalni minimum + rang procesa koji ga drzi (MINLOC),
+    // pa Bcast da svi saznaju u kom procesu treba da budu rezultati
     MPI_Reduce(&in, &out, 1, MPI_2INT, MPI_MINLOC, root, MPI_COMM_WORLD);
-    // Taj minimum minimuma prosledjujemo svima
     MPI_Bcast(&out, 1, MPI_2INT, root, MPI_COMM_WORLD);
 
+    // Redukcije sa root-om = out.rank (proces sa globalnim minimumom):
+    // c = A * b po zbiru doprinosa, row_prod = proizvod elemenata svake vrste
     MPI_Reduce(local_c, c, n, MPI_INT, MPI_SUM, out.rank, MPI_COMM_WORLD);
     MPI_Reduce(local_a,
                row_prod,
@@ -111,30 +116,18 @@ int main(int argc, char *argv[])
                out.rank,
                MPI_COMM_WORLD);
 
+    // Prikaz rezultata u procesu koji sadrzi minimum matrice A
     if (rank == out.rank)
     {
-        printf("=================================\n");
-        printf("       REZULTATI PROGRAMA\n");
-        printf("=================================\n\n");
-
-        printf("Rezultujuci vektor c:\n");
-        printf("[ ");
+        printf("Proces %d drzi minimum matrice A: %d\n", out.rank, out.value);
+        printf("A * b = [ ");
         for (int i = 0; i < n; i++)
             printf("%d ", c[i]);
-        printf("]\n\n");
-
-        printf("---------------------------------\n\n");
-
-        printf("Minimalna vrednost u A: %d\n", out.value);
-        printf("Nalazi se u procesu: %d\n\n", out.rank);
-
-        printf("---------------------------------\n\n");
-
-        printf("Proizvod elemenata po vrstama matrice A:\n");
+        printf("]\n");
+        printf("Proizvodi vrsta = [ ");
         for (int i = 0; i < n; i++)
-            printf("  Vrsta %d: %d\n", i + 1, row_prod[i]);
-
-        printf("\n=================================\n");
+            printf("%d ", row_prod[i]);
+        printf("]\n");
     }
 
     MPI_Finalize();

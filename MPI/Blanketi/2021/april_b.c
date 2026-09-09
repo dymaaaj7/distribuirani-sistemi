@@ -29,6 +29,8 @@ b)  koriscenjem P-t-P operacija
 #define k 4
 
 // size = k
+// Windows: mpicc april_b.c -o april_b.exe && mpiexec -n 4 april_b.exe
+// Linux:   mpicc april_b.c -o april_b && mpirun -np 4 ./april_b
 
 int main(int argc, char *argv[])
 {

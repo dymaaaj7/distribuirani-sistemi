@@ -29,6 +29,9 @@ b)  koriscenjem P-t-P operacija za upotrebljene grupne operacije pod a)
 #define l 4
 #define q 2
 
+// Windows: mpicc decembar_a.c -o decembar_a.exe && mpiexec -n 2 decembar_a.exe
+// Linux:   mpicc decembar_a.c -o decembar_a && mpirun -np 2 ./decembar_a
+
 int main(int argc, char *argv[])
 {
     int rank, size, root = 0;

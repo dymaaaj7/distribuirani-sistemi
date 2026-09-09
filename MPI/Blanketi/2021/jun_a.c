@@ -31,7 +31,9 @@ b) koriscenje P-t-P operacija za upotrebljene grupne operacije pod a)
 #define m 6
 #define l 2
 
-// size=m/l
+// size = m / l
+// Windows: mpicc jun_a.c -o jun_a.exe && mpiexec -n 3 jun_a.exe
+// Linux:   mpicc jun_a.c -o jun_a && mpirun -np 3 ./jun_a
 
 /*
 P0      P1      P2
