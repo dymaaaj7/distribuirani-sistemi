@@ -20,8 +20,8 @@ Na osnovu analize zadataka sa prethodnih rokova, MPI ispitni zadaci se mogu svrs
 ## Tip 1: Ciklična raspodela dvostruke petlje (Niz zadatak)
 
 ### Primeri
-- **Jun 2020** = **Januar 2022**
-- **Decembar 2022** (varijanta sa pomakom `y` i silaznim `j`)
+- **Jun 2020** = **Januar 2022** = **Septembar 2024 a**
+- **Decembar 2022** (varijacija sa pomakom `y` i silaznim `j`)
 
 ### Tekst zadatka (generički)
 Realizovati dvostruku petlju `for(i) for(j) s += i + j` ravnomernom cikličnom raspodelom među `p` procesa. Nije dozvoljeno korišćenje indeksiranih promenljivih. Rezultat prikazati u procesu koji ima najmanji/najveći broj sabiraka koji su prosti brojevi.
@@ -608,7 +608,8 @@ else {
 
 | Rok | Tip | Napomena |
 |-----|-----|----------|
-| Jun 2020 | Tip 1 | Bazni oblik, `i=0..N-1`, `j=0..N-1` |
+| Jun 2020 | Tip 1 | Bazni obrazac, `i=0..N-1`, `j=0..N-1` |
+| Septembar 2024 a | Tip 1 | **Identičan** Jun 2020 |
 | Januar 2022 | Tip 1 | **Identičan** Jun 2020 |
 | Decembar 2022 | Tip 1 | Varijanta: pomak `y`, silazni `j`, traži se **najveći** broj prostih |
 | Septembar 2022 | Tip 1 | **Identičan** Decembar 2022 |
@@ -627,6 +628,7 @@ else {
 | Januar 2025 | Tip 3b | Po `m` vrsta A (`MPI_Scatter`), cela B, **max** u A + **suma** kolona B |
 | Jun 2025 a | Tip 3a | Po `q` kolona A i `q` vrsta B, **proizvod** kolona B — **bez ekstrema**, root štampa |
 | Jun 2025 b | Jedinstven | `MPI_Bcast` niza X iz **P2**, formula `yi=(p(p+1)/2)*xi`, `MPI_Reduce(MPI_SUM)` u root |
+| Septembar 2024 b | Jedinstven | **Identičan** Jun 2025 b |
 | April 2026 a | Tip 3c | Cela A (`MPI_Bcast`) + `s` kolona B (P-to-P), **min** u B, min po vrstama C, `MPI_Gather` |
 | April 2026 b | Jedinstven | Kružna razmena — svaki proces šalje `b1` sledećem `(rank+1)%size`, prima od prethodnog |
 
