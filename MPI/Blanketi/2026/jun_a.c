@@ -26,11 +26,12 @@ Zadatak resiti koriscenjem grupnih operacija.
 #include <mpi.h>
 
 #define N 8
-#define k 2 // broj elemenata po procesu (N deljivo sa k)
+#define k 2
 
-// size = N/k = 4
-// Windows: mpicc oktobar_b.c -o oktobar_b.exe && mpiexec -n 4 oktobar_b.exe
-// Linux:   mpicc oktobar_b.c -o oktobar_b && mpirun -np 4 ./oktobar_b
+// size = N/k
+
+// Windows: mpicc jun_a.c -o jun_a.exe && mpiexec -n 4 jun_a.exe
+// Linux:   mpicc jun_a.c -o jun_a && mpirun -np 4 ./jun_a
 
 int is_prime(int n)
 {
@@ -45,40 +46,37 @@ int is_prime(int n)
 int main(int argc, char *argv[])
 {
     int rank, size, root = 0;
+    int a[N], local_a[k];
 
-    int a[N];       // ceo niz - inicijalizuje samo root
-    int local_a[k]; // lokalni deo niza (k elemenata po procesu)
-
-    int local_sum = 0, sum_elem = 0; // lokalna / globalna suma elemenata
-    double avg;                      // ā - srednja vrednost
-    double local_part, total = 0;    // doprinos Σ(ā+aᵢ) / ukupna suma
-    int bc[2];                       // bc[0] = b, bc[1] = c
-    double R;                        // konacni rezultat
+    int local_sum = 0, sum_elem = 0;
+    double avg;                   // srednja vrednost
+    double local_part, total = 0; // doprinos sumi iznad razlomka i ukupna suma
+    int bc[2];                    // bc[0] = b, bc[1] = c;
+    double R;                     // konacni rezultat
 
     struct
     {
         int value;
         int rank;
-    } in_max, out_max; // za maksimalni element
+    } in_max, out_max; // za proces sa maksimalnim elementom niza
     struct
     {
         int value;
         int rank;
-    } in_min, out_min; // za broj prostih
+    } in_min, out_min; // za najmanji broj prostih brojeva
 
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    // inicijalizacija niza u root-u
     if (rank == root)
+    {
         for (int i = 0; i < N; i++)
             a[i] = i + 1;
+    }
 
-    // 1. blok raspodela niza - svaki proces dobija k elemenata
     MPI_Scatter(a, k, MPI_INT, local_a, k, MPI_INT, root, MPI_COMM_WORLD);
 
-    // 2. lokalni prolaz: suma elemenata, lokalni max, broj prostih
     in_max.value = local_a[0];
     in_max.rank = rank;
     in_min.value = 0;
@@ -93,34 +91,27 @@ int main(int argc, char *argv[])
             in_min.value++;
     }
 
-    // 3. ā = (Σaᵢ)/N - globalna suma elemenata + bcast svima
     MPI_Reduce(&local_sum, &sum_elem, 1, MPI_INT, MPI_SUM, root, MPI_COMM_WORLD);
     MPI_Bcast(&sum_elem, 1, MPI_INT, root, MPI_COMM_WORLD);
     avg = (double)sum_elem / N;
 
-    // 4. proces sa maksimalnim elementom - on inicijalizuje b i c
     MPI_Reduce(&in_max, &out_max, 1, MPI_2INT, MPI_MAXLOC, root, MPI_COMM_WORLD);
     MPI_Bcast(&out_max, 1, MPI_2INT, root, MPI_COMM_WORLD);
 
     if (rank == out_max.rank)
     {
-        bc[0] = 10; // b
-        bc[1] = 5;  // c
+        bc[0] = 10;
+        bc[1] = 5;
     }
-    // b i c salje sam proces koji ih sadrzi - root moze biti bilo koji rang!
+
     MPI_Bcast(bc, 2, MPI_INT, out_max.rank, MPI_COMM_WORLD);
 
-    // 5. ko stampa - proces sa najmanjim brojem prostih
     MPI_Reduce(&in_min, &out_min, 1, MPI_2INT, MPI_MINLOC, root, MPI_COMM_WORLD);
     MPI_Bcast(&out_min, 1, MPI_2INT, root, MPI_COMM_WORLD);
 
-    // 6. doprinos procesa: Σ(ā + aᵢ) po svojim elementima = k·ā + Σaᵢ
-    //    (svi ucestvuju u rezultatu!)
-    //    Redukcija ide direktno u proces koji stampa - zato je MINLOC pre nje
     local_part = local_sum + k * avg;
     MPI_Reduce(&local_part, &total, 1, MPI_DOUBLE, MPI_SUM, out_min.rank, MPI_COMM_WORLD);
 
-    // 7. konacni rezultat u procesu sa najmanje prostih
     if (rank == out_min.rank)
     {
         R = total / (bc[0] + bc[1]);

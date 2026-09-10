@@ -16,13 +16,19 @@ Legenda:
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
+### Jun
+
+- [x] **MPI** — Napomena: a - Tip 6 — niz + formula, isti zadatak kao Oktobar 2025 b (R = Σ(ā+aᵢ)/(b+c)); b - teorijski — Gather + Bcast (kao April 2026 b)
+- [ ] **JMS** — Napomena:
+- [ ] **WCF** — Napomena:
+
 ---
 
 ## 2025
 
 ### Oktobar
 
-- [x] **MPI** — Napomena: a - Tip 4 — stablo (kao Oktobar 2022 a); b - Tip 2 var. — niz umesto matrice, formula R = Σ(ā+aᵢ)/(b+c)
+- [x] **MPI** — Napomena: a - Tip 4 — stablo (kao Oktobar 2022 a); b - Tip 6 — niz + formula, R = Σ(ā+aᵢ)/(b+c)
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
@@ -264,7 +270,7 @@ Legenda:
 
 ## Nedostajući rokovi
 
-- 2026 — Jun, Septembar, Oktobar, Decembar
+- 2026 — Septembar, Oktobar, Decembar
 - 2025 — Septembar, Decembar
 - 2024 — Oktobar, Jun, April, Januar, Decembar
 - 2023 — Decembar

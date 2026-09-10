@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 
     in.value = 0;
     in.rank = rank;
-    for (int t = rank; t < N * N; t++)
+    for (int t = rank; t < N * N; t += size)
     {
         int i = t / N;
         int j = t % N;
