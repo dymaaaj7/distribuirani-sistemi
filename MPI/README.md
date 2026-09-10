@@ -65,6 +65,9 @@ MPI/
     │   ├── jun_2.c
     │   ├── septembar_a.c
     │   └── septembar_b.c
+    ├── 2024/
+    │   ├── septembar_a.c
+    │   └── septembar_b.c
     ├── 2025/
     │   ├── april.c
     │   ├── januar_a.c
@@ -165,6 +168,13 @@ Rešenja zadataka sa prethodnih rokova podeljena su po godinama. Svaki rok obič
 | [`jun_2.c`](Blanketi/2023/jun_2.c) | Množenje matrice `A(k×m)` i matrice `B(m×n)` — po `q` kolona matrice A i `q` vrsta matrice B po procesu, proizvod kolona matrice B, maksimum — **grupne + P-to-P operacije**. |
 | [`septembar_a.c`](Blanketi/2023/septembar_a.c) | Množenje matrica `A(k×m)` i `B(m×n)` — po `r` vrsta matrice A, cela matrica B, proizvod elemenata svake kolone matrice A, minimum u matrici A — **grupne operacije**. |
 | [`septembar_b.c`](Blanketi/2023/septembar_b.c) | Isti zadatak — **P-to-P operacije**. |
+
+### 2024
+
+| Fajl | Tema |
+|------|------|
+| [`septembar_a.c`](Blanketi/2024/septembar_a.c) | Ciklična raspodela dvostruke petlje, suma `i+j`, pronalaženje procesa sa najmanjim brojem prostih sabiraka — **grupne operacije** (isto kao jun 2020 / januar 2022). |
+| [`septembar_b.c`](Blanketi/2024/septembar_b.c) | `MPI_Bcast` niza X iz procesa sa rangom 2, kreiranje niza `yi=(p(p+1)/2)*xi` preko `MPI_Reduce(MPI_SUM)` — **grupne operacije** (isto kao jun 2025 b). |
 
 ### 2025
 

@@ -50,7 +50,7 @@ Legenda:
 
 ### Septembar
 
-- [ ] **MPI** — Napomena: Niz
+- [x] **MPI** — Napomena: a - Tip 1 — Ciklična raspodela dvostruke petlje, min broj prostih sabiraka (kao Jun 2020); b - Jedinstven — Bcast niza X iz P2, formula yi=(p(p+1)/2)*xi, Reduce SUM (kao Jun 2025 b)
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
