@@ -34,7 +34,8 @@ MPI/
 │       ├── zadatak_4.c
 │       └── zadatak_5.c
 └── Blanketi/              # Rešenja ispitnih zadataka po godinama
-    ├── SABLONI.md         # Izvučeni šabloni i tipovi zadataka
+    ├── SABLONI.md         # Kompaktni šabloni za učenje
+    ├── SABLONI-DETALJNO.md # Detaljna analiza svih varijanti (arhiva)
     ├── 2020/
     │   ├── jun_a.c
     │   └── jun_b.c
@@ -73,10 +74,14 @@ MPI/
     │   ├── januar_a.c
     │   ├── januar_b.c
     │   ├── jun_a.c
-    │   └── jun_b.c
+    │   ├── jun_b.c
+    │   ├── oktobar_a.c
+    │   └── oktobar_b.c
     └── 2026/
         ├── april_a.c
-        └── april_b.c
+        ├── april_b.c
+        ├── jun_a.c
+        └── jun_b.c
 ```
 
 ---
@@ -186,7 +191,7 @@ Rešenja zadataka sa prethodnih rokova podeljena su po godinama. Svaki rok obič
 | [`jun_a.c`](Blanketi/2025/jun_a.c) | Množenje matrice `A(n×k)` i matrice `B(k×n)` — po `q` kolona matrice A i `q` vrsta matrice B, proizvod kolona matrice B — **grupne + P-to-P operacije** (bez traženja ekstrema). |
 | [`jun_b.c`](Blanketi/2025/jun_b.c) | Tip 5 — `MPI_Bcast` niza X iz procesa 2, formula `yi=(p(p+1)/2)*xi`, `MPI_Reduce(MPI_SUM)` — **grupne operacije** (isto kao septembar 2024 b). |
 | [`oktobar_a.c`](Blanketi/2025/oktobar_a.c) | Stablo/hiperkub — P-to-P slanje podatka iz procesa 0 svim ostalima u `log₂(p)` koraka + potpitanje o grupnoj zameni (`MPI_Bcast`) — **P-to-P operacije** (isto kao oktobar 2022 a — Tip 4). |
-| [`oktobar_b.c`](Blanketi/2025/oktobar_b.c) | Tip 2 varijanta sa nizom — Scatter blok raspodela, izračunavanje `R = Σ(ā+aᵢ)/(b+c)`, `b` i `c` u procesu sa maksimumom (MAXLOC), štampa u procesu sa najmanje prostih (MINLOC) — **grupne operacije**. |
+| [`oktobar_b.c`](Blanketi/2025/oktobar_b.c) | Tip 6 — niz + formula: Scatter blok raspodela, izračunavanje `R = Σ(ā+aᵢ)/(b+c)`, `b` i `c` u procesu sa maksimumom (MAXLOC), štampa u procesu sa najmanje prostih (MINLOC) — **grupne operacije**. |
 
 ### 2026
 
@@ -194,18 +199,23 @@ Rešenja zadataka sa prethodnih rokova podeljena su po godinama. Svaki rok obič
 |------|------|
 | [`april_a.c`](Blanketi/2026/april_a.c) | Množenje matrice `A(n×k)` i matrice `B(k×m)` — cela matrica A (`MPI_Bcast`), po `s` kolona matrice B (P-to-P), minimum u B, minimum po vrstama C — **grupne + P-to-P operacije**. |
 | [`april_b.c`](Blanketi/2026/april_b.c) | Kružna razmena podataka — svaki proces šalje niz sledećem i prima od prethodnog u prstenu — **P-to-P operacije**. |
+| [`jun_a.c`](Blanketi/2026/jun_a.c) | Tip 6 — niz + formula: Scatter blok raspodela, izračunavanje `R = Σ(ā+aᵢ)/(b+c)`, `b` i `c` u procesu sa maksimumom (MAXLOC), štampa u procesu sa najmanje prostih (MINLOC) — **grupne operacije** (isto kao oktobar 2025 b). |
+| [`jun_b.c`](Blanketi/2026/jun_b.c) | Teorijski zadatak — svaki proces ima `b1[2]`, svi treba da dobiju `b2[8]` sa svim elementima: `MPI_Gather` u root + `MPI_Bcast` iz root-a — minimalni broj poziva. |
 
 ---
 
 ## 🔧 Šabloni i tipovi zadataka
 
-Fajl [`Blanketi/SABLONI.md`](Blanketi/SABLONI.md) sadrži detaljnu analizu svih ispitnih zadataka sa izvučenim **šablonima** i **tipovima**:
+Fajl [`Blanketi/SABLONI.md`](Blanketi/SABLONI.md) je **kompaktna verzija za učenje** — jedan univerzalni skelet + tabela prekidača:
 
-- **Tip 1**: Ciklična raspodela dvostruke petlje — rekonstrukcija indeksa `i` i `j` iz `t`, pronalaženje procesa sa ekstremom (MINLOC/MAXLOC), sumiranje u izabrani proces.
-- **Tip 2**: Matrica × vektor — kolonska raspodela matrice `A`, lokalno izračunavanje, redukcija rezultata u procesu sa ekstremom.
-- **Tip 3**: Matrica × matrica — raspodela `q` kolona matrice `A` i `q` vrsta matrice `B`, lokalno množenje, redukcija rezultata u procesu sa ekstremom.
-- **Konverzija a) → b)**: Univerzalni šabloni za zamenu `MPI_Reduce`, `MPI_Bcast` i `MPI_Reduce` nad nizovima P-to-P operacijama.
-- **Tabela ponavljanja**: Koji su rokovi identični ili varijacije istog zadatka.
+- **Univerzalni skelet**: `Raspodela → lokalni račun → Reduce(LOC) → Bcast → Reduce(SUM)/Gather` (pokriva 21 od 27 zadataka).
+- **Raspodela cheat sheet**: šta koji zadatak deli po procesima.
+- **Reduce vs Gather pravilo**: preklapa li se doprinos procesa ili su delovi različiti.
+- **Posebni šabloni**: hiperkub (Tip 4), Bcast+formula (Tip 5), niz+formula (Tip 6), teorijska pitanja.
+- **Konverzija a) → b)**: recept za zamenu grupnih operacija P-to-P.
+- **Rok-indeks**: koji rok je koji šablon, sa obeleženim replikama.
+
+Detaljna analiza sa svim varijantama po rokovima ostaje u [`Blanketi/SABLONI-DETALJNO.md`](Blanketi/SABLONI-DETALJNO.md).
 
 ---
 

@@ -1,650 +1,199 @@
 <!-- markdownlint-disable MD024 -->
-# MPI Blanketi — Šabloni i Tipovi Zadataka
+# MPI Blanketi — Šabloni (kompaktna verzija)
 
-Na osnovu analize zadataka sa prethodnih rokova, MPI ispitni zadaci se mogu svrstati u **šest osnovnih tipova**. Većina zadataka dolazi u varijanti **a)** (grupne operacije) i **b)** (P-to-P operacije), pri čemu je b) uvek direktna zamena grupnih operacija iz a).
+> Detaljna analiza sa svim varijantama i obrazloženjima: [SABLONI-DETALJNO.md](SABLONI-DETALJNO.md)
+> Rešenja po rokovima: [2020](2020/) – [2026](2026/)
 
-## Pregled tipova
-
-| Tip | Naziv | Ključna ideja |
-|-----|-------|---------------|
-| **Tip 1** | Ciklična raspodela dvostruke petlje | `for(i) for(j)` rekonstrukcija indeksa iz `t = rank, rank+size, ...` |
-| **Tip 2** | Matrica × Vektor (kolonska raspodela) | Svaki proces dobije `q` kolona A + `q` elemenata b |
-| **Tip 3a** | Matrica × Matrica (kolone A + vrste B) | Svaki proces dobije `q` kolona A + `q` vrsta B → izračuna deo C |
-| **Tip 3a var.** | Matrica × Matrica (po 1 kolona / 1 vrsta) | Spoljašnji proizvod `local_a ⊗ local_b` + `MPI_Reduce(SUM)` u C |
-| **Tip 3b** | Matrica × Matrica (vrste A + cela B) | Svaki proces dobije vrste A + celu B (`MPI_Bcast`) → izračuna vrste C |
-| **Tip 3c** | Matrica × Matrica (cela A + kolone B) | Svaki proces dobije celu A (`MPI_Bcast`) + kolone B → izračuna kolone C |
-| **Tip 4** | Stablo / Hiperkub | Širenje podatka iz P0 svim ostalim u `log₂(p)` koraka |
-| **Tip 5** | Bcast + formula + Reduce | Dve grupne operacije bez raspodele: `local_y[i] = x[i]·(rank+1)`, Reduce SUM daje `yi = (p(p+1)/2)·xi` |
+**Suština:** od 27 zadataka sa rokova 2020–2026, njih **19 je jedan te isti pipeline** (Tip 1, 2, 3). Ostalo su samostalni tipovi: hiperkub — Tip 4 (2 zadatka), Bcast + formula — Tip 5 (2), niz + formula — Tip 6 (2), teorijska pitanja (2). Uči se skelet + tabela prekidača, ne sve tipove odvojeno.
 
 ---
 
-## Tip 1: Ciklična raspodela dvostruke petlje (Niz zadatak)
+## 1. Univerzalni skelet (Tip 1, 2, 3 i varijante)
 
-### Primeri
-- **Jun 2020** = **Januar 2022** = **Septembar 2024 a**
-- **Decembar 2022** (varijacija sa pomakom `y` i silaznim `j`)
-
-### Tekst zadatka (generički)
-Realizovati dvostruku petlju `for(i) for(j) s += i + j` ravnomernom cikličnom raspodelom među `p` procesa. Nije dozvoljeno korišćenje indeksiranih promenljivih. Rezultat prikazati u procesu koji ima najmanji/najveći broj sabiraka koji su prosti brojevi.
-
-### Šablon
+```
+RASPODELA → LOKALNI RAČUN → Reduce(LOC) → Bcast → Reduce(SUM)/Gather → štampa
+```
 
 ```c
-// --- 1. REKONSTRUKCIJA INDEKSA ---
-// t = rank, rank+size, rank+2*size, ...
-// i = t / JN + pocetak_i
-// j++ → j = B + (t % JN)
-// j-- → j = B - (t % JN)
+struct { int value; int rank; } in, out;
 
-for (int t = rank; t < total_iterations; t += size) {
-    int i = t / JN + offset_i;
-    int j = (direction == UP) ? B + (t % JN) : B - (t % JN);
+// --- 1. RASPODELA (v. cheat sheet ispod: Scatter / Bcast / P-to-P) ---
+
+// --- 2. LOKALNI RAČUN + lokalni ekstrem ---
+in.value = /* prvi element koji se poredi */;
+in.rank  = rank;
+for (...)
+{
+    // račun: množenje, suma, proizvod, formula...
+    if (x > in.value)            // ili "<" za minimum
+        in.value = x;
+}
+
+// --- 3. KO ŠTAMPA: proces sa ekstremom ---
+MPI_Reduce(&in, &out, 1, MPI_2INT, MPI_MAXLOC /* ili MPI_MINLOC */, root, MPI_COMM_WORLD);
+MPI_Bcast(&out, 1, MPI_2INT, root, MPI_COMM_WORLD);
+
+// --- 4. REZULTAT ide u proces koji štampa ---
+MPI_Reduce(local, global, n, MPI_INT, MPI_SUM /* ili MPI_PROD */, out.rank, MPI_COMM_WORLD);
+
+// --- 5. ŠTAMPA ---
+if (rank == out.rank) { /* printf... */ }
+```
+
+**Zapamti:**
+
+- `in.rank = rank` je obavezno — bez toga MINLOC/MAXLOC nema od koga da bira.
+- Redukcija (korak 4) ide u `out.rank`, **ne u root** — zato Bcast (korak 3) mora doći pre nje.
+- Root grupe operacije može biti **bilo koji rang** (npr. proces 2 u Tip 5), ne samo 0.
+- Zadaci bez ekstrema (Jun 2025 a) preskaču korak 3 — root štampa.
+- Po zastavici u tekstu: min/max, u kojoj matrici (A/B/C), suma/proizvod, po čemu se broje prosti.
+
+### Raspodela — cheat sheet
+
+| Zadatak | Proces dobija | Kako se šalje |
+|---|---|---|
+| matrica × vektor (Tip 2) | `q` kolona A + `q` elemenata b | kolone P-to-P, b `MPI_Scatter` |
+| mat × mat (Tip 3a) | `q` kolona A + `q` vrsta B | kolone P-to-P, vrste `MPI_Scatter` |
+| mat × mat, `q = 1` | 1 kolona A + 1 vrsta B | kolona P-to-P, vrsta `MPI_Scatter` |
+| mat × mat (Tip 3b) | vrste A + **celu** B | vrste P-to-P, B `MPI_Bcast` |
+| mat × mat (Tip 3c) | **celu** A + kolone B | A `MPI_Bcast`, kolone P-to-P |
+
+Slanje bloka P-to-P (root ostavlja sebi prvi, ostalima šalje `p*blok`-ti deo):
+
+```c
+if (rank == root) {
+    // kopija za root direktno iz matrice
+    for (int p = 0; p < size; p++) {
+        if (p == root) continue;
+        /* pakuj blok p u tmp */
+        MPI_Send(tmp, blok, MPI_INT, p, 0, MPI_COMM_WORLD);
+    }
+} else {
+    MPI_Recv(local, blok, MPI_INT, root, 0, MPI_COMM_WORLD, &status);
+}
+```
+
+### Reduce ili Gather?
+
+- Svaki proces doprinosi **celom** rezultatu (3a: parcijalni `local_c[k][n]`; `q=1`: spoljašnji proizvod `local_a[i]·local_b[j]`; Tip 2: parcijalne sume vektora c) → **`MPI_Reduce(MPI_SUM)`**.
+- Svaki proces ima **svoj deo** bez preklapanja (3b: svoje vrste C; 3c: svoje kolone C) → **`MPI_Gather`** (radi i Reduce jer se delovi ne preklapaju, ali Gather je prirodniji).
+
+---
+
+## 2. Ciklična raspodela petlje (Tip 1)
+
+`for(i) for(j) s += i + j` cikličnom raspodelom, **bez indeksiranih promenljivih** — rekonstrukcija `i` i `j` iz linearne pozicije `t = rank, rank+p, rank+2p, ...`:
+
+```c
+int JN = /* broj vrednosti j (v. tabelu) */;
+for (int t = rank; t < N * JN; t += size) {
+    int i = t / JN + pocetak_i;
+    int j = silazno ? B - (t % JN) : B + (t % JN);
     local_sum += i + j;
-
-    if (is_prime(i + j))  // ili neki drugi uslov
-        in.value++;
-}
-
-// --- 2. PRONALAZAK PROCESA SA EKSTREMOM (MIN/MAX) ---
-// a) Grupne:  MPI_Reduce(&in, &out, 1, MPI_2INT, MPI_MINLOC/MAXLOC, root, ...)
-// b) P-to-P:  root prikuplja od svih u petlji, traži min/max ručno
-
-// --- 3. BROADCAST KO STAMPA ---
-// a) Grupne:  MPI_Bcast(&out, 1, MPI_2INT, root, ...)
-// b) P-to-P:  root šalje svima u petlji
-
-// --- 4. SUMIRANJE U IZABRANI PROCES ---
-// a) Grupne:  MPI_Reduce(&local_sum, &sum, 1, MPI_INT, MPI_SUM, out.rank, ...)
-// b) P-to-P:  svi šalju out.rank, on sabira
-
-if (rank == out.rank) {
-    printf("Suma: %d\n", sum);
-    printf("Proces %d ima ekstrem: %d\n", out.rank, out.value);
+    if (is_prime(i + j))
+        in.value++;              // broj prostih sabiraka
 }
 ```
 
-### Kalkulacija parametara za cikličnu raspodelu
+| Unutrašnja petlja | JN | Rekonstrukcija `j` |
+|---|---|---|
+| `j++`, `j < C` | `C - B` | `j = B + t % JN` |
+| `j++`, `j <= C` | `C - B + 1` | `j = B + t % JN` |
+| `j--`, `j > C` | `B - C` | `j = B - t % JN` |
+| `j--`, `j >= C` | `B - C + 1` | `j = B - t % JN` |
 
-| Korak | Formula |
-|-------|---------|
-| Broj vrednosti `j` (`JN`) | `j++` i `j < C` → `JN = C - B`; `j <= C` → `JN = C - B + 1` |
-| | `j--` i `j > C` → `JN = B - C`; `j >= C` → `JN = B - C + 1` |
-| Ukupno iteracija | `t_max = N * JN` |
-| Rekonstrukcija `i` | `i = t / JN + pocetak_i` |
-| Rekonstrukcija `j` | `j++` → `j = B + (t % JN)`; `j--` → `j = B - (t % JN)` |
-
-### Ključne grupne operacije
-1. `MPI_Reduce(..., MPI_2INT, MPI_MINLOC/MPI_MAXLOC, root)` — nalazi proces sa ekstremom
-2. `MPI_Bcast(..., root)` — širi koji proces štampa
-3. `MPI_Reduce(..., MPI_SUM, out.rank)` — sumira u ciljani proces
+Ukupan broj iteracija je `N * JN`. Posle petlje — opet univerzalni skelet, koraci 3–5 (MINLOC/MAXLOC po **broju prostih**, Bcast, Reduce(SUM) u `out.rank`).
 
 ---
 
-## Tip 2: Matrica × Vektor (kolonska raspodela)
+## 3. Hiperkub / stablo (Tip 4)
 
-### Primeri
-- **April 2021** — po **jedna** kolona / element vektora
-- **April 2022** — po **q** kolona / elemenata vektora
-- **Jun 2021** — po **l** kolona / elemenata vektora
-- **Decembar 2021** — po **q** kolona / elemenata vektora (identičan Aprilu 2022)
-- **Oktobar 2025 b** — varijanta sa **običnim nizom** umesto matrice (v. napomenu ispod)
-- **April 2025** — po **s** kolona / elemenata vektora (identičan Aprilu 2022)
-
-### Tekst zadatka (generički)
-Napisati MPI program koji množi matricu `A` i vektor `b`, prikazuje rezultujući vektor `c`. Takođe pronalazi maksimum/minimum elemenata matrice `A` i sumu/proizvod elemenata svake vrste. Root proces šalje svakom procesu po `q` kolona matrice `A` (ili po jednu) i po `q` elemenata vektora `b`. Rezultati se prikazuju u procesu koji sadrži maksimum/minimum nakon raspodele.
-
-### Šablon
+Slanje podatka iz P0 svim ostalima u `log₂(p)` koraka (size je stepen dvojke):
 
 ```c
-// --- 1. RASPODELA KOLONA MATRICE A (P-to-P) ---
-// Root šalje svakom procesu po q kolona
-if (rank == root) {
-    // ostavlja sebi prvih q kolona
-    for (int i = 0; i < rows; i++)
-        for (int j = 0; j < q; j++)
-            local_a[i][j] = a[i][j];
-
-    // šalje ostalima
-    for (int p = 1; p < size; p++) {
-        for (int i = 0; i < rows; i++)
-            for (int j = 0; j < q; j++)
-                tmp_a[i][j] = a[i][p*q + j];
-        MPI_Send(tmp_a, rows*q, MPI_INT, p, 0, MPI_COMM_WORLD);
-    }
-} else {
-    MPI_Recv(local_a, rows*q, MPI_INT, root, 0, MPI_COMM_WORLD, &status);
-}
-
-// --- 2. RASPODELA VEKTORA b ---
-// a) Grupne:  MPI_Scatter(b, q, MPI_INT, local_b, q, MPI_INT, root, ...)
-// b) P-to-P:  root šalje po q elemenata svakom procesu
-
-// --- 3. LOKALNO IZRAČUNAVANJE ---
-in.value = local_a[0][0];  // ili INT_MIN/INT_MAX
-in.rank = rank;
-for (int i = 0; i < rows; i++) {
-    local_c[i] = 0;
-    local_row_sum[i] = 0;
-    for (int j = 0; j < q; j++) {
-        local_c[i]      += local_a[i][j] * local_b[j];  // vektor c
-        local_row_sum[i] += local_a[i][j];               // suma vrste
-        if (local_a[i][j] > in.value)                    // max (ili < za min)
-            in.value = local_a[i][j];
-    }
-}
-
-// --- 4. PRONALAZAK GLOBALNOG EKSTREMA ---
-// a) Grupne:  MPI_Reduce(&in, &out, 1, MPI_2INT, MPI_MAXLOC/MINLOC, root, ...)
-// b) P-to-P:  root prikuplja i poređuje
-
-// --- 5. BROADCAST KO STAMPA ---
-// a) Grupne:  MPI_Bcast(&out, 1, MPI_2INT, root, ...)
-// b) P-to-P:  root šalje svima
-
-// --- 6. REDUKCIJA REZULTATA U IZABRANI PROCES ---
-// a) Grupne:
-//    MPI_Reduce(local_row_sum, row_sum, rows, MPI_INT, MPI_SUM, out.rank, ...)
-//    MPI_Reduce(local_c, c, rows, MPI_INT, MPI_SUM, out.rank, ...)
-// b) P-to-P:  svi šalju nizove out.rank, on sabira po elementima
-
-if (rank == out.rank) {
-    // štampa vektor c, ekstrem, sume po vrstama
-}
-```
-
-### Varijante
-
-| Parametar | April 2021 | April 2022 | Jun 2021 | Decembar 2021 | April 2025 |
-|-----------|------------|------------|----------|---------------|------------|
-| Kolona po procesu | 1 (`k` = broj kolona) | `q` (konstanta) | `l` (konstanta) | `q` (konstanta) | `s` (konstanta) |
-| Operacija na vrstama | proizvod | suma | suma | suma | suma |
-| Ekstrem | minimum | maksimum | maksimum | maksimum | maksimum |
-| Stampanje | proces sa minimumom | proces sa maksimumom | proces sa maksimumom | proces sa maksimumom | proces sa maksimumom |
-
-> **Varijanta — Oktobar 2025 b (niz umesto matrice):** isti skelet kao Tip 2, samo što se umesto kolona matrice deli **niz** blok raspodelom (`MPI_Scatter` po `k = N/size` elemenata). Formula: `R = Σ(ā+aᵢ)/(b+c)`, gde je `ā` srednja vrednost niza. Novine u odnosu na standardni Tip 2:
-> - `ā` zahteva **globalnu sumu elemenata** (`MPI_Reduce(SUM)` + `MPI_Bcast`) pre lokalnog računa — doprinos procesa je `k·ā + Σ sopstvenih aᵢ`
-> - `b` i `c` se **inicijalizuju u procesu sa maksimalnim elementom** i odatle se emituju (`MPI_Bcast` sa root = `out_max.rank` — root grupe operacije može biti bilo koji rang!)
-> - štampa u procesu sa **najmanjim brojem prostih brojeva** (MINLOC po brojaču, ne po vrednosti)
-
----
-
-## Tip 3: Matrica × Matrica
-
-Postoje **dve varijante** Tip 3, koje se razlikuju po tome kako se raspodeljuje matrica A:
-
-### Tip 3a: Raspodela po kolonama matrice A (i vrstama B)
-
-### Primeri
-- **Jun 2 2022** — po `q` kolona matrice A i `q` vrsta matrice B po procesu
-- **Jun 2 2023** — po `q` kolona matrice A i `q` vrsta matrice B po procesu
-- **Jun 2025 a** — po `q` kolona matrice A i `q` vrsta matrice B po procesu, **bez traženja ekstrema** — samo root štampa
-
-### Tekst zadatka (generički — Jun 2 2022)
-Napisati MPI program koji množi matricu `A(k×m)` i matricu `B(m×n)`, prikazuje rezultujuću matricu `C`. Takođe pronalazi proizvod elemenata svake kolone matrice `B`. Root proces šalje svakom procesu po `q` kolona matrice A (P-to-P) i po `q` vrsta matrice B (grupna operacija). Rezultati se prikazuju u procesu koji sadrži maksimum matrice B nakon raspodele.
-
-### Šablon
-
-```c
-// --- 1. RASPODELA q KOLONA MATRICE A (P-to-P) ---
-// Root šalje svakom procesu q kolona, svaka kolona odjednom
-if (rank == root) {
-    for (int i = 0; i < k; i++)
-        for (int j = 0; j < q; j++)
-            local_a[i][j] = a[i][j + root * q];
-
-    for (int p = 0; p < size; p++) {
-        if (p == root) continue;
-        for (int j = 0; j < q; j++) {
-            for (int i = 0; i < k; i++)
-                tmp_a[i] = a[i][j + p * q];
-            MPI_Send(tmp_a, k, MPI_INT, p, 0, MPI_COMM_WORLD);
-        }
-    }
-} else {
-    for (int j = 0; j < q; j++)
-        MPI_Recv(&local_a[0][j], k, MPI_INT, root, 0, MPI_COMM_WORLD, &status);
-}
-
-// --- 2. RASPODELA q VRSTA MATRICE B (grupna) ---
-// MPI_Scatter(b, q*n, MPI_INT, local_b, q*n, MPI_INT, root, ...)
-
-// --- 3. LOKALNO IZRAČUNAVANJE ---
-in.value = local_b[0][0];
-in.rank = rank;
-for (int j = 0; j < n; j++) local_col_prod[j] = 1;
-
-for (int i = 0; i < q; i++)
-    for (int j = 0; j < n; j++) {
-        local_col_prod[j] *= local_b[i][j];     // proizvod kolona B
-        if (local_b[i][j] > in.value)            // lokalni max B
-            in.value = local_b[i][j];
-    }
-
-for (int i = 0; i < k; i++)
-    for (int j = 0; j < n; j++) {
-        local_c[i][j] = 0;
-        for (int l = 0; l < q; l++)
-            local_c[i][j] += local_a[i][l] * local_b[l][j];
-    }
-
-// --- 4. GLOBALNI MAKSIMUM MATRICE B ---
-// MPI_Reduce(&in, &out, 1, MPI_2INT, MPI_MAXLOC, root, ...)
-// MPI_Bcast(&out, 1, MPI_2INT, root, ...)
-
-// --- 5. REDUKCIJA REZULTATA U IZABRANI PROCES ---
-// MPI_Reduce(local_col_prod, col_prod, n, MPI_INT, MPI_PROD, out.rank, ...)
-// MPI_Reduce(local_c, c, k*n, MPI_INT, MPI_SUM, out.rank, ...)
-
-if (rank == out.rank) {
-    // štampa matricu C, maksimum, proizvode kolona B
-}
-```
-
-### Varijante — Tip 3a
-
-| Parametar | Jun 2 2022 | Jun 2 2023 | Jun 2025 a |
-|-----------|------------|------------|------------|
-| Kolona A / Vrsta B po procesu | `q` (konstanta) | `q` (konstanta) | `q` (konstanta) |
-| Operacija na B | proizvod kolona | proizvod kolona | proizvod kolona |
-| Ekstrem | maksimum u B | maksimum u B | **nema** |
-| Štampanje | proces sa maksimumom | proces sa maksimumom | **root** |
-
-> **Napomena:** Jun 2025 a je najjednostavnija varijanta Tip 3a — nema traženje ekstrema (`MPI_MAXLOC`/`MPI_MINLOC`), nema `MPI_Bcast` za određivanje ko štampa. Rezultati se prosto redukuju u root proces preko `MPI_Reduce(MPI_SUM)` za matricu C i `MPI_Reduce(MPI_PROD)` za proizvod kolona B.
-
----
-
-### Tip 3a varijanta: Po 1 kolona A i 1 vrsta B (size = broj kolona A = broj vrsta B)
-
-### Primeri
-- **Oktobar 2022 b** — po **jedna** kolona A (P-to-P) i **jedna** vrsta B (`MPI_Scatter`), `MPI_Reduce(MPI_SUM)` u C
-
-### Tekst zadatka (generički — Oktobar 2022 b)
-Napisati MPI program koji realizuje množenje matrice `A(k×l)` i matrice `B(l×m)` i prikazuje rezultujuću matricu `C(k×m)`. Master proces šalje svakom procesu po **jednu** kolonu matrice A (svi elementi kolone odjednom) i po **jednu** vrstu matrice B (svi elementi vrste odjednom). Slanje kolona matrice A koristi P-to-P, a sve ostalo grupne operacije.
-
-> **Ključna ideja:** Svaki proces dobija jedan **vektor `local_a[k]`** (kolonu A) i jedan **vektor `local_b[m]`** (vrstu B). Lokalni rezultat je **spoljašnji proizvod** ova dva vektora — matrica `local_c[k][m]` gde je `local_c[i][j] = local_a[i] * local_b[j]`. Konačna matrica `C` je **suma** svih `local_c` matrica preko procesa, što direktno odgovara definiciji matričnog množenja `C = A × B = Σ (kolona_A[k] ⊗ vrsta_B[k])`.
-
-### Šablon
-
-```c
-// pretpostavka: size = l (broj kolona matrice A = broj vrsta matrice B)
-int local_a[k], local_b[m], local_c[k][m], c[k][m];
-
-// --- 1. RASPODELA PO 1 KOLONA MATRICE A (P-to-P) ---
-if (rank == root) {
-    int tmp_a[k];
-    // root sebi uzima prvu kolonu (root)
-    for (int i = 0; i < k; i++)
-        local_a[i] = a[i][root];
-
-    for (int p = 0; p < size; p++) {
-        if (p == root) continue;
-        for (int i = 0; i < k; i++)
-            tmp_a[i] = a[i][p];
-        MPI_Send(tmp_a, k, MPI_INT, p, 0, MPI_COMM_WORLD);
-    }
-} else {
-    MPI_Recv(local_a, k, MPI_INT, root, 0, MPI_COMM_WORLD, &status);
-}
-
-// --- 2. RASPODELA PO 1 VRSTA MATRICE B (grupna) ---
-// MPI_Scatter raspodeljuje uzastopne vrste B ka procesima
-MPI_Scatter(b, m, MPI_INT, local_b, m, MPI_INT, root, MPI_COMM_WORLD);
-
-// --- 3. LOKALNO IZRAČUNAVANJE — SPOLJAŠNJI PROIZVOD ---
-for (int i = 0; i < k; i++)
-    for (int j = 0; j < m; j++)
-        local_c[i][j] = local_a[i] * local_b[j];
-
-// --- 4. SABIRANJE LOKALNIH MATRICA U GLOBALNU C ---
-// MPI_Reduce sumira odgovarajuće elemente svih local_c matrica → C
-MPI_Reduce(local_c, c, k * m, MPI_INT, MPI_SUM, root, MPI_COMM_WORLD);
-
-if (rank == root) {
-    // štampa matricu C
-}
-```
-
-### Karakteristike — Tip 3a varijanta
-
-| Parametar | Oktobar 2022 b |
-|-----------|----------------|
-| Kolona A po procesu | **1** |
-| Vrsta B po procesu | **1** (preko `MPI_Scatter`) |
-| Lokalna operacija | spoljašnji proizvod `local_a ⊗ local_b` |
-| Redukcija u C | `MPI_Reduce(MPI_SUM, root)` po elementima `k*m` |
-| Ekstrem | nema (samo prikaz C u root) |
-| Štampanje | root |
-
-> **Razlika od Tip 3a (Jun 2 2022):**
-> - Jun 2 2022: `q` kolona A + `q` vrsta B → svaki proces sam izračuna svoj **deo** finalne matrice C, redukcija je samo za poređenje ekstrema.
-> - Oktobar 2022 b: 1 kolona A + 1 vrsta B → svaki proces izračuna **delimičan doprinos** ka **celoj** matrici C, redukcija sumira sve doprinose.
-
----
-
-### Tip 3b: Raspodela po vrstama matrice A (i cela matrica B)
-
-### Primeri
-- **Septembar 2021** — po `l` vrsta matrice A, cela matrica B, proizvod kolona matrice A, maksimum u C
-- **Oktobar 2 2022** — po `s` vrsta matrice A, cela matrica B, proizvod kolona matrice A
-- **Septembar 2023** — po `r` vrsta matrice A, cela matrica B, proizvod kolona matrice A, minimum u A
-- **Januar 2025** — po `m` vrsta matrice A, cela matrica B, **suma** kolona matrice **B**, maksimum u A
-
-### Tekst zadatka (generički — Oktobar 2 2022)
-Napisati MPI program koji množi matricu `A(k×m)` i matricu `B(m×n)`, prikazuje rezultujuću matricu `C`. Takođe pronalazi proizvod elemenata svake kolone matrice `A`. Root proces šalje svakom procesu po `s` vrsta matrice A (P-to-P) i **celu matricu B** (grupna operacija). Rezultati se prikazuju u procesu koji sadrži maksimum matrice `C`.
-
-### Šablon
-
-```c
-// --- 1. RASPODELA s VRSTA MATRICE A (P-to-P) ---
-// Root šalje svakom procesu s vrsta odjednom, direktno iz matrice A
-if (rank == root) {
-    for (int i = 0; i < s; i++)
-        for (int j = 0; j < m; j++)
-            local_a[i][j] = a[i][j];
-
-    for (int p = 0; p < size; p++) {
-        if (p == root) continue;
-        for (int i = 0; i < s; i++)
-            for (int j = 0; j < m; j++)
-                local_a[i][j] = a[p * s + i][j];
-        MPI_Send(local_a, s * m, MPI_INT, p, 0, MPI_COMM_WORLD);
-    }
-} else {
-    MPI_Recv(local_a, s * m, MPI_INT, root, 0, MPI_COMM_WORLD, &status);
-}
-
-// --- 2. RASPODELA CELE MATRICE B (grupna) ---
-// MPI_Bcast(b, m*n, MPI_INT, root, ...)
-
-// --- 3. LOKALNO IZRAČUNAVANJE ---
-// Proizvod elemenata svake kolone matrice A
-for (int j = 0; j < m; j++) local_col_prod[j] = 1;
-for (int i = 0; i < s; i++)
-    for (int j = 0; j < m; j++)
-        local_col_prod[j] *= local_a[i][j];
-
-// Množenje A × B → C (lokalni deo)
-in.value = local_c[0][0];
-in.rank = rank;
-for (int i = 0; i < s; i++)
-    for (int j = 0; j < n; j++) {
-        local_c[i][j] = 0;
-        for (int l = 0; l < m; l++)
-            local_c[i][j] += local_a[i][l] * b[l][j];
-        if (local_c[i][j] > in.value)
-            in.value = local_c[i][j];
-    }
-
-// --- 4. GLOBALNI MAKSIMUM MATRICE C ---
-// MPI_Reduce(&in, &out, 1, MPI_2INT, MPI_MAXLOC, root, ...)
-// MPI_Bcast(&out, 1, MPI_2INT, root, ...)
-
-// --- 5. REDUKCIJA REZULTATA U IZABRANI PROCES ---
-// MPI_Reduce(local_col_prod, col_prod, m, MPI_INT, MPI_PROD, out.rank, ...)
-// MPI_Reduce(local_c, c, s*n, MPI_INT, MPI_SUM, out.rank, ...)
-
-if (rank == out.rank) {
-    // štampa matricu C, maksimum, proizvode kolona A
-}
-```
-
-### Varijante — Tip 3b
-
-| Parametar | Septembar 2021 | Oktobar 2 2022 | Septembar 2023 | Januar 2025 |
-|-----------|----------------|----------------|----------------|-------------|
-| Vrsta A po procesu | `l` (konstanta) | `s` (konstanta) | `r` (konstanta) | `m` (konstanta) |
-| Matrica B | cela (`MPI_Bcast`) | cela (`MPI_Bcast`) | cela (`MPI_Bcast`) | cela (`MPI_Bcast`) |
-| Operacija | proizvod kolona **A** | proizvod kolona **A** | proizvod kolona **A** | **suma** kolona **B** |
-| Ekstrem | maksimum u C | maksimum u C | **minimum u A** | **maksimum u A** |
-| Štampanje | proces sa maksimumom | proces sa maksimumom | **proces sa minimumom** | **proces sa maksimumom** |
-
-> **Napomena:** Septembar 2021 i Septembar 2023 koriste `MPI_Scatter` umesto P-to-P za slanje vrsta matrice A — moguće zato što je k deljivo sa l/r. Kod Oktobra 2 2022, `s` vrsta se šalju P-to-P kao u zadatku. Septembar 2023 je prvi zadatak gde se ekstrem traži u matrici **A** (minimum), a ne u rezultujućoj matrici **C** (maksimum). Januar 2025 donosi dve novine: operacija je na matrici **B** (suma kolona) umesto na matrici A, a ekstrem je **maksimum u A**.
-
----
-
-### Tip 3c: Cela matrica A + kolone matrice B
-
-### Primeri
-- **April 2026 a** — cela matrica A (`MPI_Bcast`) + po `s` kolona matrice B (P-to-P), minimum u B, minimum po vrstama C
-
-### Tekst zadatka (generički — April 2026 a)
-Napisati MPI program koji realizuje množenje matrice `A(n×k)` i matrice `B(k×m)`, prikazuje rezultujuću matricu `C`. Program pronalazi minimum svake vrste matrice `C`. Master proces šalje svakom procesu **celu matricu A** i po `s` kolona matrice B. Rezultati se prikazuju u procesu koji sadrži minimum u matrici B nakon distribuiranja.
-
-> **Ključna ideja:** Ovo je **inverz** od Tip 3b. Umesto što se dele vrste A + cela B (Tip 3b), ovde se šalje cela A + dele kolone B. Svaki proces izračuna **različite kolone** finalne matrice C. Rezultat se sakuplja preko `MPI_Gather` (ne `MPI_Reduce`), jer svaki proces ima različite kolone — nema preklapanja.
-
-### Šablon
-
-```c
-// --- 1. RASPODELA CELE MATRICE A (grupna) ---
-// MPI_Bcast(a, n*k, MPI_INT, root, ...)
-
-// --- 2. RASPODELA s KOLONA MATRICE B (P-to-P) ---
-// Root šalje svakom procesu po s kolona matrice B
-if (rank == root) {
-    for (int i = 0; i < k; i++)
-        for (int j = 0; j < s; j++)
-            local_b[i][j] = b[i][root * s + j];
-
-    int tmp_b[k][s];
-    for (int p = 0; p < size; p++) {
-        if (p == root) continue;
-        for (int i = 0; i < k; i++)
-            for (int j = 0; j < s; j++)
-                tmp_b[i][j] = b[i][j + p * s];
-        MPI_Send(tmp_b, k * s, MPI_INT, p, 0, MPI_COMM_WORLD);
-    }
-} else {
-    MPI_Recv(local_b, k * s, MPI_INT, root, 0, MPI_COMM_WORLD, &status);
-}
-
-// --- 3. LOKALNO IZRAČUNAVANJE ---
-in.value = INT_MAX;
-in.rank = rank;
-for (int i = 0; i < k; i++)
-    for (int j = 0; j < s; j++)
-        if (local_b[i][j] < in.value)
-            in.value = local_b[i][j];          // lokalni min B
-
-for (int i = 0; i < n; i++)
-    for (int j = 0; j < s; j++) {
-        local_c[i][j] = 0;
-        for (int l = 0; l < k; l++)
-            local_c[i][j] += a[i][l] * local_b[l][j];  // kolone C
-    }
-
-// --- 4. GLOBALNI MINIMUM MATRICE B ---
-// MPI_Reduce(&in, &out, 1, MPI_2INT, MPI_MINLOC, root, ...)
-// MPI_Bcast(&out, 1, MPI_2INT, root, ...)
-
-// --- 5. GATHER REZULTATA U IZABRANI PROCES ---
-// MPI_Gather(local_c, n*s, MPI_INT, c, n*s, MPI_INT, out.rank, ...)
-
-if (rank == out.rank) {
-    // minimum po vrstama C (računa se nakon Gather-a)
-    for (int i = 0; i < n; i++) {
-        row_min[i] = c[i][0];
-        for (int j = 0; j < m; j++)
-            if (c[i][j] < row_min[i])
-                row_min[i] = c[i][j];
-    }
-    // štampa matricu C, minimum B, minimum po vrstama C
-}
-```
-
-### Karakteristike — Tip 3c
-
-| Parametar | April 2026 a |
-|-----------|--------------|
-| Matrica A | cela (`MPI_Bcast`) |
-| Kolona B po procesu | `s` (konstanta, P-to-P) |
-| Lokalni rezultat | `local_c[n][s]` — **kolone** matrice C |
-| Sakupljanje C | `MPI_Gather` (ne `MPI_Reduce`!) |
-| Ekstrem | **minimum** u B |
-| Dodatna operacija | minimum po vrstama C (nakon Gather-a) |
-| Štampanje | proces sa minimumom u B |
-
-> **Razlika od Tip 3b:**
-> - Tip 3b: vrste A + cela B → svaki proces izračuna **vrste** C → `MPI_Reduce(MPI_SUM)` sakuplja rezultate (jer se vrste C ne preklapaju, može i `MPI_Gather`).
-> - Tip 3c: cela A + kolone B → svaki proces izračuna **kolone** C → `MPI_Gather` sakuplja rezultate u ispravan redosled.
->
-> **Važno:** U Tip 3c se `MPI_Gather` koristi umesto `MPI_Reduce` zato što svaki proces ima **različite** kolone C — nema preklapanja elemenata, pa se rezultati samo slažu jedan pored drugog.
-
----
-
-## Tip 4: Stablo / Hiperkub (širenje podatka u `log₂(p)` koraka)
-
-### Primeri
-- **Oktobar 2022 a** — slanje jednog podatka iz P0 svim ostalim procesima (broj procesa je stepen dvojke)
-- **Oktobar 2025 a** — isto kao Oktobar 2022 a, uz dodatno potpitanje: grupna operacija koja zamenjuje komunikaciju je `MPI_Bcast`
-
-### Tekst zadatka (generički)
-Napisati MPI program koji korišćenjem **Point-to-Point** komunikacije vrši slanje jednog podatka iz procesa 0 svim ostalim procesima u komunikatoru. Broj procesa je **stepen dvojke**. Procesi su uređeni u **stablo (hiperkub)**, a komunikacija se odvija u `log₂(p)` koraka — u svakom koraku se broj procesa koji "znaju" podatak udvostručuje.
-
-### Vizuelizacija (za `size = 8`)
-
-```
-Korak 1: P0 → P1                         (1 → 2 procesa)
-Korak 2: P0 → P2,  P1 → P3              (2 → 4 procesa)
-Korak 3: P0 → P4,  P1 → P5,  P2 → P6,  P3 → P7  (4 → 8 procesa)
-```
-
-U svakom koraku `i`, procesi `[0, 2^(i-1))` šalju, procesi `[2^(i-1), 2^i)` primaju (par je `rank` ↔ `rank + 2^(i-1)`).
-
-### Šablon
-
-```c
-#include <math.h>
-
-int data;
-int steps = (int)log2(size);   // broj koraka = log₂(size)
-
-if (rank == root)
-    data = /* početna vrednost */;
+int steps = (int)log2(size);
 
 for (int i = 1; i <= steps; i++) {
-    int half = 1 << (i - 1);   // 2^(i-1) = trenutni broj procesa koji znaju podatak
-
-    if (rank < half)
-        // pošiljaoci: salju svom paru rank + half
+    int half = 1 << (i - 1);              // 2^(i-1)
+    if (rank < half)                      // šalje svom paru
         MPI_Send(&data, 1, MPI_INT, rank + half, 0, MPI_COMM_WORLD);
-    else if (rank < 2 * half)
-        // primaoci: primaju od para rank - half
+    else if (rank < 2 * half)             // prima od para
         MPI_Recv(&data, 1, MPI_INT, rank - half, 0, MPI_COMM_WORLD, &status);
-    // ostali procesi (rank >= 2*half) ne učestvuju u ovom koraku
+    // rank >= 2*half ne radi ništa u ovom koraku!
 }
-
-if (rank != root)
-    printf("Proces %d primio vrednost: %d\n", rank, data);
 ```
 
-### Ključne ideje — Tip 4
-
-1. **`half = 1 << (i-1)`** — bitwise levi pomak je elegantan način za računanje `2^(i-1)`.
-2. **Tri kategorije procesa u svakom koraku**:
-   - `rank < half` → **šalje** procesu `rank + half`
-   - `half ≤ rank < 2*half` → **prima** od procesa `rank - half`
-   - `rank ≥ 2*half` → **čeka** sledeći korak
-3. **Broj procesa raste eksponencijalno**: 1 → 2 → 4 → 8 → ... → `size`.
-4. **Logaritamska kompleksnost**: za `p = 2^k` procesa potrebno je tačno `k = log₂(p)` koraka.
-
-> **Napomena:** Ovaj obrazac se koristi i u `MPI_1_4.c` (vežbe) za realizaciju `MPI_Scatter` preko hiperkuba i u `MPI_1_3.c` za sumiranje brojeva u logaritamskom broju koraka. Inverzna varijanta (sve → P0 u `log₂(p)` koraka) se koristi za **redukciju** stilovi `MPI_Reduce`.
+- **Tri kategorije po koraku:** `rank < half` šalje, `half ≤ rank < 2·half` prima, ostali čekaju. `else` umesto `else if` = deadlock.
+- U koraku `i` broj procesa koji znaju podatak se **udvostručuje**: 1 → 2 → 4 → ... → p.
+- Grupna zamena: `MPI_Bcast(&data, 1, MPI_INT, root, MPI_COMM_WORLD)` (Okt 2025 a pita baš to).
 
 ---
 
-## Tip 5: Bcast + formula + Reduce (dve grupne operacije)
+## 4. Sitni tipovi
 
-### Primeri
-- **Septembar 2024 b** = **Jun 2025 b** (jun 2025 dodaje ograničenje: između dve grupne operacije nije dozvoljena još jedna naredba)
+### Tip 5: Bcast + formula + Reduce (Septembar 2024 b = Jun 2025 b)
 
-### Tekst zadatka (generički)
-Korišćenjem grupne operacije izvršiti slanje `n` podataka niza `X` svim procesima, gde se elementi inicijalizuju u procesu sa rankom 2. Korišćenjem još jedne grupne operacije kreirati niz `Y`, gde je `yi = (p(p+1)/2)·xi`, `i = 0..n-1` (p — ukupan broj procesa).
-
-### Šablon
+Dve grupne operacije, bez raspodele — `yi = (p(p+1)/2)·xi`:
 
 ```c
-int x[n], local_y[n], y[n];
-
-// inicijalizacija u procesu sa rankom 2 (root može biti bilo koji rang!)
-if (rank == 2)
-    for (int i = 0; i < n; i++)
-        x[i] = i + 1;
-
-// --- 1. GRUPNA OPERACIJA: Bcast iz procesa 2 ---
-MPI_Bcast(x, n, MPI_INT, 2, MPI_COMM_WORLD);
-
-// lokalni doprinos svakog procesa
+MPI_Bcast(x, n, MPI_INT, 2, MPI_COMM_WORLD);       // inicijalizacija u procesu 2!
 for (int i = 0; i < n; i++)
     local_y[i] = x[i] * (rank + 1);
-
-// --- 2. GRUPNA OPERACIJA: Reduce SUM ---
-// Σ(rank+1) po svim procesima = p(p+1)/2 → yi = (p(p+1)/2)·xi
 MPI_Reduce(local_y, y, n, MPI_INT, MPI_SUM, 2, MPI_COMM_WORLD);
-
-if (rank == 2)
-    // štampa niz y
 ```
 
-### Ključne ideje — Tip 5
+Formula se **dobija kroz redukciju**: `Σ(rank+1) = p(p+1)/2`.
 
-1. **Root može biti bilo koji rang** — i `MPI_Bcast` i `MPI_Reduce` ovde idu preko procesa 2, ne 0.
-2. **Formula se dobija kroz redukciju**: svaki proces doprinese `x[i]·(rank+1)`, pa suma preko svih procesa daje `x[i]·Σ(rank+1) = x[i]·p(p+1)/2`.
-3. **Nema raspodele podataka** — Bcast šalje ceo niz svima, pa nema `MPI_Scatter` ni MINLOC/MAXLOC logike.
+### Tip 6: Niz + formula (Oktobar 2025 b = Jun 2026 a — identičan tekst!)
+
+`R = Σ(ā+aᵢ)/(b+c)`, gde je `ā` srednja vrednost niza. Scatter niza + skelet iz sekcije 1, uz tri specifičnosti:
+
+```c
+MPI_Scatter(a, k, MPI_INT, local_a, k, MPI_INT, root, MPI_COMM_WORLD);  // k = N/size
+
+// lokalni prolaz: suma, lokalni max, broj prostih (kao u skeletu)
+
+// ā zahteva GLOBALNU sumu pre lokalnog računa:
+MPI_Reduce(&local_sum, &sum_elem, 1, MPI_INT, MPI_SUM, root, MPI_COMM_WORLD);
+MPI_Bcast(&sum_elem, 1, MPI_INT, root, MPI_COMM_WORLD);
+avg = (double)sum_elem / N;
+
+// doprinos procesa za Σ(ā+aᵢ) po sopstvenim elementima:
+local_part = local_sum + k * avg;
+```
+
+- `b` i `c` se inicijalizuju u **MAXLOC procesu** i odatle emituju (`MPI_Bcast` sa root = `out_max.rank`)
+- štampa u procesu sa **najmanjim brojem prostih** (MINLOC po brojaču)
+- finalno: `MPI_Reduce(&local_part, &total, 1, MPI_DOUBLE, MPI_SUM, out_min.rank, ...)` pa `R = total/(b+c)`
+
+### Teorijska pitanja (2026)
+
+- **April 2026 b** — kružna razmena: svaki proces šalje `b1` sledećem `(rank+1)%size`, prima od prethodnog (`MPI_Send` + `MPI_Recv`).
+- **Jun 2026 b** — svi imaju `b1[2]`, svi treba `b2[8]` sa svim elementima: `MPI_Gather(b1, 2, MPI_INT, b2, 2, MPI_INT, root, ...)` + `MPI_Bcast(b2, 8, MPI_INT, root, ...)`. (Jednim pozivom: `MPI_Allgather` — ako je rađen na predmetu.)
 
 ---
 
-## Zamena grupnih operacija P-to-P
+## 5. a → b konverzija (grupne → P-to-P)
 
-Sve tri često korišćene grupne operacije u zadacima se zamenjuju na isti način:
+Varijanta b) uvek menja iste tri operacije istim receptom (root = bilo koji ciljni proces):
 
-### 1. `MPI_Reduce(..., MPI_MINLOC/MAXLOC, root)`
+| Grupna | P-to-P zamena |
+|---|---|
+| `MPI_Reduce(..., MPI_MINLOC/MAXLOC, root)` | svi šalju `in` root-u; root u petlji prima i upoređuje (čuva manji/veći sa rankom) |
+| `MPI_Bcast(..., root)` | root u petlji šalje svima; ostali primaju |
+| `MPI_Reduce(..., MPI_SUM/PROD, target)` — skalar | svi šalju target-u; on sabira/množi |
+| `MPI_Reduce(..., MPI_SUM, target)` — niz | svi šalju niz target-u; on sabira **po elementima** |
+| `MPI_Scatter` | root u petlji šalje svakom njegov deo |
+| `MPI_Gather` | svi šalju root-u; on slaže delove |
+
 ```c
-if (rank != root)
-    MPI_Send(&in, 1, MPI_2INT, root, 0, MPI_COMM_WORLD);
-else {
-    out = in;
-    for (int p = 0; p < size; p++) {
-        if (p == root) continue;
-        MPI_Recv(&in, 1, MPI_2INT, p, 0, MPI_COMM_WORLD, &status);
-        if (out.value > in.value) out = in;  // MINLOC
-        // if (out.value < in.value) out = in;  // MAXLOC
-    }
-}
-```
-
-### 2. `MPI_Bcast(&out, ..., root)`
-```c
-if (rank == root) {
-    for (int p = 0; p < size; p++) {
-        if (p == root) continue;
-        MPI_Send(&out, 1, MPI_2INT, p, 0, MPI_COMM_WORLD);
-    }
+// primer: Reduce(SUM) niza -> P-to-P
+if (rank != target) {
+    MPI_Send(local_arr, n, MPI_INT, target, 0, MPI_COMM_WORLD);
 } else {
-    MPI_Recv(&out, 1, MPI_2INT, root, 0, MPI_COMM_WORLD, &status);
-}
-```
-
-### 3. `MPI_Reduce(..., MPI_SUM, target_rank)` — skalar
-```c
-if (rank != target_rank)
-    MPI_Send(&local_sum, 1, MPI_INT, target_rank, 0, MPI_COMM_WORLD);
-else {
-    sum = local_sum;
-    for (int p = 0; p < size; p++) {
-        if (p == target_rank) continue;
-        MPI_Recv(&local_sum, 1, MPI_INT, p, 0, MPI_COMM_WORLD, &status);
-        sum += local_sum;
-    }
-}
-```
-
-### 4. `MPI_Reduce(..., MPI_SUM, target_rank)` — niz
-```c
-if (rank != target_rank)
-    MPI_Send(local_arr, n, MPI_INT, target_rank, 0, MPI_COMM_WORLD);
-else {
     for (int i = 0; i < n; i++) global_arr[i] = local_arr[i];
     for (int p = 0; p < size; p++) {
-        if (p == target_rank) continue;
+        if (p == target) continue;
         MPI_Recv(local_arr, n, MPI_INT, p, 0, MPI_COMM_WORLD, &status);
         for (int i = 0; i < n; i++) global_arr[i] += local_arr[i];
     }
@@ -653,45 +202,43 @@ else {
 
 ---
 
-## Uočeni patterni i ponavljanja
+## 6. Rok-indeks (koji rok je koji šablon)
 
-| Rok | Tip | Napomena |
-|-----|-----|----------|
-| Jun 2020 | Tip 1 | Bazni obrazac, `i=0..N-1`, `j=0..N-1` |
-| Septembar 2024 a | Tip 1 | **Identičan** Jun 2020 |
-| Januar 2022 | Tip 1 | **Identičan** Jun 2020 |
-| Decembar 2022 | Tip 1 | Varijanta: pomak `y`, silazni `j`, traži se **najveći** broj prostih |
-| Septembar 2022 | Tip 1 | **Identičan** Decembar 2022 |
-| April 2021 | Tip 2 | Po jedna kolona, **min** + **proizvod** po vrstama |
-| April 2022 | Tip 2 | Po `q` kolona, **max** + **suma** po vrstama |
-| Jun 2021 | Tip 2 | Po `l` kolona, **max** + **suma** po vrstama |
-| Decembar 2021 | Tip 2 | **Identičan** Aprilu 2022 — po `q` kolona, **max** + **suma** po vrstama |
-| April 2025 | Tip 2 | **Identičan** Aprilu 2022 — po `s` kolona, **max** + **suma** po vrstama |
-| Jun 2 2022 | Tip 3a | Po `q` kolona A i `q` vrsta B, **max** + **proizvod** kolona B |
-| Jun 2 2023 | Tip 3a | Po `q` kolona A i `q` vrsta B, **max** + **proizvod** kolona B |
-| Septembar 2021 | Tip 3b | Po `l` vrsta A (`MPI_Scatter`), cela B, **max** u C + **proizvod** kolona A |
-| Oktobar 2 2022 | Tip 3b | Po `s` vrsta A, cela B, **max** u C + **proizvod** kolona A |
-| Oktobar 2022 a | Tip 4 | Hiperkub — P-to-P slanje podatka od P0 svim ostalim u `log₂(p)` koraka |
-| Oktobar 2022 b | Tip 3a var. | Po **1** kolona A (P-to-P) i **1** vrsta B (`MPI_Scatter`), `MPI_Reduce` u C |
-| Septembar 2023 | Tip 3b | Po `r` vrsta A (`MPI_Scatter`/P-to-P), cela B, **min** u A + **proizvod** kolona A |
-| Januar 2025 | Tip 3b | Po `m` vrsta A (`MPI_Scatter`), cela B, **max** u A + **suma** kolona B |
-| Jun 2025 a | Tip 3a | Po `q` kolona A i `q` vrsta B, **proizvod** kolona B — **bez ekstrema**, root štampa |
-| Jun 2025 b | Tip 5 | `MPI_Bcast` niza X iz **P2**, formula `yi=(p(p+1)/2)*xi`, `MPI_Reduce(MPI_SUM)` u root |
-| Septembar 2024 b | Tip 5 | **Identičan** Jun 2025 b (+ ograničenje da između dve grupne operacije nema drugih naredbi) |
-| April 2026 a | Tip 3c | Cela A (`MPI_Bcast`) + `s` kolona B (P-to-P), **min** u B, min po vrstama C, `MPI_Gather` |
-| April 2026 b | Jedinstven | Kružna razmena — svaki proces šalje `b1` sledećem `(rank+1)%size`, prima od prethodnog |
-| Oktobar 2025 a | Tip 4 | **Identičan** Oktobru 2022 a + potpitanje: grupna zamena = `MPI_Bcast` |
-| Oktobar 2025 b | Tip 2 var. | Scatter niza → MAXLOC (b i c inicijalizuje proces sa maksimumom) → MINLOC (broj prostih) → Reduce SUM u procesu sa najmanje prostih; formula `R = Σ(ā+aᵢ)/(b+c)` |
+| Rok | Šablon | Bitno |
+|---|---|---|
+| Jun 2020 | Tip 1 | bazni: `i,j` od 0 do N-1, **min** prostih |
+| Januar 2022 | Tip 1 | identičan Junu 2020 |
+| Septembar 2024 a | Tip 1 | identičan Junu 2020 |
+| Septembar 2022 | Tip 1 | pomak `y`, silazni `j`, **max** prostih |
+| Decembar 2022 | Tip 1 | isto kao Septembar 2022 |
+| April 2021 | Tip 2 | po **1** kolona, **min** + proizvod po vrstama |
+| Jun 2021 | Tip 2 | po `l` kolona, max + suma |
+| Decembar 2021 | Tip 2 | po `q` kolona, max + suma |
+| April 2022 | Tip 2 | identičan Decembru 2021 |
+| April 2025 | Tip 2 | identičan (po `s`) |
+| Septembar 2021 | Tip 3b | `l` vrsta A + cela B, max u **C**, proizvod kolona A |
+| Oktobar 2 2022 | Tip 3b | `s` vrsta A + cela B, max u **C** |
+| Septembar 2023 | Tip 3b | `r` vrsta A + cela B, **min u A** |
+| Januar 2025 | Tip 3b | `m` vrsta A + cela B, max u A, **suma kolona B** |
+| April 2026 a | Tip 3c | cela A + `s` kolona B, **min u B**, `MPI_Gather` |
+| Jun 2 2022 | Tip 3a | `q` kolona A + `q` vrsta B, max u B, proizvod kolona B |
+| Jun 2 2023 | Tip 3a | identičan Junu 2 2022 |
+| Jun 2025 a | Tip 3a | isto, ali **bez ekstrema** — root štampa |
+| Oktobar 2022 b | Tip 3a (`q=1`) | 1 kolona + 1 vrsta → spoljašnji proizvod + Reduce(SUM) |
+| Oktobar 2025 b = Jun 2026 a | Tip 6 | `R = Σ(ā+aᵢ)/(b+c)`; b i c u MAXLOC procesu, štampa u MINLOC po broju prostih |
+| Oktobar 2022 a = Oktobar 2025 a | Tip 4 | hiperkub; 2025 dodaje pitanje o `MPI_Bcast` |
+| Septembar 2024 b = Jun 2025 b | Tip 5 | Bcast iz P2 + formula `yi=(p(p+1)/2)·xi` + Reduce |
+| April 2026 b | teorija | kružna razmena u prstenu |
+| Jun 2026 b | teorija | Gather + Bcast (ili Allgather) |
 
 ---
 
-## Saveti za učenje
+## 7. Kako se uči
 
-1. **Naučiti šablon Tip 1** — petlja sa rekonstrukcijom indeksa je najčešća na ispitu. Razumeti kako se iz `t` rekonstruišu `i` i `j` za uzlažni i silazni smer.
-2. **Naučiti šablon Tip 2** — raspodela kolona matrice P-to-P, zatim grupne operacije za redukciju. Zamena a→b je uvek ista.
-3. **Razumeti razliku Tip 3a vs Tip 3b vs Tip 3c** — Tip 3a deli A po **kolonama** + B po **vrstama** (svaki proces izračuna deo C samostalno); Tip 3b deli A po **vrstama** + cela B (`MPI_Bcast`) (svaki proces izračuna **različite vrste** finalne C); Tip 3c šalje celu A (`MPI_Bcast`) + deli B po **kolonama** (svaki proces izračuna **različite kolone** finalne C, sakuplja se `MPI_Gather`).
-4. **Tip 3a varijanta (q=1)** — kada svaki proces dobije po **1** kolonu A i **1** vrstu B, lokalni rezultat je **spoljašnji proizvod** koji se sumira u finalnu C preko `MPI_Reduce(MPI_SUM)`.
-5. **Tip 4 (Stablo)** — petlja `for (i = 1; i <= log₂(size); i++)` sa `half = 1 << (i-1)`. Tri kategorije: `rank < half` šalje, `half ≤ rank < 2*half` prima, ostali čekaju. Uvek se podrazumeva da je `size` stepen dvojke.
-6. **Pamtiti strukturu** `struct { int value; int rank; }` — neophodna za `MPI_MINLOC`/`MPI_MAXLOC`.
-7. **Redosled operacija** je uvek isti za Tip 1/2/3: **Raspodela → Lokalni račun → Reduce(LOC) → Bcast → Reduce(SUM)**.
-8. **Jedinstveni zadaci** — povremeno se pojave zadaci koji ne pripadaju nijednom tipu (npr. April 2026 b — kružna razmena). Važno je razumeti osnovne grupne operacije (`MPI_Bcast`, `MPI_Reduce`) i znati ih kombinovati u novim situacijama.
+1. **Skelet naizust** (sekcija 1) — koraci 1–5 + zašto Bcast ide pre Reduce u `out.rank`.
+2. **Cheat sheet raspodele** — po tekstu zadatka prepoznaj šta ko dobija; ostalo je uvek isto.
+3. **Reduce vs Gather pravilo** — preklapa li se doprinos procesa (Reduce) ili su delovi različiti (Gather).
+4. **Tip 1 rekonstrukcija indeksa** — formula tabela iz sekcije 2.
+5. **Hiperkub** — `half = 1 << (i-1)`, tri kategorije, `else if`!
+6. **a→b konverzija** — uvek isti recept, sekcija 5.
+7. Kad ideš kroz rokove, radi po Rok-indeksu: prvi svake vrsti, ostali su replike.
