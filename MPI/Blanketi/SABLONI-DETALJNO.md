@@ -673,6 +673,8 @@ else {
 | Oktobar 2 2022 | Tip 3b | Po `s` vrsta A, cela B, **max** u C + **proizvod** kolona A |
 | Oktobar 2022 a | Tip 4 | Hiperkub — P-to-P slanje podatka od P0 svim ostalim u `log₂(p)` koraka |
 | Oktobar 2022 b | Tip 3a var. | Po **1** kolona A (P-to-P) i **1** vrsta B (`MPI_Scatter`), `MPI_Reduce` u C |
+| Oktobar 2023 a | Tip 4 | **Identičan** Oktobru 2022 a — hiperkub, P-to-P slanje od P0 svim u `log₂(p)` koraka |
+| Oktobar 2023 b | Tip 3a var. | Po **1** kolona A (P-to-P) i **1** vrsta B (`MPI_Scatter`) — kao Oktobar 2022 b, plus **proizvod vrsta A** preko `MPI_Reduce(MPI_PROD)` |
 | Septembar 2023 | Tip 3b | Po `r` vrsta A (`MPI_Scatter`/P-to-P), cela B, **min** u A + **proizvod** kolona A |
 | Januar 2025 | Tip 3b | Po `m` vrsta A (`MPI_Scatter`), cela B, **max** u A + **suma** kolona B |
 | Jun 2025 a | Tip 3a | Po `q` kolona A i `q` vrsta B, **proizvod** kolona B — **bez ekstrema**, root štampa |

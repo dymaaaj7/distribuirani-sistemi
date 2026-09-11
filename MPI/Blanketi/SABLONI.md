@@ -4,7 +4,7 @@
 > Detaljna analiza sa svim varijantama i obrazloženjima: [SABLONI-DETALJNO.md](SABLONI-DETALJNO.md)
 > Rešenja po rokovima: [2020](2020/) – [2026](2026/)
 
-**Suština:** od 27 zadataka sa rokova 2020–2026, njih **19 je jedan te isti pipeline** (Tip 1, 2, 3). Ostalo su samostalni tipovi: hiperkub — Tip 4 (2 zadatka), Bcast + formula — Tip 5 (2), niz + formula — Tip 6 (2), teorijska pitanja (2). Uči se skelet + tabela prekidača, ne sve tipove odvojeno.
+**Suština:** od 29 zadataka sa rokova 2020–2026, njih **20 je jedan te isti pipeline** (Tip 1, 2, 3). Ostalo su samostalni tipovi: hiperkub — Tip 4 (3 zadatka), Bcast + formula — Tip 5 (2), niz + formula — Tip 6 (2), teorijska pitanja (2). Uči se skelet + tabela prekidača, ne sve tipove odvojeno.
 
 ---
 
@@ -225,8 +225,10 @@ if (rank != target) {
 | Jun 2 2023 | Tip 3a | identičan Junu 2 2022 |
 | Jun 2025 a | Tip 3a | isto, ali **bez ekstrema** — root štampa |
 | Oktobar 2022 b | Tip 3a (`q=1`) | 1 kolona + 1 vrsta → spoljašnji proizvod + Reduce(SUM) |
+| Oktobar 2023 b | Tip 3a (`q=1`) | isto + **proizvod vrsta A** (Reduce `MPI_PROD` na koloni) |
 | Oktobar 2025 b = Jun 2026 a | Tip 6 | `R = Σ(ā+aᵢ)/(b+c)`; b i c u MAXLOC procesu, štampa u MINLOC po broju prostih |
 | Oktobar 2022 a = Oktobar 2025 a | Tip 4 | hiperkub; 2025 dodaje pitanje o `MPI_Bcast` |
+| Oktobar 2023 a | Tip 4 | isto kao Oktobar 2022 a |
 | Septembar 2024 b = Jun 2025 b | Tip 5 | Bcast iz P2 + formula `yi=(p(p+1)/2)·xi` + Reduce |
 | April 2026 b | teorija | kružna razmena u prstenu |
 | Jun 2026 b | teorija | Gather + Bcast (ili Allgather) |

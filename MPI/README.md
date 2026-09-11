@@ -64,6 +64,8 @@ MPI/
     │   └── septembar_b.c
     ├── 2023/
     │   ├── jun_2.c
+    │   ├── oktobar_a.c
+    │   ├── oktobar_b.c
     │   ├── septembar_a.c
     │   └── septembar_b.c
     ├── 2024/
@@ -164,7 +166,7 @@ Rešenja zadataka sa prethodnih rokova podeljena su po godinama. Svaki rok obič
 | [`septembar_a.c`](Blanketi/2022/septembar_a.c) | Ciklična raspodela dvostruke petlje sa pomakom `y` i silaznim `j` — pronalaženje procesa sa najvećim brojem prostih sabiraka — **grupne operacije** (isto kao decembar 2022). |
 | [`septembar_b.c`](Blanketi/2022/septembar_b.c) | Isti zadatak — **P-to-P operacije**. |
 | [`oktobar_a.c`](Blanketi/2022/oktobar_a.c) | Stablo — P-to-P slanje podatka od procesa 0 svim ostalim u logaritamskom broju koraka — **P-to-P operacije**. |
-| [`oktobar_b.c`](Blanketi/2022/oktobar_b.c) | Stablo — P-to-P slanje podatka od procesa 0 svim ostalim u logaritamskom broju koraka — **P-to-P operacije**. |
+| [`oktobar_b.c`](Blanketi/2022/oktobar_b.c) | Množenje matrica `A(k×l)` i `B(l×m)` — po jedna kolona matrice A (P-to-P) i jedna vrsta matrice B (`MPI_Scatter`) po procesu — **grupne + P-to-P operacije**. |
 
 ### 2023
 
@@ -173,6 +175,8 @@ Rešenja zadataka sa prethodnih rokova podeljena su po godinama. Svaki rok obič
 | [`jun_2.c`](Blanketi/2023/jun_2.c) | Množenje matrice `A(k×m)` i matrice `B(m×n)` — po `q` kolona matrice A i `q` vrsta matrice B po procesu, proizvod kolona matrice B, maksimum — **grupne + P-to-P operacije**. |
 | [`septembar_a.c`](Blanketi/2023/septembar_a.c) | Množenje matrica `A(k×m)` i `B(m×n)` — po `r` vrsta matrice A, cela matrica B, proizvod elemenata svake kolone matrice A, minimum u matrici A — **grupne operacije**. |
 | [`septembar_b.c`](Blanketi/2023/septembar_b.c) | Isti zadatak — **P-to-P operacije**. |
+| [`oktobar_a.c`](Blanketi/2023/oktobar_a.c) | Stablo — P-to-P slanje podatka od procesa 0 svim ostalim u logaritamskom broju koraka — **P-to-P operacije** (isto kao oktobar 2022 a — Tip 4). |
+| [`oktobar_b.c`](Blanketi/2023/oktobar_b.c) | Množenje matrica `A(k×l)` i `B(l×m)` — po jedna kolona matrice A (P-to-P) i jedna vrsta matrice B (`MPI_Scatter`) po procesu, proizvod elemenata svake vrste matrice A — **grupne + P-to-P operacije** (isto kao oktobar 2022 b + proizvod vrsta A). |
 
 ### 2024
 
@@ -208,7 +212,7 @@ Rešenja zadataka sa prethodnih rokova podeljena su po godinama. Svaki rok obič
 
 Fajl [`Blanketi/SABLONI.md`](Blanketi/SABLONI.md) je **kompaktna verzija za učenje** — jedan univerzalni skelet + tabela prekidača:
 
-- **Univerzalni skelet**: `Raspodela → lokalni račun → Reduce(LOC) → Bcast → Reduce(SUM)/Gather` (pokriva 21 od 27 zadataka).
+- **Univerzalni skelet**: `Raspodela → lokalni račun → Reduce(LOC) → Bcast → Reduce(SUM)/Gather` (pokriva 20 od 29 zadataka).
 - **Raspodela cheat sheet**: šta koji zadatak deli po procesima.
 - **Reduce vs Gather pravilo**: preklapa li se doprinos procesa ili su delovi različiti.
 - **Posebni šabloni**: hiperkub (Tip 4), Bcast+formula (Tip 5), niz+formula (Tip 6), teorijska pitanja.

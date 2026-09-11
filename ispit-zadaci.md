@@ -72,7 +72,7 @@ Legenda:
 
 ### Oktobar
 
-- [ ] **MPI** — Napomena:
+- [x] **MPI** — Napomena: a - Tip 4 — stablo (kao Oktobar 2022 a); b - Tip 3a (q=1) — 1 kolona A (P-to-P) + 1 vrsta B (Scatter), kao Oktobar 2022 b + proizvod vrsta A
 - [ ] **JMS** — Napomena:
 - [ ] **WCF** — Napomena:
 
