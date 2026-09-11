@@ -1,7 +1,7 @@
 <!-- markdownlint-disable MD024 -->
 # MPI Blanketi — Šabloni i Tipovi Zadataka
 
-Na osnovu analize zadataka sa prethodnih rokova, MPI ispitni zadaci se mogu svrstati u **pet osnovna tipova**. Većina zadataka dolazi u varijanti **a)** (grupne operacije) i **b)** (P-to-P operacije), pri čemu je b) uvek direktna zamena grupnih operacija iz a).
+Na osnovu analize zadataka sa prethodnih rokova, MPI ispitni zadaci se mogu svrstati u **šest osnovnih tipova**. Većina zadataka dolazi u varijanti **a)** (grupne operacije) i **b)** (P-to-P operacije), pri čemu je b) uvek direktna zamena grupnih operacija iz a).
 
 ## Pregled tipova
 
@@ -14,6 +14,7 @@ Na osnovu analize zadataka sa prethodnih rokova, MPI ispitni zadaci se mogu svrs
 | **Tip 3b** | Matrica × Matrica (vrste A + cela B) | Svaki proces dobije vrste A + celu B (`MPI_Bcast`) → izračuna vrste C |
 | **Tip 3c** | Matrica × Matrica (cela A + kolone B) | Svaki proces dobije celu A (`MPI_Bcast`) + kolone B → izračuna kolone C |
 | **Tip 4** | Stablo / Hiperkub | Širenje podatka iz P0 svim ostalim u `log₂(p)` koraka |
+| **Tip 5** | Bcast + formula + Reduce | Dve grupne operacije bez raspodele: `local_y[i] = x[i]·(rank+1)`, Reduce SUM daje `yi = (p(p+1)/2)·xi` |
 
 ---
 
@@ -86,6 +87,7 @@ if (rank == out.rank) {
 - **April 2022** — po **q** kolona / elemenata vektora
 - **Jun 2021** — po **l** kolona / elemenata vektora
 - **Decembar 2021** — po **q** kolona / elemenata vektora (identičan Aprilu 2022)
+- **Oktobar 2025 b** — varijanta sa **običnim nizom** umesto matrice (v. napomenu ispod)
 - **April 2025** — po **s** kolona / elemenata vektora (identičan Aprilu 2022)
 
 ### Tekst zadatka (generički)
@@ -158,6 +160,11 @@ if (rank == out.rank) {
 | Operacija na vrstama | proizvod | suma | suma | suma | suma |
 | Ekstrem | minimum | maksimum | maksimum | maksimum | maksimum |
 | Stampanje | proces sa minimumom | proces sa maksimumom | proces sa maksimumom | proces sa maksimumom | proces sa maksimumom |
+
+> **Varijanta — Oktobar 2025 b (niz umesto matrice):** isti skelet kao Tip 2, samo što se umesto kolona matrice deli **niz** blok raspodelom (`MPI_Scatter` po `k = N/size` elemenata). Formula: `R = Σ(ā+aᵢ)/(b+c)`, gde je `ā` srednja vrednost niza. Novine u odnosu na standardni Tip 2:
+> - `ā` zahteva **globalnu sumu elemenata** (`MPI_Reduce(SUM)` + `MPI_Bcast`) pre lokalnog računa — doprinos procesa je `k·ā + Σ sopstvenih aᵢ`
+> - `b` i `c` se **inicijalizuju u procesu sa maksimalnim elementom** i odatle se emituju (`MPI_Bcast` sa root = `out_max.rank` — root grupe operacije može biti bilo koji rang!)
+> - štampa u procesu sa **najmanjim brojem prostih brojeva** (MINLOC po brojaču, ne po vrednosti)
 
 ---
 
@@ -488,6 +495,7 @@ if (rank == out.rank) {
 
 ### Primeri
 - **Oktobar 2022 a** — slanje jednog podatka iz P0 svim ostalim procesima (broj procesa je stepen dvojke)
+- **Oktobar 2025 a** — isto kao Oktobar 2022 a, uz dodatno potpitanje: grupna operacija koja zamenjuje komunikaciju je `MPI_Bcast`
 
 ### Tekst zadatka (generički)
 Napisati MPI program koji korišćenjem **Point-to-Point** komunikacije vrši slanje jednog podatka iz procesa 0 svim ostalim procesima u komunikatoru. Broj procesa je **stepen dvojke**. Procesi su uređeni u **stablo (hiperkub)**, a komunikacija se odvija u `log₂(p)` koraka — u svakom koraku se broj procesa koji "znaju" podatak udvostručuje.
@@ -540,6 +548,47 @@ if (rank != root)
 4. **Logaritamska kompleksnost**: za `p = 2^k` procesa potrebno je tačno `k = log₂(p)` koraka.
 
 > **Napomena:** Ovaj obrazac se koristi i u `MPI_1_4.c` (vežbe) za realizaciju `MPI_Scatter` preko hiperkuba i u `MPI_1_3.c` za sumiranje brojeva u logaritamskom broju koraka. Inverzna varijanta (sve → P0 u `log₂(p)` koraka) se koristi za **redukciju** stilovi `MPI_Reduce`.
+
+---
+
+## Tip 5: Bcast + formula + Reduce (dve grupne operacije)
+
+### Primeri
+- **Septembar 2024 b** = **Jun 2025 b** (jun 2025 dodaje ograničenje: između dve grupne operacije nije dozvoljena još jedna naredba)
+
+### Tekst zadatka (generički)
+Korišćenjem grupne operacije izvršiti slanje `n` podataka niza `X` svim procesima, gde se elementi inicijalizuju u procesu sa rankom 2. Korišćenjem još jedne grupne operacije kreirati niz `Y`, gde je `yi = (p(p+1)/2)·xi`, `i = 0..n-1` (p — ukupan broj procesa).
+
+### Šablon
+
+```c
+int x[n], local_y[n], y[n];
+
+// inicijalizacija u procesu sa rankom 2 (root može biti bilo koji rang!)
+if (rank == 2)
+    for (int i = 0; i < n; i++)
+        x[i] = i + 1;
+
+// --- 1. GRUPNA OPERACIJA: Bcast iz procesa 2 ---
+MPI_Bcast(x, n, MPI_INT, 2, MPI_COMM_WORLD);
+
+// lokalni doprinos svakog procesa
+for (int i = 0; i < n; i++)
+    local_y[i] = x[i] * (rank + 1);
+
+// --- 2. GRUPNA OPERACIJA: Reduce SUM ---
+// Σ(rank+1) po svim procesima = p(p+1)/2 → yi = (p(p+1)/2)·xi
+MPI_Reduce(local_y, y, n, MPI_INT, MPI_SUM, 2, MPI_COMM_WORLD);
+
+if (rank == 2)
+    // štampa niz y
+```
+
+### Ključne ideje — Tip 5
+
+1. **Root može biti bilo koji rang** — i `MPI_Bcast` i `MPI_Reduce` ovde idu preko procesa 2, ne 0.
+2. **Formula se dobija kroz redukciju**: svaki proces doprinese `x[i]·(rank+1)`, pa suma preko svih procesa daje `x[i]·Σ(rank+1) = x[i]·p(p+1)/2`.
+3. **Nema raspodele podataka** — Bcast šalje ceo niz svima, pa nema `MPI_Scatter` ni MINLOC/MAXLOC logike.
 
 ---
 
@@ -627,10 +676,12 @@ else {
 | Septembar 2023 | Tip 3b | Po `r` vrsta A (`MPI_Scatter`/P-to-P), cela B, **min** u A + **proizvod** kolona A |
 | Januar 2025 | Tip 3b | Po `m` vrsta A (`MPI_Scatter`), cela B, **max** u A + **suma** kolona B |
 | Jun 2025 a | Tip 3a | Po `q` kolona A i `q` vrsta B, **proizvod** kolona B — **bez ekstrema**, root štampa |
-| Jun 2025 b | Jedinstven | `MPI_Bcast` niza X iz **P2**, formula `yi=(p(p+1)/2)*xi`, `MPI_Reduce(MPI_SUM)` u root |
-| Septembar 2024 b | Jedinstven | **Identičan** Jun 2025 b |
+| Jun 2025 b | Tip 5 | `MPI_Bcast` niza X iz **P2**, formula `yi=(p(p+1)/2)*xi`, `MPI_Reduce(MPI_SUM)` u root |
+| Septembar 2024 b | Tip 5 | **Identičan** Jun 2025 b (+ ograničenje da između dve grupne operacije nema drugih naredbi) |
 | April 2026 a | Tip 3c | Cela A (`MPI_Bcast`) + `s` kolona B (P-to-P), **min** u B, min po vrstama C, `MPI_Gather` |
 | April 2026 b | Jedinstven | Kružna razmena — svaki proces šalje `b1` sledećem `(rank+1)%size`, prima od prethodnog |
+| Oktobar 2025 a | Tip 4 | **Identičan** Oktobru 2022 a + potpitanje: grupna zamena = `MPI_Bcast` |
+| Oktobar 2025 b | Tip 2 var. | Scatter niza → MAXLOC (b i c inicijalizuje proces sa maksimumom) → MINLOC (broj prostih) → Reduce SUM u procesu sa najmanje prostih; formula `R = Σ(ā+aᵢ)/(b+c)` |
 
 ---
 
@@ -643,4 +694,4 @@ else {
 5. **Tip 4 (Stablo)** — petlja `for (i = 1; i <= log₂(size); i++)` sa `half = 1 << (i-1)`. Tri kategorije: `rank < half` šalje, `half ≤ rank < 2*half` prima, ostali čekaju. Uvek se podrazumeva da je `size` stepen dvojke.
 6. **Pamtiti strukturu** `struct { int value; int rank; }` — neophodna za `MPI_MINLOC`/`MPI_MAXLOC`.
 7. **Redosled operacija** je uvek isti za Tip 1/2/3: **Raspodela → Lokalni račun → Reduce(LOC) → Bcast → Reduce(SUM)**.
-8. **Jedinstveni zadaci** — povremeno se pojave zadaci koji ne pripadaju nijednom tipu (npr. Jun 2025 b). Važno je razumeti osnovne grupne operacije (`MPI_Bcast`, `MPI_Reduce`) i znati ih kombinovati u novim situacijama.
+8. **Jedinstveni zadaci** — povremeno se pojave zadaci koji ne pripadaju nijednom tipu (npr. April 2026 b — kružna razmena). Važno je razumeti osnovne grupne operacije (`MPI_Bcast`, `MPI_Reduce`) i znati ih kombinovati u novim situacijama.

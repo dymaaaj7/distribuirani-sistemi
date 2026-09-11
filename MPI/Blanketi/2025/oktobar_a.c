@@ -1,21 +1,15 @@
 /*
 
 Napisati MPI program koji korišćenjem Point-to-Point komunikacije vrši slanje
-jednog podatka iz procesa 0 svim ostalim procesima u komunikatoru (broj procesa
-je stepen dvojke).
+jednog podatka iz procesa 0 svim ostalim procesima u komunikatoru
+(broj procesa je stepen dvojke).
 
 Procesi nakon primanja prikazuju dobijene vrednosti.
 
 Procesi su uređeni u stablo, komunikacija se odvija kao što je prikazano na
 slici, za broj procesa=8.
 
-0 -(korak 1)-> 1
-0 -(korak 2)-> 2
-1 -(korak 2)-> 3
-0 -(korak 3)-> 4
-1 -(korak 3)-> 5
-2 -(korak 3)-> 6
-3 -(korak 3)-> 7
+Napisati grupnu operaciju koja bi zamenila prethodno opisanu komunikaciju.
 
 */
 
@@ -23,10 +17,17 @@ slici, za broj procesa=8.
 #include <stdio.h>
 #include <math.h>
 
+// size = p (stepen dvojke)
+// Windows: mpicc oktobar_a.c -o oktobar_a.exe && mpiexec -n 8 oktobar_a.exe
+// Linux:   mpicc oktobar_a.c -o oktobar_a && mpirun -np 8 ./oktobar_a
+
+// Grupna operacija koja zamenjuje ovu komunikaciju:
+// MPI_Bcast(&data, 1, MPI_INT, root, MPI_COMM_WORLD);
+
 int main(int argc, char *argv[])
 {
     int rank, size, root = 0;
-    int data;
+    int data = 42;
 
     MPI_Status status;
     MPI_Init(&argc, &argv);
@@ -48,7 +49,7 @@ int main(int argc, char *argv[])
     }
 
     if (rank != 0)
-        printf("Proces %d primio vrednost: %d\n", rank, data);
+        printf("Proces %d primio vrednost %d. \n", rank, data);
 
     MPI_Finalize();
     return 0;

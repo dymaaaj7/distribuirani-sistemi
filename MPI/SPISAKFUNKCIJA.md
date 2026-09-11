@@ -4,8 +4,8 @@
 
 1. [Inicijalizacija](#inicijalizacija)
 2. [Topologija](#topologija)
-3. [Blokiajuca komunikacija](#blokiajuca-komunikacija)
-4. [Neblokiajuca komunikacija](#neblokiajuca-komunikacija)
+3. [Blokirajuca komunikacija](#blokirajuca-komunikacija)
+4. [Neblokirajuca komunikacija](#neblokirajuca-komunikacija)
 5. [Cekanje na zavrsetak](#cekanje-na-zavrsetak)
 6. [Grupne operacije](#grupne-operacije)
 
@@ -27,6 +27,18 @@ int MPI_Init(int *argc, char ***argv)
 | `argv` | `char ***` | Pokazivač na niz stringova argumenata komandne linije |
 
 > **Napomena:** Mora biti pozvana tačno jednom. Na kraju programa obavezno pozvati `MPI_Finalize()`.
+
+---
+
+### `MPI_Finalize`
+
+```c
+int MPI_Finalize(void)
+```
+
+**Opis:** Zatvara MPI izvršno okruženje i oslobađa sve MPI resurse. Mora biti pozvana na kraju svakog MPI programa, nakon svih ostalih MPI poziva. Posle nje se ne sme pozvati nijedna MPI funkcija.
+
+> **Napomena:** Svi procesi moraju doći do `MPI_Finalize()` — ako neki proces završi ranije, ostali mogu ostati blokirani u komunikaciji. Ispisi (`printf`) pre nje su sigurni.
 
 ---
 
@@ -62,7 +74,7 @@ int MPI_Comm_size(MPI_Comm comm, int *size)
 
 ---
 
-## Blokiajuca komunikacija
+## Blokirajuca komunikacija
 
 ### `MPI_Send`
 
@@ -74,7 +86,7 @@ int MPI_Send(void *buf, int count, MPI_Datatype dtype, int dest, int tag, MPI_Co
 
 | Parametar | Tip | Opis |
 |-----------|-----|------|
-| `buf` | `void *` | Pokazivač na podatke koji se šalju (bаfer za slanje) |
+| `buf` | `void *` | Pokazivač na podatke koji se šalju (bafer za slanje) |
 | `count` | `int` | Broj elemenata koji se šalju |
 | `dtype` | `MPI_Datatype` | Tip podataka (npr. `MPI_INT`, `MPI_DOUBLE`, `MPI_CHAR`) |
 | `dest` | `int` | Rang odredišnog procesa |
@@ -95,7 +107,7 @@ int MPI_Recv(void *buf, int count, MPI_Datatype dtype, int source, int tag, MPI_
 
 | Parametar | Tip | Opis |
 |-----------|-----|------|
-| `buf` | `void *` | Bаfer u koji se upisuju primljeni podaci |
+| `buf` | `void *` | Bafer u koji se upisuju primljeni podaci |
 | `count` | `int` | Maksimalan broj elemenata koji se mogu primiti (veličina bafera) |
 | `dtype` | `MPI_Datatype` | Tip podataka koji se prima |
 | `source` | `int` | Rang procesa pošiljaoca; `MPI_ANY_SOURCE` za primanje od bilo koga |
@@ -105,7 +117,7 @@ int MPI_Recv(void *buf, int count, MPI_Datatype dtype, int source, int tag, MPI_
 
 ---
 
-## Neblokiajuca komunikacija
+## Neblokirajuca komunikacija
 
 ### `MPI_Isend`
 
@@ -117,7 +129,7 @@ int MPI_Isend(void *buf, int count, MPI_Datatype dtype, int dest, int tag, MPI_C
 
 | Parametar | Tip | Opis |
 |-----------|-----|------|
-| `buf` | `void *` | Bаfer sa podacima za slanje — ne sme se menjati dok prenos nije završen |
+| `buf` | `void *` | Bafer sa podacima za slanje — ne sme se menjati dok prenos nije završen |
 | `count` | `int` | Broj elemenata |
 | `dtype` | `MPI_Datatype` | Tip podataka |
 | `dest` | `int` | Rang odredišnog procesa |
@@ -125,7 +137,7 @@ int MPI_Isend(void *buf, int count, MPI_Datatype dtype, int dest, int tag, MPI_C
 | `comm` | `MPI_Comm` | Komunikator |
 | `request` | `MPI_Request *` | Izlaz: ručka (handle) za praćenje statusa prenosa — koristi se u `MPI_Wait`/`MPI_Test` |
 
-> **Napomena:** Prefiks `I` = Immediate (odmah). Bаfer ne treba dirati pre `MPI_Wait`!
+> **Napomena:** Prefiks `I` = Immediate (odmah). Bafer ne treba dirati pre `MPI_Wait`!
 
 ---
 
@@ -139,7 +151,7 @@ int MPI_Irecv(void *buf, int count, MPI_Datatype dtype, int source, int tag, MPI
 
 | Parametar | Tip | Opis |
 |-----------|-----|------|
-| `buf` | `void *` | Bаfer u koji će se upisati primljeni podaci — ne čitati dok prenos nije završen |
+| `buf` | `void *` | Bafer u koji će se upisati primljeni podaci — ne čitati dok prenos nije završen |
 | `count` | `int` | Maksimalan broj elemenata |
 | `dtype` | `MPI_Datatype` | Tip podataka |
 | `source` | `int` | Rang pošiljaoca; `MPI_ANY_SOURCE` za bilo koji izvor |
@@ -157,7 +169,7 @@ int MPI_Irecv(void *buf, int count, MPI_Datatype dtype, int source, int tag, MPI
 int MPI_Wait(MPI_Request *request, MPI_Status *status)
 ```
 
-**Opis:** Blokira se sve dok se neblokiajuća operacija (`Isend`/`Irecv`) identifikovana ručkom `request` ne završi. Nakon toga je bаfer siguran za upotrebu.
+**Opis:** Blokira se sve dok se neblokirajuća operacija (`Isend`/`Irecv`) identifikovana ručkom `request` ne završi. Nakon toga je bafer siguran za upotrebu.
 
 | Parametar | Tip | Opis |
 |-----------|-----|------|
@@ -172,7 +184,7 @@ int MPI_Wait(MPI_Request *request, MPI_Status *status)
 int MPI_Test(MPI_Request *request, int *flag, MPI_Status *status)
 ```
 
-**Opis:** Proverava da li je neblokiajuća operacija završena i odmah vraća kontrolu bez čekanja. Koristi se za "polling" — periodičnu proveru u petlji.
+**Opis:** Proverava da li je neblokirajuća operacija završena i odmah vraća kontrolu bez čekanja. Koristi se za "polling" — periodičnu proveru u petlji.
 
 | Parametar | Tip | Opis |
 |-----------|-----|------|
@@ -215,8 +227,8 @@ int MPI_Reduce(void *send_buffer, void *recv_buffer, int count, MPI_Datatype dat
 
 | Parametar | Tip | Opis |
 |-----------|-----|------|
-| `send_buffer` | `void *` | Ulazni bаfer — podaci koji se šalju ka redukciji |
-| `recv_buffer` | `void *` | Izlazni bаfer — samo root proces prima rezultat |
+| `send_buffer` | `void *` | Ulazni bafer — podaci koji se šalju ka redukciji |
+| `recv_buffer` | `void *` | Izlazni bafer — samo root proces prima rezultat |
 | `count` | `int` | Broj elemenata koji se redukuju |
 | `datatype` | `MPI_Datatype` | Tip podataka |
 | `operation` | `MPI_Op` | Operacija: `MPI_SUM`, `MPI_MAX`, `MPI_MIN`, `MPI_PROD`, `MPI_LAND`... |
@@ -256,11 +268,11 @@ int MPI_Scan(void *send_buffer, void *recv_buffer, int count, MPI_Datatype datat
 int MPI_Bcast(void *buffer, int count, MPI_Datatype datatype, int rank, MPI_Comm comm)
 ```
 
-**Opis:** Root proces šalje isti bаfer svim ostalim procesima. Svi procesi pozivaju ovu funkciju — root šalje, ostali primaju.
+**Opis:** Root proces šalje isti bafer svim ostalim procesima. Svi procesi pozivaju ovu funkciju — root šalje, ostali primaju.
 
 | Parametar | Tip | Opis |
 |-----------|-----|------|
-| `buffer` | `void *` | Kod root-a: podaci koji se šalju. Kod ostalih: bаfer koji prima podatke |
+| `buffer` | `void *` | Kod root-a: podaci koji se šalju. Kod ostalih: bafer koji prima podatke |
 | `count` | `int` | Broj elemenata koji se šalju/primaju |
 | `datatype` | `MPI_Datatype` | Tip podataka |
 | `rank` | `int` | Rang root procesa koji emituje podatke |
@@ -282,10 +294,10 @@ int MPI_Scatter(void *send_buffer, int send_count, MPI_Datatype send_type,
 
 | Parametar | Tip | Opis |
 | ----------- | ----- | ------ |
-| `send_buffer` | `void *` | Bаfer sa svim podacima koje root raspodeljuje (relevantan samo za root) |
+| `send_buffer` | `void *` | Bafer sa svim podacima koje root raspodeljuje (relevantan samo za root) |
 | `send_count` | `int` | Broj elemenata koji se šalju **svakom procesu** (ne ukupno!) |
 | `send_type` | `MPI_Datatype` | Tip podataka koji se šalju |
-| `recv_buffer` | `void *` | Bаfer u koji svaki proces prima svoju porciju |
+| `recv_buffer` | `void *` | Bafer u koji svaki proces prima svoju porciju |
 | `recv_count` | `int` | Broj elemenata koje prima svaki proces |
 | `recv_type` | `MPI_Datatype` | Tip podataka koji se primaju |
 | `rank` | `int` | Rang root procesa koji vrši raspodelu |
@@ -310,7 +322,7 @@ int MPI_Gather(void *send_buffer, int send_count, MPI_Datatype send_type,
 | `send_buffer` | `void *` | Lokalni podaci svakog procesa koji se šalju root-u |
 | `send_count` | `int` | Broj elemenata koje svaki proces šalje |
 | `send_type` | `MPI_Datatype` | Tip podataka koji se šalju |
-| `recv_buffer` | `void *` | Bаfer u koji root upisuje sve primljene podatke (relevantan samo za root) |
+| `recv_buffer` | `void *` | Bafer u koji root upisuje sve primljene podatke (relevantan samo za root) |
 | `recv_count` | `int` | Broj elemenata primljenih od svakog pojedinačnog procesa |
 | `recv_type` | `MPI_Datatype` | Tip podataka koji se primaju |
 | `rank` | `int` | Rang root procesa koji prima sve podatke |

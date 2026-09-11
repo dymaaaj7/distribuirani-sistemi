@@ -174,7 +174,7 @@ Rešenja zadataka sa prethodnih rokova podeljena su po godinama. Svaki rok obič
 | Fajl | Tema |
 |------|------|
 | [`septembar_a.c`](Blanketi/2024/septembar_a.c) | Ciklična raspodela dvostruke petlje, suma `i+j`, pronalaženje procesa sa najmanjim brojem prostih sabiraka — **grupne operacije** (isto kao jun 2020 / januar 2022). |
-| [`septembar_b.c`](Blanketi/2024/septembar_b.c) | `MPI_Bcast` niza X iz procesa sa rangom 2, kreiranje niza `yi=(p(p+1)/2)*xi` preko `MPI_Reduce(MPI_SUM)` — **grupne operacije** (isto kao jun 2025 b). |
+| [`septembar_b.c`](Blanketi/2024/septembar_b.c) | `MPI_Bcast` niza X iz procesa sa rangom 2, kreiranje niza `yi=(p(p+1)/2)*xi` preko `MPI_Reduce(MPI_SUM)` — **grupne operacije** (isto kao jun 2025 b — Tip 5). |
 
 ### 2025
 
@@ -184,7 +184,9 @@ Rešenja zadataka sa prethodnih rokova podeljena su po godinama. Svaki rok obič
 | [`januar_b.c`](Blanketi/2025/januar_b.c) | Isti zadatak — **P-to-P operacije**. |
 | [`april.c`](Blanketi/2025/april.c) | Množenje matrice `A(n×k)` i vektora `b(k)` — po `s` kolona po procesu, maksimum i suma po vrstama — **grupne + P-to-P operacije**. |
 | [`jun_a.c`](Blanketi/2025/jun_a.c) | Množenje matrice `A(n×k)` i matrice `B(k×n)` — po `q` kolona matrice A i `q` vrsta matrice B, proizvod kolona matrice B — **grupne + P-to-P operacije** (bez traženja ekstrema). |
-| [`jun_b.c`](Blanketi/2025/jun_b.c) | Jedinstven zadatak — `MPI_Bcast` niza X iz procesa 2, formula `yi=(p(p+1)/2)*xi`, `MPI_Reduce(MPI_SUM)` — **grupne operacije**. |
+| [`jun_b.c`](Blanketi/2025/jun_b.c) | Tip 5 — `MPI_Bcast` niza X iz procesa 2, formula `yi=(p(p+1)/2)*xi`, `MPI_Reduce(MPI_SUM)` — **grupne operacije** (isto kao septembar 2024 b). |
+| [`oktobar_a.c`](Blanketi/2025/oktobar_a.c) | Stablo/hiperkub — P-to-P slanje podatka iz procesa 0 svim ostalima u `log₂(p)` koraka + potpitanje o grupnoj zameni (`MPI_Bcast`) — **P-to-P operacije** (isto kao oktobar 2022 a — Tip 4). |
+| [`oktobar_b.c`](Blanketi/2025/oktobar_b.c) | Tip 2 varijanta sa nizom — Scatter blok raspodela, izračunavanje `R = Σ(ā+aᵢ)/(b+c)`, `b` i `c` u procesu sa maksimumom (MAXLOC), štampa u procesu sa najmanje prostih (MINLOC) — **grupne operacije**. |
 
 ### 2026
 
