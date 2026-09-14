@@ -13,13 +13,13 @@ Legenda:
 ### April
 
 - [x] **MPI** — Napomena: a - Tip 3c — Cela matrica A (Bcast) + s kolona B (P-to-P), min u B, min po vrstama C; b - Jedinstven — Kružna razmena b1→sledeći, prima od prethodnog
-- [ ] **JMS** — Napomena: isto kao Jun 2026 (aplikacija za obavestenja)
+- [x] **JMS** — Napomena: Aplikacija za obavestenja (3×) — isti kao Jun 2026 i Jun 2025
 - [ ] **WCF** — Napomena:
 
 ### Jun
 
 - [x] **MPI** — Napomena: a - Tip 6 — niz + formula, isti zadatak kao Oktobar 2025 b (R = Σ(ā+aᵢ)/(b+c)); b - teorijski — Gather + Bcast (kao April 2026 b)
-- [x] **JMS** — Napomena: Aplikacija za obavestenja — Sender sa funkcijom za slanje + Receiver sa listenerom, MapMessage (Autor/Datum/Tekst)
+- [x] **JMS** — Napomena: Aplikacija za obavestenja (3×) — Sender sa funkcijom za slanje + Receiver sa listenerom, MapMessage (Autor/Datum/Tekst), isti kao April 2026 i Jun 2025
 - [ ] **WCF** — Napomena:
 
 ---
@@ -29,25 +29,25 @@ Legenda:
 ### Oktobar
 
 - [x] **MPI** — Napomena: a - Tip 4 — stablo (kao Oktobar 2022 a); b - Tip 6 — niz + formula, R = Σ(ā+aᵢ)/(b+c)
-- [ ] **JMS** — Napomena:
+- [ ] **JMS** — Napomena: Minesweeper (1×) — svako polje je klijent, selector po x/y koordinatama, agregacija odgovora suseda
 - [ ] **WCF** — Napomena:
 
 ### Jun
 
 - [x] **MPI** — Napomena: a - Tip 3a — Matrica × matrica, po q kolona A + q vrsta B, proizvod kolona B (bez ekstrema); b - Jedinstven — Bcast niza X iz P2, formula yi=(p(p+1)/2)*xi, Reduce SUM
-- [ ] **JMS** — Napomena:
+- [x] **JMS** — Napomena: Aplikacija za obavestenja (3×) — identičan Junu 2026 i Aprilu 2026
 - [ ] **WCF** — Napomena:
 
 ### April
 
 - [x] **MPI** — Napomena: Tip 2 — Matrica × vektor, po `s` kolona, max + suma po vrstama (kao April 2022)
-- [ ] **JMS** — Napomena:
+- [ ] **JMS** — Napomena: Temperatura (3×) — hotel, selector po lokaciji, isti kao Septembar 2023; varijanta Oktobra 2023
 - [ ] **WCF** — Napomena:
 
 ### Januar
 
 - [x] **MPI** — Napomena: Tip 3b — Matrica × matrica, po `m` vrsta A + cela B, suma kolona B, maksimum u A
-- [ ] **JMS** — Napomena:
+- [ ] **JMS** — Napomena: Ispitivanje (2×) — funkcije Pokreni/PosaljiPitanje, isti kao Septembar 2024
 - [ ] **WCF** — Napomena:
 
 ---
@@ -57,7 +57,7 @@ Legenda:
 ### Septembar
 
 - [x] **MPI** — Napomena: a - Tip 1 — Ciklična raspodela dvostruke petlje, min broj prostih sabiraka (kao Jun 2020); b - Jedinstven — Bcast niza X iz P2, formula yi=(p(p+1)/2)*xi, Reduce SUM (kao Jun 2025 b)
-- [ ] **JMS** — Napomena:
+- [ ] **JMS** — Napomena: Ispitivanje (2×) — identičan Januaru 2025
 - [ ] **WCF** — Napomena:
 
 ---
@@ -67,43 +67,43 @@ Legenda:
 ### Oktobar 2
 
 - [ ] **MPI** — Napomena:
-- [ ] **JMS** — Napomena:
+- [ ] **JMS** — Napomena: Mail (3×) — isti kao Jun 2023; Jan 2022 je durable varijanta
 - [ ] **WCF** — Napomena:
 
 ### Oktobar
 
 - [ ] **MPI** — Napomena:
-- [ ] **JMS** — Napomena:
+- [ ] **JMS** — Napomena: Temperatura (3×) — varijanta sa "dopuniti", bez slanja zahteva; ostali su Septembar 2023 i April 2025
 - [ ] **WCF** — Napomena:
 
 ### Septembar
 
 - [X] **MPI** — Napomena: Matrica × matrica, po r vrsta matrice A, proizvod kolona A, prikaz u procesu sa minimumom
-- [ ] **JMS** — Napomena:
+- [ ] **JMS** — Napomena: Temperatura (3×) — isti kao April 2025; varijanta Oktobra 2023
 - [ ] **WCF** — Napomena:
 
 ### Jun 2
 
 - [x] **MPI** — Napomena: Matrica × matrica, po q kolona A i q vrsta B, max u B + proizvod kolona B
-- [ ] **JMS** — Napomena:
+- [ ] **JMS** — Napomena: Merge sort (2×) — rekurzija porukama, deljenje niza na polovine, agregacija dva dela, isti kao Oktobar 2022
 - [ ] **WCF** — Napomena:
 
 ### Jun
 
 - [ ] **MPI** — Napomena:
-- [ ] **JMS** — Napomena:
+- [ ] **JMS** — Napomena: Mail (3×) — topic obavezan, više primalaca, JMSTimestamp, isti kao Oktobar 2 2023; Jan 2022 je durable varijanta
 - [ ] **WCF** — Napomena:
 
 ### April
 
 - [ ] **MPI** — Napomena:
-- [ ] **JMS** — Napomena:
+- [ ] **JMS** — Napomena: Pomoć-u-mreži (1×) — necentralizovana, funkcija "pomoć", selector po tipu posla
 - [ ] **WCF** — Napomena:
 
 ### Januar
 
 - [ ] **MPI** — Napomena:
-- [ ] **JMS** — Napomena:
+- [ ] **JMS** — Napomena: Lanac stanica (3×) — ObjectMessage sa listom poslova, prosleđivanje, isti kao Oktobar 2 i Decembar 2022
 - [ ] **WCF** — Napomena:
 
 ---
@@ -113,13 +113,13 @@ Legenda:
 ### Oktobar 2
 
 - [x] **MPI** — Napomena: Tip 3b — Matrica × matrica, po `s` vrsta matrice A, cela matrica B, proizvod kolona A, maksimum u C
-- [ ] **JMS** — Napomena:
+- [ ] **JMS** — Napomena: Lanac stanica (3×) — isti kao Decembar 2022 i Januar 2023
 - [ ] **WCF** — Napomena:
 
 ### Oktobar
 
 - [x] **MPI** — Napomena: a-stablo i b-matrica i matrica
-- [ ] **JMS** — Napomena:
+- [ ] **JMS** — Napomena: Merge sort (2×) — rekurzija porukama, deljenje niza na polovine, agregacija dva dela, isti kao Jun 2 2023
 - [ ] **WCF** — Napomena:
 
 ### Septembar
@@ -131,31 +131,31 @@ Legenda:
 ### Jun 2
 
 - [x] **MPI** — Napomena: Tip 3 - Matrica i matrica (A×B, q kolona/vrsta)
-- [ ] **JMS** — Napomena:
+- [ ] **JMS** — Napomena: Prodavnica (3×) — ObjectMessage + propertiji, selector sa AND/BETWEEN, isti kao April i Jun 2022
 - [ ] **WCF** — Napomena:
 
 ### Jun
 
 - [ ] **MPI** — Napomena: Cudno
-- [ ] **JMS** — Napomena:
+- [ ] **JMS** — Napomena: Prodavnica (3×) — isti kao April 2022 i Jun 2 2022
 - [ ] **WCF** — Napomena:
 
 ### April
 
 - [x] **MPI** — Napomena: Matrica i vektor, po q kolona/elemenata vektora
-- [ ] **JMS** — Napomena:
+- [ ] **JMS** — Napomena: Prodavnica (3×) — isti kao Jun 2022 i Jun 2 2022
 - [ ] **WCF** — Napomena:
 
 ### Januar
 
 - [x] **MPI** — Napomena: Niz, kao Jun 2020
-- [ ] **JMS** — Napomena:
+- [ ] **JMS** — Napomena: Mail (3×) — durable varijanta, poruke čekaju neaktivne korisnike, isti zadatak kao Jun 2023 i Oktobar 2 2023
 - [ ] **WCF** — Napomena:
 
 ### Decembar
 
 - [x] **MPI** — Napomena: Niz
-- [ ] **JMS** — Napomena:
+- [ ] **JMS** — Napomena: Lanac stanica (3×) — isti kao Oktobar 2 2022 i Januar 2023
 - [ ] **WCF** — Napomena:
 
 ---
