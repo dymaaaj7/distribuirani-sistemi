@@ -1,4 +1,4 @@
-# Zadatak - Septembar 2024, Januar 2025
+# Zadatak - Januar 2025 (isti kao Septembar 2025, Septembar 2024 i Oktobar 2024)
 
 Koristeći JMS kreirati sistem za ispitivanje i ocenjivanje.
 

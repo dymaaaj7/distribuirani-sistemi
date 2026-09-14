@@ -1,6 +1,6 @@
 # JMS Blanketi — Šabloni
 
-> Napomena: za sad pokriveno onim šta je urađeno (vezbe + Jun 2026). Dopunjuje se kako se rešavaju novi rokovii.
+> Napomena: za sad pokriveno onim šta je urađeno (vezbe + Jun 2026 + temperatura Apr/Okt 2 2025, Sept 2023). Dopunjuje se kako se rešavaju novi rokovi.
 > Teorija: [../Vezbe/MOM_JMS.md](../Vezbe/MOM_JMS.md) · Beleške: [../beleske.md](../beleske.md)
 
 ## Skelet (objektni stil — kao Sestra/Lekar u vezbama)
@@ -53,6 +53,7 @@ public class Ucesnik {
 | centralizovana arhitektura (centrala kao router) | `JMS_08` (Centrala + Redirect*ML) |
 | necentralizovana (direktna komunikacija) | `JMS_09` |
 | MapMessage + funkcija za slanje + listener ispis | `Blanketi/G2026/Jun` |
+| selector na queue + property filter + main-ritual primaoca | `Blanketi/G2025/Oktobar_2` (isti: April 2025, Sept 2023) |
 
 ## Pravila koja se zaborave (iz vezbi i beleški)
 
@@ -61,6 +62,10 @@ public class Ucesnik {
 - try-catch **samo u `onMessage`** (interfejs ne baca izuzetke); svuda ostale `throws`.
 - JNDI imena identična kod svih učesnika — najčešći bug.
 - Transakciona sesija (`true`) zahteva `qs.commit()` posle send — bez toga poruka ostaje u baferu.
+- Selector je **drugi argument** `createReceiver(q, "...")` — zaboravljanje argumenta = primalac tuđe poruke.
+- Selector je poseban jezik: `=` (ne `==`), vrednost u apostrofima: `"Lokacija = '" + lokacija + "'"` — sintaksna greška baca `InvalidSelectorException` odmah u `kreni()`.
+- `setStringProperty` ≠ `setString` — po **telu** poruke (setString) selector NE filtrira; samo **property** učestvuje u filteru.
+- Main ritual primaoca: unos → konstruktor → `kreni()` → ispis → `System.in.read()` → `zatvori()`. `kreni()` se odmah vraća; poruke obrađuje JMS thread, main samo mora ostati živ.
 - Na ispitu: bez importova i try-catch (osim listenera).
 
 ## Provera pre predaje
