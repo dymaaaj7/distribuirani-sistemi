@@ -13,13 +13,13 @@ Legenda:
 ### April
 
 - [x] **MPI** — Napomena: a - Tip 3c — Cela matrica A (Bcast) + s kolona B (P-to-P), min u B, min po vrstama C; b - Jedinstven — Kružna razmena b1→sledeći, prima od prethodnog
-- [ ] **JMS** — Napomena:
+- [ ] **JMS** — Napomena: isto kao Jun 2026 (aplikacija za obavestenja)
 - [ ] **WCF** — Napomena:
 
 ### Jun
 
 - [x] **MPI** — Napomena: a - Tip 6 — niz + formula, isti zadatak kao Oktobar 2025 b (R = Σ(ā+aᵢ)/(b+c)); b - teorijski — Gather + Bcast (kao April 2026 b)
-- [ ] **JMS** — Napomena:
+- [x] **JMS** — Napomena: Aplikacija za obavestenja — Sender sa funkcijom za slanje + Receiver sa listenerom, MapMessage (Autor/Datum/Tekst)
 - [ ] **WCF** — Napomena:
 
 ---
