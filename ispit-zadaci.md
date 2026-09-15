@@ -18,6 +18,7 @@ Legenda:
 ### 2025
 
 - [x] **Oktobar** — a - Tip 4 — stablo (kao Oktobar 2022 a); b - Tip 6 — niz + formula, R = Σ(ā+aᵢ)/(b+c)
+- [x] **Septembar** — a/b - Tip 3b — **identičan Januaru 2025** (m vrsta A + cela B, suma kolona B, prikaz u procesu sa max u A)
 - [x] **Jun** — a - Tip 3a — Matrica × matrica, po q kolona A + q vrsta B, proizvod kolona B (bez ekstrema); b - Jedinstven — Bcast niza X iz P2, formula yi=(p(p+1)/2)*xi, Reduce SUM
 - [x] **April** — Tip 2 — Matrica × vektor, po `s` kolona, max + suma po vrstama (kao April 2022)
 - [x] **Januar** — Tip 3b — Matrica × matrica, po `m` vrsta A + cela B, suma kolona B, maksimum u A
@@ -82,13 +83,13 @@ Legenda:
 
 - [x] **April** — Aplikacija za obavestenja (3×) — isti kao Jun 2026 i Jun 2025
 - [x] **Jun** — Aplikacija za obavestenja (3×) — Sender sa funkcijom za slanje + Receiver sa listenerom, MapMessage (Autor/Datum/Tekst), isti kao April 2026 i Jun 2025
-- [x] **Jun 2** — Razmena poruka (1×) — Start(ime) prima / Posalji(ime, tekst) šalje; TextMessage, property Ime za selector, load-balans = "isti korisnik"
+- [x] **Jun 2** — Razmena poruka (1×) — Start(ime) prima / Posalji(ime, tekst) šalje, više klijenata istog imena = isti korisnik
 - [ ] **Septembar** —
 
 ### 2025
 
 - [ ] **Septembar** — Ispitivanje (4×) — isti kao Januar 2025, Septembar i Oktobar 2024
-- [x] **Oktobar 2** — Temperatura (4×) — urađena (Oktobar_2/Klijent.java), isti kao April 2025 i Septembar 2023
+- [x] **Oktobar 2** — Temperatura (4×) — isti kao April 2025 i Septembar 2023
 - [ ] **Oktobar** — Minesweeper (1×) — svako polje je klijent, selector po x/y koordinatama, agregacija odgovora suseda
 - [x] **Jun** — Aplikacija za obavestenja (3×) — identičan Junu 2026 i Aprilu 2026
 - [x] **April** — Temperatura (4×) — hotel, selector po lokaciji, isti kao Septembar 2023 i Oktobar 2 2025; varijanta Oktobra 2023

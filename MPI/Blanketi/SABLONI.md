@@ -78,6 +78,42 @@ if (rank == root) {
 - Svaki proces doprinosi **celom** rezultatu (3a: parcijalni `local_c[k][n]`; `q=1`: spoljašnji proizvod `local_a[i]·local_b[j]`; Tip 2: parcijalne sume vektora c) → **`MPI_Reduce(MPI_SUM)`**.
 - Svaki proces ima **svoj deo** bez preklapanja (3b: svoje vrste C; 3c: svoje kolone C) → **`MPI_Gather`** (radi i Reduce jer se delovi ne preklapaju, ali Gather je prirodniji).
 
+### Šablon 3 petlje (univerzalan za sve matrice zadatke)
+
+Jedan skelet — tekst zadatka samo popuni imenice. Zameniš `A`→`B`, `<`→`>`, `+=`→`*=` i gotovo:
+
+```c
+// 1. RASPODELA — po tekstu (cheat sheet iznad)
+
+// 2. EKSTREM — ista petlja, samo min/max po tekstu (ili je nema)
+in.value = INT_MIN;  in.rank = rank;               // min: INT_MAX i uslov >
+for (i po lokalnom delu)
+    if (in.value < local[i][j]) in.value = ...;
+
+// 3. REZULTAT — uvek isti oblik, nikad se ne menja
+local_c[i][j] += komad_A * komad_B;
+
+// 4. AGREGACIJA — ista petlja: + ili *, kolone ili vrste (ili je nema)
+for (j = 0; j < n; j++) local_sum[j] = 0;          // proizvod: kreni od 1!
+for (i = rank; i < k; i += size)                   // ciklično po celoj matrici
+    local_sum[j] += b[i][j];
+
+// 5. SPAJANJE — uvek iste 4 linije, samo destinacija (DEST)
+MPI_Reduce(&in, &out, 1, MPI_2INT, MPI_MAXLOC, root, ...);
+MPI_Bcast(&out, ...);                              // svi moraju znati out.rank
+MPI_Gather(local_c, ..., DEST, ...);
+MPI_Reduce(local_sum, sum, n, MPI_SUM, DEST, ...);
+
+// 6. ISPIS — u istom procesu gde se skupilo
+```
+
+Sve o destinaciji (DEST):
+
+- tekst traži ekstrem → sve ide u **out.rank** (i ispis tamo)
+- ne traži → sve ide u **root**
+
+Poeni koje pojedu: neutralni element (0 za sumu, **1 za proizvod**), i ne mešati dve stvari u istu petlju.
+
 ---
 
 ## 2. Ciklična raspodela petlje (Tip 1)
@@ -220,6 +256,7 @@ if (rank != target) {
 | Oktobar 2 2022 | Tip 3b | `s` vrsta A + cela B, max u **C** |
 | Septembar 2023 | Tip 3b | `r` vrsta A + cela B, **min u A** |
 | Januar 2025 | Tip 3b | `m` vrsta A + cela B, max u A, **suma kolona B** |
+| Septembar 2025 | Tip 3b | **identičan Januaru 2025** (tekst reč po reč) |
 | April 2026 a | Tip 3c | cela A + `s` kolona B, **min u B**, `MPI_Gather` |
 | Jun 2 2022 | Tip 3a | `q` kolona A + `q` vrsta B, max u B, proizvod kolona B |
 | Jun 2 2023 | Tip 3a | identičan Junu 2 2022 |
