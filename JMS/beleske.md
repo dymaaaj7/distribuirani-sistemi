@@ -38,6 +38,36 @@ sender.send(msg);  // nema potrebe za commit
 
 ---
 
+## Queue ili topic? (prva odluka u svakom zadatku)
+
+| | **queue** | **topic** |
+| --- | --- | --- |
+| Ko dobija poruku | **tačno jedan** primalac (load balancing među onima koji prođu filter) | **svi aktivni pretinerci** dobijaju kopiju |
+| Poruka čeka neaktivne? | ✅ čeka u queue-u | ❌ propuštaju je (osim durable) |
+| Tipičan tekst zadatka | „šalje **zahtev**", „**samo jedan** obrađuje", „isti korisnik" | „**svi** korisnici", „obaveštava **sve**", „svi prisutni" |
+
+- Više primalaca na istom queue-u **sa istim selectorom** = load balancing → poruku dobija jedan od njih.
+  Ako su „isti korisnik" (Jun 2 2026) — to je tačno ono što se traži!
+- Durable varijanta (`createDurableSubscriber` + `tc.setClientID`) postoji **samo za topic** — poruke čekaju neaktivne (Mail, Jan 2022).
+
+---
+
+## Slanje vs primanje — gde šta ide (najčešća zbrka)
+
+```java
+// FUNKCIJA ZA SLANJE: create + set + send
+TextMessage msg = qs.createTextMessage();
+msg.setText(tekst);
+msg.setStringProperty("Ime", ime);   // property = JEDINO po čemu selector filtrira
+sender.send(msg);
+
+// LISTENER (onMessage): cast + get + ispis — poruku NIKAD ne praviš ovde, ona stiže kao parametar
+TextMessage msg = (TextMessage) message;
+String t = msg.getText();
+```
+
+---
+
 ## Korisni linkovi
 
 - [Nazad na JMS README](README.md)
