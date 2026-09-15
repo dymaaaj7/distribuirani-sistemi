@@ -1,6 +1,6 @@
 # JMS Blanketi — Šabloni
 
-> Napomena: za sad pokriveno onim šta je urađeno (vezbe + Jun 2026 + temperatura Apr/Okt 2 2025, Sept 2023). Dopunjuje se kako se rešavaju novi rokovi.
+> Napomena: za sad pokriveno onim šta je urađeno (vezbe + Jun 2026 + temperatura Apr/Okt 2 2025, Sept 2023 + razmena poruka Jun 2 2026). Dopunjuje se kako se rešavaju novi rokovi.
 > Teorija: [../Vezbe/MOM_JMS.md](../Vezbe/MOM_JMS.md) · Beleške: [../beleske.md](../beleske.md)
 
 ## Skelet (objektni stil — kao Sestra/Lekar u vezbama)
@@ -54,6 +54,7 @@ public class Ucesnik {
 | necentralizovana (direktna komunikacija) | `JMS_09` |
 | MapMessage + funkcija za slanje + listener ispis | `Blanketi/G2026/Jun` |
 | selector na queue + property filter + main-ritual primaoca | `Blanketi/G2025/Oktobar_2` (isti: April 2025, Sept 2023) |
+| TextMessage + klijent i šalje i prima na ISTOM kanalu; load-balans istih selectora = "isti korisnik" | `Blanketi/G2026/Jun_2` |
 
 ## Pravila koja se zaborave (iz vezbi i beleški)
 
@@ -66,6 +67,8 @@ public class Ucesnik {
 - Selector je poseban jezik: `=` (ne `==`), vrednost u apostrofima: `"Lokacija = '" + lokacija + "'"` — sintaksna greška baca `InvalidSelectorException` odmah u `kreni()`.
 - `setStringProperty` ≠ `setString` — po **telu** poruke (setString) selector NE filtrira; samo **property** učestvuje u filteru.
 - Main ritual primaoca: unos → konstruktor → `kreni()` → ispis → `System.in.read()` → `zatvori()`. `kreni()` se odmah vraća; poruke obrađuje JMS thread, main samo mora ostati živ.
+- **create+send → u funkciji za slanje; cast+get+ispis → u listeneru.** Poruku nikad ne praviš u `onMessage` — ona stiže kao parametar.
+- Queue vs topic po tekstu: „samo jedan / zahtev / isti korisnik" → queue; „svi korisnici / svi prisutni" → topic (durable samo za topic).
 - Na ispitu: bez importova i try-catch (osim listenera).
 
 ## Provera pre predaje
