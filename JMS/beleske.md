@@ -50,6 +50,14 @@ sender.send(msg);  // nema potrebe za commit
   Ako su „isti korisnik" (Jun 2 2026) — to je tačno ono što se traži!
 - Durable varijanta (`createDurableSubscriber` + `tc.setClientID`) postoji **samo za topic** — poruke čekaju neaktivne (Mail, Jan 2022).
 
+### API asimetrija (kompajlerske zamke)
+
+| | queue | topic |
+| --- | --- | --- |
+| primač | `qs.createReceiver(q, selector)` — 2 arg | `ts.createSubscriber(t, selector, false)` — **3 arg** (`noLocal`) |
+| pošiljalac | `sender.send(msg)` | `publisher.publish(msg)` |
+| sesija poruke | poruku pravi sesija kanala na koji šalješ (`qs.createTextMessage()` za queue slanje, `ts...` za topic) | |
+
 ---
 
 ## Slanje vs primanje — gde šta ide (najčešća zbrka)
