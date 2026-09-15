@@ -92,7 +92,7 @@ Legenda:
 - [ ] **Oktobar** — Minesweeper (1×) — svako polje je klijent, selector po x/y koordinatama, agregacija odgovora suseda
 - [x] **Jun** — Aplikacija za obavestenja (3×) — identičan Junu 2026 i Aprilu 2026
 - [x] **April** — Temperatura (4×) — hotel, selector po lokaciji, isti kao Septembar 2023 i Oktobar 2 2025; varijanta Oktobra 2023
-- [ ] **Januar** — Ispitivanje (4×) — funkcije Pokreni/PosaljiPitanje, isti kao Septembar 2025, Septembar i Oktobar 2024
+- [x] **Januar** — Ispitivanje (4×) — urađeno (Sistem.java); funkcije Pokreni/PosaljiPitanje, topic za pitanja + queue za odgovore
 
 ### 2024
 

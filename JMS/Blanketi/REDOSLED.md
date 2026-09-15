@@ -10,7 +10,7 @@
 | 2 | 💬 Razmena poruka (1×) | Jun 2 2026 | najnoviji jedinstveni — jak signal; usmeravanje po imenu, više klijenata istog imena = isti korisnik (JMS verzija četa) |
 | 3 | 💣 Minesweeper (1×) | Okt 2025 | jak signal; multi-instanca, selector po koordinatama, agregacija odgovora |
 | 4 | 🌡️ Temperatura (4×) | Apr 2025, Okt 2 2025, Sept 2023, Okt 2023 | urađena (Apr/Okt 2 2025, Sept 2023); selector + više kanala + skica kanala; Okt 2023 je delta varijanta sa "dopuniti" (bez qAkcija) |
-| 5 | 🎓 Ispitivanje (4×) | Jan 2025, Sept 2025, Sept 2024, Okt 2024 | funkcije u tekstu (Pokreni, PosaljiPitanje), uloge nastavnik/student |
+| 5 | 🎓 Ispitivanje (4×) | Jan 2025, Sept 2025, Sept 2024, Okt 2024 | urađena (Januar/Sistem.java); funkcije u tekstu (Pokreni, PosaljiPitanje), topic za pitanja + queue za odgovore |
 | 6 | 📧 Mail (3×) | Jun 2023, Okt 2 2023, Jan 2022 | topic obavezan + više primalaca + JMSTimestamp; Jan 2022 je durable varijanta |
 | 7 | 🏭 Lanac stanica (3×) | Jan 2023, Dec 2022, Okt 2 2022 | ObjectMessage sa menjanjem stanja, prosleđivanje lancem |
 | 8 | 🎯 Prodavnica (3×) | Jun 2 2022, Jun 2022, Apr 2022 | selector majstorija (AND/BETWEEN), property uz ObjectMessage |

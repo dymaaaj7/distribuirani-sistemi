@@ -1,6 +1,6 @@
 # JMS Blanketi — Šabloni
 
-> Napomena: za sad pokriveno onim šta je urađeno (vezbe + Jun 2026 + temperatura Apr/Okt 2 2025, Sept 2023 + razmena poruka Jun 2 2026). Dopunjuje se kako se rešavaju novi rokovi.
+> Napomena: za sad pokriveno onim šta je urađeno (vezbe + Jun 2026 + temperatura Apr/Okt 2 2025, Sept 2023 + razmena poruka Jun 2 2026 + ispitivanje Jan 2025). Dopunjuje se kako se rešavaju novi rokovi.
 > Teorija: [../Vezbe/MOM_JMS.md](../Vezbe/MOM_JMS.md) · Beleške: [../beleske.md](../beleske.md)
 
 ## Skelet (objektni stil — kao Sestra/Lekar u vezbama)
@@ -55,6 +55,7 @@ public class Ucesnik {
 | MapMessage + funkcija za slanje + listener ispis | `Blanketi/G2026/Jun` |
 | selector na queue + property filter + main-ritual primaoca | `Blanketi/G2025/Oktobar_2` (isti: April 2025, Sept 2023) |
 | TextMessage + klijent i šalje i prima na ISTOM kanalu; load-balans istih selectora = "isti korisnik" | `Blanketi/G2026/Jun_2` |
+| topic + queue kombinacija u jednoj klasi, uloge grananjem u Pokreni, skica toka na početku | `Blanketi/G2025/Januar` (ispitivanje) |
 
 ## Pravila koja se zaborave (iz vezbi i beleški)
 
@@ -69,6 +70,11 @@ public class Ucesnik {
 - Main ritual primaoca: unos → konstruktor → `kreni()` → ispis → `System.in.read()` → `zatvori()`. `kreni()` se odmah vraća; poruke obrađuje JMS thread, main samo mora ostati živ.
 - **create+send → u funkciji za slanje; cast+get+ispis → u listeneru.** Poruku nikad ne praviš u `onMessage` — ona stiže kao parametar.
 - Queue vs topic po tekstu: „samo jedan / zahtev / isti korisnik" → queue; „svi korisnici / svi prisutni" → topic (durable samo za topic).
+- **Topic sa selectorom = TRI argumenta**: `ts.createSubscriber(t, "Sifra = '...'", false)` — bez trećeg (`noLocal`) ne kompajlira. Queue je 2 argumenta.
+- Poruku pravi sesija **kanala na koji šalješ** (`ts` za topic, `qs` za queue); za topic se šalje `publish`, za queue `send`.
+- Property se čita **po imenu iz stringa**: `msg.getStringProperty("sifraPitanja")` — ne prosleđuj promenljivu sa vrednošću.
+- Dve konekcije (queue + topic) → **obojе startuj** na kraju metode za slušanje, i **oboji close** u `zatvori()`.
+- Kad tekst kaže „nije potrebno implementirati pozive funkcija" — main se NE piše; boduju se samo funkcije sa tačnim potpisima + skica/navođenje kanala.
 - Na ispitu: bez importova i try-catch (osim listenera).
 
 ## Provera pre predaje
