@@ -79,7 +79,7 @@ Legenda:
 ### Septembar
 
 - [X] **MPI** — Napomena: Matrica × matrica, po r vrsta matrice A, proizvod kolona A, prikaz u procesu sa minimumom
-- [ ] **JMS** — Napomena: Temperatura (3×) — isti kao April 2025; varijanta Oktobra 2023
+- [x] **JMS** — Napomena: Temperatura (3×) — isti kao April 2025; varijanta Oktobra 2023
 - [ ] **WCF** — Napomena:
 
 ### Jun 2

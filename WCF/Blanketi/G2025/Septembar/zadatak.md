@@ -1,8 +1,8 @@
-# Zadatak - April 2025 (skoro isti kao Jun 2025 — razlika u re-registraciji)
+# Zadatak - Septembar 2025 (isti kao Jun 2025)
 
 Koristeći WCF napisati **čet aplikaciju**.
 
-Svaki korisnik pri startovanju klijenta registruje svoj nadimak. Ukoliko se registruje **isti nadimak**, smatrati da je prethodna sesija **prestala da važi**.
+Svaki korisnik pri startovanju klijenta registruje svoj nadimak. Smatrati da je prethodna sesija **i dalje važi**.
 
 Klijent pod svojim nadimkom šalje poruku drugom klijentu tako što navede njegov nadimak.
 

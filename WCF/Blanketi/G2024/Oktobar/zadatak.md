@@ -1,4 +1,4 @@
-# Zadatak - Septembar 2024 (isti kao Oktobar 2024)
+# Zadatak - Oktobar 2024 (isti kao Septembar 2024)
 
 Koristeći WCF kreirati sistem za **registraciju vozila**.
 

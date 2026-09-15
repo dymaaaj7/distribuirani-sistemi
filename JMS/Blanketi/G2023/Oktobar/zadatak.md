@@ -1,4 +1,4 @@
-# Zadatak - Oktobar 2023 (varijanta — Septembar 2023 i April 2025 su skoro isti, bez "dopuniti")
+# Zadatak - Oktobar 2023 (varijanta — Septembar 2023, Oktobar 2 2025 i April 2025 su skoro isti, bez "dopuniti")
 
 Dopuniti sistem za održavanje optimalne temperature u hotelu.
 
