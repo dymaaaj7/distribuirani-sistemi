@@ -1,5 +1,134 @@
 # WCF — Windows Communication Foundation
 
+## Osnove — šta je WCF
+
+Framework za **razmenu poruka između dva programa preko mreže**. Pišeš običan C# metod, WCF ga "iznese" na mrežu — klijent ga zove preko **proxy-ja** (objekat koji izgleda kao lokalni metod, ali poziv putuje mrežom).
+
+Tri lika:
+
+- **Servis** — klasa + ugovor (logika)
+- **Host** — proces koji servis drži živim i sluša mrežu (IIS, konzola...)
+- **Klijent** — zove servis preko proxy-ja
+
+Svaki ispitni zadatak traži isto 4 stvari: **interfejs, implementaciju, config, klijenta**.
+
+---
+
+## ABC — od čega se pravi endpoint
+
+Endpoint je "utičnica" na kojoj servis prima pozive. Uvek tri dela:
+
+- **A — Address**: gde (URL, npr. `http://localhost:8000/Kalkulator`)
+- **B — Binding**: kako (transport poruka)
+- **C — Contract**: šta (interfejs — zajednički klijentu i servisu)
+
+```xml
+<endpoint address="" binding="wsDualHttpBinding" contract="WCFKalkulator.IKalkulator"/>
+```
+
+**Metode nemaju svoje adrese** (to je REST, ne WCF) — adresa je endpoint-a, operacija putuje **u poruci** (Action header). Jedan endpoint za sve operacije.
+
+---
+
+## Bindingovi — tabela za pamćenje
+
+| Binding | Transport | Sesije | Duplex | Kad |
+|---------|-----------|--------|--------|-----|
+| `basicHttpBinding` | HTTP | ❌ | ❌ | najprostije, bez stanja |
+| `wsHttpBinding` | HTTP + WS-* | ✅ | ❌ | standardno, sesije |
+| `wsDualHttpBinding` | HTTP ×2 | ✅ | ✅ | **duplex / callback** |
+| `netTcpBinding` | TCP | ✅ | ✅ | brzo, takođe duplex |
+
+Binding se bira po sposobnostima koje tekst traži, **ne** po InstanceContextMode:
+- tekst traži callback → `wsDualHttpBinding` / `netTcpBinding`
+- tekst traži sesije → sve osim `basicHttpBinding`
+- ništa specijalno → `basicHttpBinding` / `wsHttpBinding`
+
+---
+
+## Atributi — ko stoji gde
+
+| Atribut | Na | Šta radi |
+|---------|----|----------|
+| `[ServiceContract]` | interfejs servisa | celina je ugovor (+ SessionMode, CallbackContract) |
+| `[OperationContract]` | metod | metod je vidljiv klijentu — **bez njega metod ne postoji za WCF** |
+| `[DataContract]` | klasa podataka | klasa putuje kroz poruke |
+| `[DataMember]` | property/polje | član se serijalizuje — bez njega stiže default vrednost |
+| `[ServiceBehavior]` | klasa implementacije | ponašanje (InstanceContextMode, ConcurrencyMode) |
+
+`IsOneWay = true` na operaciji → "pošalji i ne čekaj" — metod mora biti `void`, bez povratne vrednosti. Standardno na callback metodama.
+
+---
+
+## Duplex / callback — servis zove klijenta
+
+Kad tekst kaže *"servis poziva/obaveštava klijenta"* → duplex. Lanac:
+
+```
+CallbackContract ⇒ treba povratni kanal ⇒ treba sesija ⇒ SessionMode.Required
+                                              ⇒ treba duplex binding ⇒ wsDualHttpBinding
+```
+
+**Pravilo: callback ⇒ uvek `SessionMode.Required`** (i duplex binding).
+
+### Serverska strana
+
+```csharp
+[ServiceContract(SessionMode = SessionMode.Required,
+                 CallbackContract = typeof(IKalkulatorCallback))]
+public interface IKalkulator { ... }
+
+public interface IKalkulatorCallback
+{
+    [OperationContract(IsOneWay = true)]
+    void Rezultat(Rezultat r);
+}
+```
+
+U implementaciji — kanal do klijenta koji nas je zvao:
+
+```csharp
+private IKalkulatorCallback Callback
+{
+    get { return OperationContext.Current.GetCallbackChannel<IKalkulatorCallback>(); }
+}
+// u metodi: Callback.Rezultat(new Rezultat { ... });
+```
+
+### Klijentska strana — 4 koraka
+
+```csharp
+// 1. implementirati callback interfejs
+class KalkulatorCallback : IKalkulatorCallback
+{
+    public void Rezultat(Rezultat r) { Console.WriteLine(r.Izraz); }
+}
+
+// 2. InstanceContext — "ko prima callback-e"
+InstanceContext ctx = new InstanceContext(new KalkulatorCallback());
+
+// 3. DuplexChannelFactory (NE običan ChannelFactory!) — A+B+C iz koda
+DuplexChannelFactory<IKalkulator> factory = new DuplexChannelFactory<IKalkulator>(
+    ctx, new WSDualHttpBinding(),
+    new EndpointAddress("http://localhost:8000/Kalkulator"));
+
+// 4. proxy i pozivi
+IKalkulator proxy = factory.CreateChannel();
+proxy.Dodaj(5);
+```
+
+---
+
+## Česte zamke
+
+- Callback ugovor + ne-duplex binding → **greška pri pokretanju** servisa
+- Metod bez `[OperationContract]` → tiho nestane iz ugovora (kompajlira se!)
+- Property bez `[DataMember]` → ne serijalizuje se, klijent prima 0/null (tiho)
+- `IsOneWay = true` + povratna vrednost → ne kompajlira se
+- Binding klijenta mora biti **isti** kao na servisu
+
+---
+
 ## InstanceContextMode
 
 Određuje kako se kreira i održava instanca servisa.
