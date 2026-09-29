@@ -1,67 +1,15 @@
-# Distribuirani Sistemi — Materijali sa vežbi i ispita
+# Distribuirani Sistemi
 
-Ovaj repozitorijum sadrži materijale, vežbe, laboratorijske zadatke i ispitna rešenja iz predmeta **Distribuirani Sistemi**.
+Materijali za pismeni deo ispita — **MPI**, **JMS** i **WCF**.
 
-Fokus je na pismenom delu ispita i obuhvata tri tehnologije: **MPI**, **JMS** i **WCF**.
+| Folder | Sadržaj |
+|--------|---------|
+| [MPI/](MPI/) | vežbe, lab, rešeni blanketi 2020–2026, šabloni |
+| [JMS/](JMS/) | vežbe, tekstovi rokova G2022–G2026, šabloni |
+| [WCF/](WCF/) | vežbe, tekstovi rokova G2022–G2026 |
+| [ispit-zadaci.md](ispit-zadaci.md) | svi rokovi po godinama — šta je rešeno, koje su replike |
 
----
-
-## 📁 Struktura projekta
-
-```
-.
-├── MPI/                          # MPI vežbe, labovi i blanketi
-│   ├── README.md                 # Detaljan opis MPI dela
-│   ├── SPISAKFUNKCIJA.md         # Referenca MPI funkcija
-│   ├── template.c                # Šablon za MPI programe
-│   ├── Vezbe/
-│   ├── Lab/
-│   └── Blanketi/
-│
-├── JMS/                          # JMS vežbe, labovi i blanketi
-│   ├── README.md                 # Detaljan opis JMS dela
-│   ├── beleske.md                # Kratke beleške za ispit (JMS)
-│   ├── lib/
-│   │   └── javax.jms-api-2.0.1.jar
-│   ├── Vezbe/
-│   │   ├── MOM_JMS.md           # Teorijski rezime: MOM i JMS
-│   │   ├── JMS_07/              # Osnovni API, Queue, Topic, transakcije
-│   │   └── JMS_09/              # Necentralizovana arhitektura — lekar/sestra
-│   ├── Lab/
-│   └── Blanketi/
-│
-├── WCF/                          # WCF vežbe, labovi i blanketi
-│   ├── README.md
-│   ├── beleske.md
-│   ├── Vezbe/
-│   ├── Lab/
-│   └── Blanketi/
-│
-├── ispit-zadaci.md               # Praćenje odrađenih zadataka sa ispita po rokovima
-├── Distribuirani Sistemi_PrezentacijeSpojene.pdf
-└── .gitignore
-```
+Kako spremati: kreni od `*/Blanketi/SABLONI.md` i `REDOSLED.md` — rokovi se stalno ponavljaju, pa se uči po jedan predstavnik svake porodice zadataka, a replike samo provere.
 
 ---
-
-## 🚀 Brzi linkovi
-
-| Tehnologija | Opis |
-|-------------|------|
-| [MPI](MPI/README.md) | Paralelno programiranje sa Message Passing Interface |
-| [JMS](JMS/README.md) | Java Message Service — asinhrona komunikacija |
-| [WCF](WCF/README.md) | Windows Communication Foundation |
-| [Praćenje zadataka](ispit-zadaci.md) | Evidencija odrađenih zadataka po ispitnim rokovima |
-
----
-
-## 📝 Napomene
-
-- Folder `MPI/Lab/PS-NP-Lab1PTP` sadrži implementaciju zadataka sa prve laboratorijske vežbe sa predmeta Paralelni Sistemi po **novoj akreditaciji** i pomenuti zadaci odgovaraju prvom terminu MPI vežbi na predmetu Distribuirani Sistemi.
-- Kod nekih vežbi i zadataka **nedostaje implementacija** — ostavljeni su samo komentari sa tekstom zadatka.
-- Fajl [`MPI/template.c`](MPI/template.c) sadrži osnovni šablon za MPI programe sa inicijalizacijom, dobijanjem ranga i veličine komunikatora, kao i finalizacijom.
-- JMS primeri koriste GlassFish/Payara `jms/__defaultConnectionFactory` i JNDI lookup za `queue` / `topic` resurse.
-
----
-
 *Autor: Dimitrije Janković*
