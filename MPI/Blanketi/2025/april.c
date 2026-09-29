@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
                MPI_SUM,
                out.rank,
                MPI_COMM_WORLD);
-    MPI_Reduce(local_a, c, n, MPI_INT, MPI_SUM, out.rank, MPI_COMM_WORLD);
+    MPI_Reduce(local_c, c, n, MPI_INT, MPI_SUM, out.rank, MPI_COMM_WORLD);
 
     if (rank == out.rank)
     {

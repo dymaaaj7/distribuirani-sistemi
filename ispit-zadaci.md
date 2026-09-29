@@ -1,71 +1,76 @@
 <!-- markdownlint-disable MD024 -->
-# Praćenje odrađenih zadataka sa ispita
+# Blanketi — pregled po rokovima
 
 Legenda:
 
-- `[ ]` – nije odrađen
-- `[x]` – odrađen
+- `[x]` – rešenje postoji u repozitorijumu
+- `[ ]` – samo tekst zadatka (ili nema ničega)
 
 ---
 
 ## MPI
 
+<!-- Napomene, kratki rečnik: A×B / A×b = množenje matrica / matrice vektorom;
+     "m vrsta A + cela B" = šta master deli procesima (P2P = vrsta se šalje P2P);
+     "štampa u max(A)" = prikaz u procesu koji sadrži ekstrem matrice A;
+     ciklična = suma i+j po cikličnoj raspodeli petlje. -->
+
 ### 2026
 
-- [x] **April** — a - Tip 3c — Cela matrica A (Bcast) + s kolona B (P-to-P), min u B, min po vrstama C; b - Jedinstven — Kružna razmena b1→sledeći, prima od prethodnog
-- [x] **Jun** — a - Tip 6 — niz + formula, isti zadatak kao Oktobar 2025 b (R = Σ(ā+aᵢ)/(b+c)); b - teorijski — Gather + Bcast (kao April 2026 b)
+- [x] **April** — a: A×B, cela A svima (Bcast) + po s kolona B (P2P); min u B, min po vrstama C. b: kružna razmena — svako šalje sledbeniku
+- [x] **Jun** — a: niz, R = Σ(ā+aᵢ)/(b+c). b: teorija, minimalan broj poziva (Gather pa Bcast)
 
 ### 2025
 
-- [x] **Oktobar** — a - Tip 4 — stablo (kao Oktobar 2022 a); b - Tip 6 — niz + formula, R = Σ(ā+aᵢ)/(b+c)
-- [x] **Septembar** — a/b - Tip 3b — **identičan Januaru 2025** (m vrsta A + cela B, suma kolona B, prikaz u procesu sa max u A)
-- [x] **Jun** — a - Tip 3a — Matrica × matrica, po q kolona A + q vrsta B, proizvod kolona B (bez ekstrema); b - Jedinstven — Bcast niza X iz P2, formula yi=(p(p+1)/2)*xi, Reduce SUM
-- [x] **April** — Tip 2 — Matrica × vektor, po `s` kolona, max + suma po vrstama (kao April 2022)
-- [x] **Januar** — Tip 3b — Matrica × matrica, po `m` vrsta A + cela B, suma kolona B, maksimum u A
+- [x] **Oktobar** — a: stablo broadcast (P2P) + pitanje za Bcast zamenu. b: niz, R = Σ(ā+aᵢ)/(b+c)
+- [x] **Septembar** — A×B, m vrsta A + cela B; suma kolona B; štampa u max(A) — identičan Jan 2025
+- [x] **Jun** — a: A×B, q kolona A (P2P) + q vrsta B (Scatter); proizvod kolona B. b: Bcast niza iz P2, yi=(p(p+1)/2)·xi, Reduce SUM
+- [x] **April** — A×b, po s kolona A (P2P) + s elemenata b; max u A, suma po vrstama A — kao April 2022
+- [x] **Januar** — A×B, m vrsta A + cela B; suma kolona B; štampa u max(A) (a: grupne, b: P2P)
 
 ### 2024
 
 - [ ] **Oktobar** —
-- [x] **Septembar** — a - Tip 1 — Ciklična raspodela dvostruke petlje, min broj prostih sabiraka (kao Jun 2020); b - Jedinstven — Bcast niza X iz P2, formula yi=(p(p+1)/2)*xi, Reduce SUM (kao Jun 2025 b)
+- [x] **Septembar** — a: ciklična, min broj prostih sabiraka. b: Bcast niza iz P2, yi=(p(p+1)/2)·xi — kao Jun 2025 b
 - [ ] **Jun** —
 
 ### 2023
 
 - [ ] **Oktobar 2** —
-- [ ] **Oktobar** —
-- [x] **Septembar** — Matrica × matrica, po r vrsta matrice A, proizvod kolona A, prikaz u procesu sa minimumom
-- [x] **Jun 2** — Matrica × matrica, po q kolona A i q vrsta B, max u B + proizvod kolona B
+- [ ] **Oktobar** — a: stablo — kao Okt 2022 a. b: A×B, kolona A (P2P) + vrsta B — kao Okt 2022 b
+- [x] **Septembar** — A×B, r vrsta A + cela B; proizvod kolona A; štampa u min(A)
+- [x] **Jun 2** — A×B, q kolona A + q vrsta B; proizvod kolona B; max u B
 - [ ] **Jun** —
 - [ ] **April** —
 - [ ] **Januar** —
 
 ### 2022
 
-- [x] **Oktobar 2** — Tip 3b — Matrica × matrica, po `s` vrsta matrice A, cela matrica B, proizvod kolona A, maksimum u C
-- [x] **Oktobar** — a - stablo; b - matrica i matrica
-- [x] **Septembar** — Tip 1 - Niz, kao Decembar 2022
-- [x] **Jun 2** — Tip 3 - Matrica i matrica (A×B, q kolona/vrsta)
-- [ ] **Jun** — Čudno
-- [x] **April** — Matrica i vektor, po q kolona/elemenata vektora
-- [x] **Januar** — Niz, kao Jun 2020
-- [x] **Decembar** — Niz
+- [x] **Oktobar 2** — A×B, s vrsta A + cela B; proizvod kolona A; max u C
+- [x] **Oktobar** — a: stablo broadcast. b: A×B, kolona A (P2P) + vrsta B (Scatter)
+- [x] **Septembar** — ciklična, j na dole + pomeraj y — kao Decembar 2022
+- [x] **Jun 2** — A×B, q kolona A + q vrsta B; proizvod kolona B; max u B — kao Jun 2 2023
+- [ ] **Jun** — (tekst nejasan)
+- [x] **April** — A×b, po q kolona A + q elemenata b; max u A, suma po vrstama
+- [x] **Januar** — ciklična, min prostih — kao Jun 2020
+- [x] **Decembar** — ciklična, j na dole + pomeraj y — kao Septembar 2022
 
 ### 2021
 
 - [ ] **Oktobar 2** —
 - [ ] **Oktobar** —
-- [x] **Septembar** — Matrica × matrica, po l vrsta matrice A + proizvod kolona matrice A
-- [x] **Jun** — Matrica i vektor, po l kolona/elemenata vektora
+- [x] **Septembar** — A×B, l vrsta A + cela B; proizvod kolona A
+- [x] **Jun** — A×b, po l kolona A + l elemenata b
 - [ ] **Maj** —
-- [x] **April** — Matrica i vektor — po jedna kolona/element vektora
-- [x] **Decembar** — Matrica i vektor, po q kolona/elemenata vektora (kao April 2022)
+- [x] **April** — A×b, po 1 kolona A + 1 element b
+- [x] **Decembar** — A×b, po q kolona A + q elemenata b — kao April 2022
 
 ### 2020
 
 - [ ] **Oktobar** —
 - [ ] **Septembar** —
 - [ ] **Jul — dodatni** —
-- [x] **Jun** — Niz, kao Januar 2022
+- [x] **Jun** — ciklična, min prostih — kao Januar 2022
 
 ### 2019
 
